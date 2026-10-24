@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="_ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/fonts.css">
+<style>body{margin:0;background:#F8F9FA;font-family:'Open Sans',sans-serif;color:#67748E}a{color:#cb0c9f}a:hover{color:#344767}</style>
+</helmet>
+<div style="max-width:1320px;margin:0 auto;padding:32px 24px 64px;display:flex;flex-direction:column;gap:32px;font-size:14px;line-height:1.5">
+  <header style="display:flex;flex-direction:column;gap:8px">
+    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Gestion de garages · Modèle de données</div>
+    <h1 style="margin:0;font-size:32px;line-height:1.2;color:#344767">Modèle de données complet</h1>
+    <p style="margin:0;max-width:820px;text-wrap:pretty">Modèle relationnel aligné sur la maquette : 8 tables, 7 relations. Les statuts de location, de garage, d'échéance et de locataire sont calculés et ne sont pas stockés. Les types sont indicatifs (SQL standard).</p>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:8px;font-size:12px;font-weight:700">
+      <span style="padding:4px 10px;border-radius:6px;background:#344767;color:#fff">PK clé primaire</span>
+      <span style="padding:4px 10px;border-radius:6px;background:#fff;color:#cb0c9f;border:1px solid #cb0c9f">FK clé étrangère</span>
+      <span style="padding:4px 10px;border-radius:6px;background:#fff;color:#344767;border:1px solid #D2D6DA">NOT NULL par défaut · « NULL » = facultatif</span>
+    </div>
+  </header>
+
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:20px;color:#344767">1. Diagramme entités-relations</h2>
+    <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);padding:24px;overflow:auto">
+      <div style="position:relative;width:{{ dW }}px;height:{{ dH }}px;margin:0 auto">
+        <svg width="{{ dW }}" height="{{ dH }}" style="position:absolute;left:0;top:0">
+          <sc-for list="{{ lines }}" as="l" hint-placeholder-count="7"><path d="{{ l.d }}" fill="none" stroke="#8392AB" stroke-width="1.5"></path></sc-for>
+          <sc-for list="{{ lineLabels }}" as="t" hint-placeholder-count="14"><text x="{{ t.x }}" y="{{ t.y }}" fill="{{ t.fill }}" font-size="11" font-weight="{{ t.fw }}" font-family="Open Sans, sans-serif">{{ t.t }}</text></sc-for>
+        </svg>
+        <sc-for list="{{ cards }}" as="c" hint-placeholder-count="8">
+          <div style="position:absolute;left:{{ c.x }}px;top:{{ c.y }}px;width:{{ c.w }}px;height:{{ c.h }}px;box-sizing:border-box;background:#fff;border:1px solid #D2D6DA;border-radius:10px;overflow:hidden;box-shadow:0 3px 8px rgba(52,71,103,.08)">
+            <div style="height:34px;box-sizing:border-box;padding:0 12px;display:flex;align-items:center;background:{{ c.bg }};font-weight:700;font-size:13px;color:#344767;letter-spacing:.02em">{{ c.name }}</div>
+            <div style="padding:4px 0">
+              <sc-for list="{{ c.rows }}" as="r" hint-placeholder-count="4">
+                <div style="height:22px;display:flex;align-items:center;gap:8px;padding:0 12px;font-size:12px;color:#344767">
+                  <span style="width:22px;flex:none;text-align:center;font-size:10px;font-weight:700;color:{{ r.kFg }}">{{ r.k }}</span>
+                  <span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-family:ui-monospace,Menlo,monospace;font-weight:{{ r.fw }}">{{ r.n }}</span>
+                  <span style="font-size:11px;color:#67748E;white-space:nowrap">{{ r.t }}</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:16px;font-size:12px;text-align:center">Cardinalités UML : « 1 » côté table parente, « 0..N » côté table enfant, « 0..1 » pour une clé étrangère facultative. UTILISATEUR n'a aucune relation : elle sert uniquement à l'authentification et aux rôles.</div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:16px">
+    <h2 style="margin:0;font-size:20px;color:#344767">2. Dictionnaire des tables</h2>
+    <sc-for list="{{ entities }}" as="e" hint-placeholder-count="8">
+      <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);overflow:hidden">
+        <div style="padding:16px 24px;background:{{ e.bg }};display:flex;flex-direction:column;gap:2px">
+          <div style="font-size:16px;font-weight:700;color:#344767;font-family:ui-monospace,Menlo,monospace">{{ e.name }}</div>
+          <div style="color:#344767;text-wrap:pretty">{{ e.desc }}</div>
+        </div>
+        <div style="overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="text-align:left;font-size:11px;text-transform:uppercase;opacity:.75"><th style="padding:10px 12px 10px 24px;white-space:nowrap">Colonne</th><th style="padding:10px 12px;white-space:nowrap">Type</th><th style="padding:10px 12px;white-space:nowrap">Clé</th><th style="padding:10px 12px;white-space:nowrap">Null</th><th style="padding:10px 24px 10px 12px">Contrainte / règle</th></tr></thead>
+          <tbody><sc-for list="{{ e.cols }}" as="c" hint-placeholder-count="5">
+            <tr style="border-top:1px solid #e9ecef;vertical-align:top"><td style="padding:10px 12px 10px 24px;font-family:ui-monospace,Menlo,monospace;font-weight:700;color:#344767;white-space:nowrap">{{ c.n }}</td><td style="padding:10px 12px;white-space:nowrap;font-family:ui-monospace,Menlo,monospace;color:#344767">{{ c.t }}</td><td style="padding:10px 12px"><span style="font-size:11px;font-weight:700;color:{{ c.kFg }}">{{ c.k }}</span></td><td style="padding:10px 12px;white-space:nowrap;color:{{ c.nFg }}">{{ c.nn }}</td><td style="padding:10px 24px 10px 12px;min-width:280px">{{ c.r }}</td></tr>
+          </sc-for></tbody>
+        </table></div>
+      </div>
+    </sc-for>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:20px;color:#344767">3. Relations</h2>
+    <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="text-align:left;font-size:11px;text-transform:uppercase;opacity:.75"><th style="padding:12px 12px 12px 24px">Parent</th><th style="padding:12px">Enfant</th><th style="padding:12px">Clé étrangère</th><th style="padding:12px">Cardinalité</th><th style="padding:12px">Suppression</th><th style="padding:12px 24px 12px 12px">Règle</th></tr></thead>
+      <tbody><sc-for list="{{ rels }}" as="r" hint-placeholder-count="7">
+        <tr style="border-top:1px solid #e9ecef;vertical-align:top"><td style="padding:10px 12px 10px 24px;font-family:ui-monospace,Menlo,monospace;font-weight:700;color:#344767">{{ r.p }}</td><td style="padding:10px 12px;font-family:ui-monospace,Menlo,monospace;font-weight:700;color:#344767">{{ r.c }}</td><td style="padding:10px 12px;font-family:ui-monospace,Menlo,monospace;white-space:nowrap">{{ r.fk }}</td><td style="padding:10px 12px;white-space:nowrap">{{ r.card }}</td><td style="padding:10px 12px;white-space:nowrap;font-weight:700;color:#344767">{{ r.del }}</td><td style="padding:10px 24px 10px 12px;min-width:260px">{{ r.rule }}</td></tr>
+      </sc-for></tbody>
+    </table></div>
+  </section>
+
+  <section style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:24px">
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2 style="margin:0;font-size:20px;color:#344767">4. Valeurs énumérées</h2>
+      <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);padding:8px 24px">
+        <sc-for list="{{ enums }}" as="e" hint-placeholder-count="5"><div style="padding:12px 0;border-top:1px solid #e9ecef;display:flex;flex-direction:column;gap:6px"><div style="font-family:ui-monospace,Menlo,monospace;font-weight:700;color:#344767;font-size:13px">{{ e.n }}</div><div style="display:flex;gap:6px;flex-wrap:wrap"><sc-for list="{{ e.v }}" as="v" hint-placeholder-count="3"><span style="padding:2px 8px;border-radius:6px;background:#F8F9FA;border:1px solid #e9ecef;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:#344767">{{ v }}</span></sc-for></div></div></sc-for>
+      </div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:12px">
+      <h2 style="margin:0;font-size:20px;color:#344767">5. Unicités et contrôles SQL</h2>
+      <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);padding:8px 24px">
+        <sc-for list="{{ sqlRules }}" as="r" hint-placeholder-count="8"><div style="padding:10px 0;border-top:1px solid #e9ecef;display:flex;gap:12px"><span style="flex:none;min-width:64px;font-size:11px;font-weight:700;text-transform:uppercase;color:#cb0c9f;padding-top:2px">{{ r.k }}</span><span style="min-width:0"><b style="color:#344767;font-family:ui-monospace,Menlo,monospace;font-size:12px">{{ r.t }}</b><br>{{ r.d }}</span></div></sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:20px;color:#344767">6. Données calculées (non stockées)</h2>
+    <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);overflow:auto"><table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr style="text-align:left;font-size:11px;text-transform:uppercase;opacity:.75"><th style="padding:12px 12px 12px 24px">Donnée</th><th style="padding:12px">Valeurs</th><th style="padding:12px 24px 12px 12px">Calcul</th></tr></thead>
+      <tbody><sc-for list="{{ derived }}" as="d" hint-placeholder-count="8">
+        <tr style="border-top:1px solid #e9ecef;vertical-align:top"><td style="padding:10px 12px 10px 24px;font-family:ui-monospace,Menlo,monospace;font-weight:700;color:#344767;white-space:nowrap">{{ d.n }}</td><td style="padding:10px 12px;color:#344767;min-width:180px">{{ d.v }}</td><td style="padding:10px 24px 10px 12px;min-width:320px">{{ d.c }}</td></tr>
+      </sc-for></tbody>
+    </table></div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:20px;color:#344767">7. Contrôles applicatifs (hors contrainte SQL)</h2>
+    <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);padding:8px 24px">
+      <sc-for list="{{ appRules }}" as="r" hint-placeholder-count="8"><div style="padding:10px 0;border-top:1px solid #e9ecef;display:flex;gap:12px"><span style="flex:none;min-width:84px;font-size:11px;font-weight:700;text-transform:uppercase;color:#cb0c9f;padding-top:2px">{{ r.k }}</span><span style="min-width:0;text-wrap:pretty">{{ r.d }}</span></div></sc-for>
+    </div>
+  </section>
+
+  <section style="display:flex;flex-direction:column;gap:12px">
+    <h2 style="margin:0;font-size:20px;color:#344767">8. Évolutions par rapport au MCD précédent</h2>
+    <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);padding:8px 24px">
+      <sc-for list="{{ changes }}" as="r" hint-placeholder-count="5"><div style="padding:10px 0;border-top:1px solid #e9ecef;display:flex;gap:12px"><span style="flex:none;min-width:84px;font-family:ui-monospace,Menlo,monospace;font-size:12px;font-weight:700;color:#344767;padding-top:1px">{{ r.k }}</span><span style="min-width:0;text-wrap:pretty">{{ r.d }}</span></div></sc-for>
+    </div>
+  </section>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  renderVals() {
+    const c = (n, t, k, nn, r) => ({ n, t, k, nn: nn ? 'NOT NULL' : 'NULL', r, kFg: k === 'PK' ? '#344767' : '#cb0c9f', nFg: nn ? '#344767' : '#67748E', fw: k ? 700 : 400 });
+    const PK = (r) => c('id', 'INTEGER', 'PK', true, r || 'Identifiant auto-incrémenté.');
+    const B = { blue: '#e3ecff', pink: '#fde4f4', purple: '#efe6ff', green: '#e0f4e6', amber: '#fff0d6', gray: '#eceff3' };
+    const E = [
+      { key: 'LOCATAIRE', bg: B.pink, x: 0, y: 0, desc: 'Personne louant ou ayant loué un ou plusieurs garages. Un locataire peut avoir plusieurs locations, sur des garages différents.', cols: [PK(),
+        c('civilite', 'VARCHAR(4)', '', false, 'Valeurs : M. ou Mme.'),
+        c('nom', 'VARCHAR(100)', '', true, 'Obligatoire.'),
+        c('prenom', 'VARCHAR(100)', '', true, 'Obligatoire. Le couple nom + prénom déclenche une alerte de doublon non bloquante, sans contrainte d\'unicité.'),
+        c('rue', 'VARCHAR(150)', '', true, 'Adresse : rue.'),
+        c('numero_rue', 'VARCHAR(10)', '', true, 'Adresse : numéro.'),
+        c('code_postal', 'VARCHAR(10)', '', true, 'Adresse : code postal.'),
+        c('localite', 'VARCHAR(100)', '', true, 'Adresse : localité.'),
+        c('tel1', 'VARCHAR(30)', '', true, 'Téléphone principal.'),
+        c('tel2', 'VARCHAR(30)', '', false, 'Téléphone secondaire.'),
+        c('email', 'VARCHAR(255)', '', false, 'Format e-mail valide s\'il est renseigné.')] },
+      { key: 'LOCATION', bg: B.purple, x: 320, y: 0, desc: 'Période pendant laquelle un locataire occupe un garage. Le statut n\'est pas stocké (voir section 6).', cols: [PK(),
+        c('garage_id', 'INTEGER', 'FK', true, 'Garage loué.'),
+        c('locataire_id', 'INTEGER', 'FK', true, 'Locataire.'),
+        c('date_debut', 'DATE', '', true, 'Peut être passée ou future (location « à venir »). Un loyer doit exister pour le garage à cette date.'),
+        c('date_fin', 'DATE', '', false, 'NULL = sans échéance. Sinon dernier jour d\'un mois et ≥ date_debut. Une fin passée ou du jour termine la location.'),
+        c('nb_cles_remises', 'SMALLINT', '', true, '≥ 0 et ≤ garage.nb_cles_total − garage.nb_cles_reserve.')] },
+      { key: 'GARAGE', bg: B.blue, x: 640, y: 0, desc: 'Garage louable. Maximum 20 garages (contrôle applicatif).', cols: [PK(),
+        c('numero', 'VARCHAR(10)', '', true, 'Unique. Saisi en majuscules (ex. G01), non modifiable après création.'),
+        c('adresse', 'VARCHAR(200)', '', false, 'Présente dans les données de démonstration et utilisée par la recherche, mais ni affichée ni saisie dans la maquette. Vide pour les garages créés.'),
+        c('nb_cles_total', 'SMALLINT', '', true, '≥ 0 dans la maquette (> 0 dans les règles métier initiales : à trancher).'),
+        c('nb_cles_reserve', 'SMALLINT', '', true, '≥ 0 et ≤ nb_cles_total. Clés gardées en réserve, jamais remises. Clés disponibles = total − réserve.'),
+        c('statut', 'VARCHAR(15)', '', true, 'libre (défaut) ou indisponible. « Loué » n\'est jamais stocké : il est déduit de la location active.')] },
+      { key: 'LOYER_GARAGE', bg: B.blue, x: 640, y: 212, desc: 'Historique des loyers d\'un garage. Deux périodes d\'un même garage ne se chevauchent jamais.', cols: [PK(),
+        c('garage_id', 'INTEGER', 'FK', true, 'Garage concerné. Au moins un loyer à la création du garage.'),
+        c('montant', 'DECIMAL(8,2)', '', true, '> 0. Montant mensuel en euros.'),
+        c('date_debut', 'DATE', '', true, 'Strictement postérieure au début du loyer précédent du même garage.'),
+        c('date_fin', 'DATE', '', false, 'NULL = loyer courant. Renseignée automatiquement à la veille de date_debut du loyer suivant, jamais saisie.')] },
+      { key: 'ECHEANCE', bg: B.green, x: 320, y: 234, desc: 'Loyer dû pour une location et un mois. Le statut (à payer, partiel, payé) est déduit des versements.', cols: [PK(),
+        c('location_id', 'INTEGER', 'FK', true, 'Location concernée.'),
+        c('periode', 'DATE', '', true, 'Premier jour du mois concerné. Unique avec location_id.'),
+        c('montant_du', 'DECIMAL(8,2)', '', true, '> 0. Loyer en vigueur du garage pour cette période, figé à la création de l\'échéance.')] },
+      { key: 'VERSEMENT', bg: B.green, x: 320, y: 424, desc: 'Encaissement imputé à une échéance. Plusieurs versements peuvent solder une échéance (paiement partiel).', cols: [PK(),
+        c('echeance_id', 'INTEGER', 'FK', true, 'Échéance payée.'),
+        c('montant', 'DECIMAL(8,2)', '', true, '> 0. Le cumul des versements d\'une échéance ne dépasse pas montant_du.'),
+        c('mode_paiement', 'VARCHAR(10)', '', true, 'virement ou especes.'),
+        c('date_paiement', 'DATE', '', true, 'Date de réception, proposée à la date du jour.')] },
+      { key: 'REMARQUE', bg: B.amber, x: 960, y: 0, desc: 'Remarque ou interaction rattachée à un locataire ou à un garage, jamais à une location.', cols: [PK(),
+        c('locataire_id', 'INTEGER', 'FK', false, 'Renseigné si la remarque concerne un locataire.'),
+        c('garage_id', 'INTEGER', 'FK', false, 'Renseigné si la remarque concerne un garage. Exactement un des deux champs est renseigné.'),
+        c('date_creation', 'TIMESTAMP', '', true, 'Horodatée par le système, non modifiable.'),
+        c('type', 'VARCHAR(12)', '', true, 'information, probleme ou autre.'),
+        c('texte', 'TEXT', '', true, 'Texte enrichi (HTML : gras, italique, souligné, listes, liens). Non vide.'),
+        c('resolu', 'BOOLEAN', '', false, 'NULL si type ≠ probleme. Sinon false à la création, true une fois résolu.'),
+        c('date_resolution', 'DATE', '', false, 'Obligatoire quand resolu = true, NULL sinon. Effacée à la réouverture.')] },
+      { key: 'UTILISATEUR', bg: B.gray, x: 0, y: 344, desc: 'Compte d\'accès à l\'application. Il existe toujours au moins un admin actif.', cols: [PK(),
+        c('login', 'VARCHAR(50)', '', true, 'Unique.'),
+        c('email', 'VARCHAR(255)', '', true, 'Unique.'),
+        c('mot_de_passe_hash', 'VARCHAR(255)', '', true, 'Mot de passe haché, jamais en clair.'),
+        c('role', 'VARCHAR(20)', '', true, 'admin, gestionnaire ou lecture_seule.'),
+        c('actif', 'BOOLEAN', '', true, 'Défaut true. Impossible de désactiver ou supprimer le dernier admin actif.')] }
+    ];
+    const W = 260, RH = 22, HH = 34, OFF = 44;
+    E.forEach(e => { e.name = e.key; e.h = HH + e.cols.length * RH + 8 + 0; e.ay = e.y + OFF; });
+    const M = {}; E.forEach(e => M[e.key] = e);
+    const cards = E.map(e => ({ name: e.name, x: e.x, y: e.ay, w: W, h: e.h, bg: e.bg, rows: e.cols.map(k => ({ k: k.k, n: k.n, t: k.t.replace(/\(.*\)/, ''), kFg: k.kFg, fw: k.fw })) }));
+    const R = (e, dy) => [e.x + W, e.ay + dy], L = (e, dy) => [e.x, e.ay + dy], T = (e, dx) => [e.x + dx, e.ay], Bt = (e, dx) => [e.x + dx, e.ay + e.h];
+    const lines = [], lineLabels = [];
+    const lab = (x, y, t, strong) => lineLabels.push({ x, y, t, fill: strong ? '#344767' : '#67748E', fw: strong ? 700 : 400 });
+    const seg = (a, b) => lines.push({ d: 'M' + a[0] + ' ' + a[1] + ' L' + b[0] + ' ' + b[1] });
+    let a = R(M.LOCATAIRE, 17), b = L(M.LOCATION, 17); seg(a, b); lab(a[0] + 6, a[1] - 6, '1', 1); lab(b[0] - 32, b[1] - 6, '0..N');
+    a = L(M.GARAGE, 17); b = R(M.LOCATION, 17); seg(b, a); lab(a[0] - 14, a[1] - 6, '1', 1); lab(b[0] + 6, b[1] - 6, '0..N');
+    a = Bt(M.LOCATION, 130); b = T(M.ECHEANCE, 130); seg(a, b); lab(a[0] + 8, a[1] + 14, '1', 1); lab(b[0] + 8, b[1] - 6, '0..N');
+    a = Bt(M.ECHEANCE, 130); b = T(M.VERSEMENT, 130); seg(a, b); lab(a[0] + 8, a[1] + 14, '1', 1); lab(b[0] + 8, b[1] - 6, '0..N');
+    a = Bt(M.GARAGE, 130); b = T(M.LOYER_GARAGE, 130); seg(a, b); lab(a[0] + 8, a[1] + 14, '1', 1); lab(b[0] + 8, b[1] - 6, '1..N');
+    a = R(M.GARAGE, 17); b = L(M.REMARQUE, 17); seg(a, b); lab(a[0] + 6, a[1] - 6, '0..1', 1); lab(b[0] - 32, b[1] - 6, '0..N');
+    a = T(M.LOCATAIRE, 130); b = T(M.REMARQUE, 130);
+    lines.push({ d: 'M' + a[0] + ' ' + a[1] + ' L' + a[0] + ' 18 L' + b[0] + ' 18 L' + b[0] + ' ' + b[1] });
+    lab(a[0] + 8, a[1] - 6, '0..1', 1); lab(b[0] + 8, b[1] - 6, '0..N'); lab(540, 12, 'une remarque concerne un locataire OU un garage (XOR)');
+    const entities = E.map(e => ({ name: e.name, bg: e.bg, desc: e.desc, cols: e.cols }));
+    const rels = [
+      { p: 'GARAGE', c: 'LOYER_GARAGE', fk: 'garage_id', card: '1 — 1..N', del: 'CASCADE', rule: 'Le premier loyer est créé avec le garage. La suppression d\'un garage (admin, sans location) supprime son historique de loyers.' },
+      { p: 'GARAGE', c: 'LOCATION', fk: 'garage_id', card: '1 — 0..N', del: 'RESTRICT', rule: 'Un garage ayant un historique de locations ne peut pas être supprimé.' },
+      { p: 'LOCATAIRE', c: 'LOCATION', fk: 'locataire_id', card: '1 — 0..N', del: 'RESTRICT', rule: 'Un locataire ayant eu une location ou un paiement ne peut pas être supprimé.' },
+      { p: 'LOCATION', c: 'ECHEANCE', fk: 'location_id', card: '1 — 0..N', del: 'RESTRICT', rule: 'Une location portant des échéances ne peut être que clôturée.' },
+      { p: 'ECHEANCE', c: 'VERSEMENT', fk: 'echeance_id', card: '1 — 0..N', del: 'RESTRICT', rule: 'Les versements s\'annulent un par un (admin uniquement).' },
+      { p: 'LOCATAIRE', c: 'REMARQUE', fk: 'locataire_id', card: '0..1 — 0..N', del: 'CASCADE', rule: 'La suppression d\'un locataire supprime ses remarques.' },
+      { p: 'GARAGE', c: 'REMARQUE', fk: 'garage_id', card: '0..1 — 0..N', del: 'CASCADE', rule: 'La suppression d\'un garage supprime ses remarques.' }
+    ];
+    const enums = [
+      { n: 'UTILISATEUR.role', v: ['admin', 'gestionnaire', 'lecture_seule'] },
+      { n: 'GARAGE.statut', v: ['libre', 'indisponible'] },
+      { n: 'LOCATAIRE.civilite', v: ['M.', 'Mme'] },
+      { n: 'VERSEMENT.mode_paiement', v: ['virement', 'especes'] },
+      { n: 'REMARQUE.type', v: ['information', 'probleme', 'autre'] }
+    ];
+    const sqlRules = [
+      { k: 'UNIQUE', t: 'UTILISATEUR (login)', d: 'Un login par compte.' },
+      { k: 'UNIQUE', t: 'UTILISATEUR (email)', d: 'Un e-mail par compte.' },
+      { k: 'UNIQUE', t: 'GARAGE (numero)', d: 'Numéro de garage unique.' },
+      { k: 'UNIQUE', t: 'ECHEANCE (location_id, periode)', d: 'Une seule échéance par location et par mois.' },
+      { k: 'UNIQUE', t: 'LOYER_GARAGE (garage_id, date_debut)', d: 'Pas deux loyers débutant le même jour pour un garage.' },
+      { k: 'CHECK', t: 'GARAGE', d: 'nb_cles_total ≥ 0, nb_cles_reserve ≥ 0 et nb_cles_reserve ≤ nb_cles_total.' },
+      { k: 'CHECK', t: 'LOYER_GARAGE', d: 'montant > 0 et date_fin NULL ou ≥ date_debut.' },
+      { k: 'CHECK', t: 'LOCATION', d: 'nb_cles_remises ≥ 0 et date_fin NULL ou ≥ date_debut.' },
+      { k: 'CHECK', t: 'ECHEANCE / VERSEMENT', d: 'montant_du > 0 et montant > 0.' },
+      { k: 'CHECK', t: 'REMARQUE', d: '(locataire_id IS NULL) <> (garage_id IS NULL). resolu NULL si type ≠ probleme. date_resolution renseignée seulement si resolu = true.' }
+    ];
+    const derived = [
+      { n: 'LOCATION.statut', v: 'a_venir · active · terminee', c: 'a_venir si date_debut > date du jour. terminee si date_fin ≤ date du jour. active sinon (date_fin NULL ou future).' },
+      { n: 'GARAGE.statut_affiche', v: 'libre · loue · indisponible', c: 'loue si une location active a démarré ; sinon indisponible si GARAGE.statut = indisponible ; sinon libre. Une location à venir ne rend pas le garage loué.' },
+      { n: 'GARAGE.loyer_courant', v: 'montant ou vide', c: 'LOYER_GARAGE dont date_debut ≤ date du jour ≤ date_fin (ou date_fin NULL).' },
+      { n: 'LOYER_GARAGE.etat', v: 'a_venir · en_vigueur · cloture', c: 'a_venir si date_debut ≥ 1er du mois suivant ; en_vigueur si date_fin NULL ou ≥ date du jour ; cloture sinon.' },
+      { n: 'ECHEANCE.montant_recu', v: 'décimal', c: 'SUM(VERSEMENT.montant) de l\'échéance.' },
+      { n: 'ECHEANCE.reste_du', v: 'décimal ≥ 0', c: 'montant_du − montant_recu.' },
+      { n: 'ECHEANCE.statut', v: 'a_payer · partiel · paye', c: 'paye si reste_du = 0 et montant_recu > 0 ; partiel si montant_recu > 0 et reste_du > 0 ; a_payer si aucun versement.' },
+      { n: 'ECHEANCE.en_retard', v: 'booléen', c: 'Vrai si l\'échéance n\'est pas soldée et que sa période est passée.' },
+      { n: 'LOCATAIRE.statut', v: 'actuel · ancien · sans_location', c: 'actuel s\'il a une location active ; ancien s\'il a eu des locations mais aucune active ; sans_location s\'il n\'en a jamais eu.' },
+      { n: 'LOCATAIRE.solde', v: 'a_jour · en_retard', c: 'en_retard si au moins une de ses échéances est en retard.' }
+    ];
+    const appRules = [
+      { k: 'Garage', d: 'Maximum 20 garages au total.' },
+      { k: 'Loyer', d: 'Non-chevauchement des périodes d\'un garage. Un nouveau loyer clôture l\'ancien (date_fin = veille). Seul le dernier loyer est modifiable ; seul un dernier loyer à venir est supprimable. Blocage si un paiement existe déjà pour la période ou si une location a démarré depuis son début.' },
+      { k: 'Location', d: 'Une seule location active à la fois par garage. Garage libre exigé à la création. Un loyer doit exister à la date de début. Durée minimale d\'un mois calendrier (non contrôlée dans la maquette).' },
+      { k: 'Location', d: 'Suppression (admin) : à venir toujours possible ; active seulement sans paiement ; terminée jamais.' },
+      { k: 'Clés', d: 'nb_cles_remises ≤ nb_cles_total − nb_cles_reserve, y compris lors de la modification du garage (total − réserve ≥ clés remises de la location active).' },
+      { k: 'Échéance', d: 'Création manuelle par mois (garages avec location couvrant la période). Une échéance par location et par mois. Le montant dû est figé à la création.' },
+      { k: 'Versement', d: 'Cumul des versements ≤ montant_du. Paiement partiel strictement inférieur au reste dû ; sinon paiement en totalité. Annulation d\'un versement réservée à l\'admin.' },
+      { k: 'Locataire', d: 'Alerte de doublon sur nom + prénom, non bloquante.' },
+      { k: 'Utilisateur', d: 'Au moins un admin actif en permanence.' },
+      { k: 'Suppressions', d: 'Toute suppression définitive est réservée à l\'admin. Le gestionnaire clôture ou désactive.' }
+    ];
+    const changes = [
+      { k: 'VERSEMENT', d: 'Nouvelle table. Elle porte les paiements partiels et multiples. ECHEANCE ne contient plus statut, date_paiement ni mode_paiement : ces informations viennent des versements.' },
+      { k: 'REMARQUE', d: 'locataire_id devient facultatif ; ajout de garage_id (exactement un des deux renseigné) et de date_resolution.' },
+      { k: 'GARAGE', d: 'Ajout de statut (libre, indisponible), qui remplace la notion d\'activation ; le statut « loué » est calculé.' },
+      { k: 'ECHEANCE', d: 'Le statut devient calculé (à payer, partiel, payé).' }
+    ];
+    const dW = 1220, dH = Math.max(...E.map(e => e.ay + e.h)) + 16;
+    return { cards, lines, lineLabels, entities, rels, enums, sqlRules, derived, appRules, changes, dW, dH };
+  }
+}
+</script>
+</body>
+</html>
