@@ -1,0 +1,28 @@
+<div class="modal-backdrop" (mousedown)="backdropDown($event)" (click)="backdropClick($event)">
+  <div
+    #panel
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    [attr.aria-labelledby]="titleId"
+    [style.max-width.px]="width()"
+    (keydown)="trapFocus($event)"
+  >
+    <div class="modal__head">
+      <div class="modal__title" [id]="titleId">{{ title() }}</div>
+      <button type="button" class="modal__close" [appTooltip]="'commun.fermer' | translate" (click)="closed.emit()">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+    <div class="modal__body">
+      <ng-content />
+      @if (error(); as message) {
+        <div class="message-error" role="alert">{{ message }}</div>
+      }
+    </div>
+    <div class="modal__foot">
+      <ng-content select="[modalFooter]" />
+    </div>
+  </div>
+</div>

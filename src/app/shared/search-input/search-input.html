@@ -1,0 +1,13 @@
+<div class="si">
+  <i class="fa-solid fa-magnifying-glass si__icon" aria-hidden="true"></i>
+  <input
+    #field
+    type="search"
+    class="input si__field"
+    [value]="value()"
+    [placeholder]="placeholder()"
+    [attr.aria-label]="placeholder()"
+    (input)="typed(field.value)"
+    (keydown.enter)="submit(field.value)"
+  />
+</div>

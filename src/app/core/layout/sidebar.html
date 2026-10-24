@@ -1,0 +1,52 @@
+<div class="sb__brand">{{ 'app.titre' | translate }}</div>
+<hr class="sb__line" />
+
+<nav class="sb__nav" [attr.aria-label]="'nav.principale' | translate">
+  <ul>
+    @for (item of items; track item.path) {
+      <li>
+        <a
+          class="sb__link"
+          [routerLink]="['/', item.path]"
+          routerLinkActive="is-active"
+          [appTooltip]="collapsed() ? (item.labelKey | translate) : null"
+        >
+          <span class="sb__tile"><i class="fa-solid" [class]="item.icon"></i></span>
+          <span class="sb__label">{{ item.labelKey | translate }}</span>
+        </a>
+      </li>
+    }
+  </ul>
+</nav>
+
+<div class="sb__foot">
+  <hr class="sb__line" />
+  @if (user(); as current) {
+    <div class="sb__user">
+      <span class="sb__avatar" aria-hidden="true">{{ avatar() }}</span>
+      <div class="sb__who">
+        <b>{{ current.login }}</b>
+        <span>{{ 'role.' + current.role | translate }}</span>
+      </div>
+    </div>
+  }
+  <hr class="sb__line sb__line--thin" />
+  <button
+    type="button"
+    class="sb__action"
+    [appTooltip]="collapsed() ? ('auth.mdp.titre' | translate) : null"
+    (click)="changePassword.emit()"
+  >
+    <span class="sb__action-icon"><i class="fa-solid fa-key"></i></span>
+    <span class="sb__label">{{ 'auth.mdp.titre' | translate }}</span>
+  </button>
+  <button
+    type="button"
+    class="sb__action"
+    [appTooltip]="collapsed() ? ('auth.deconnexion.bouton' | translate) : null"
+    (click)="logout.emit()"
+  >
+    <span class="sb__action-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+    <span class="sb__label">{{ 'auth.deconnexion.bouton' | translate }}</span>
+  </button>
+</div>

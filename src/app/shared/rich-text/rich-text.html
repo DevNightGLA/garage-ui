@@ -1,0 +1,13 @@
+<quill-editor
+  class="rt"
+  format="html"
+  theme="snow"
+  [formControl]="inner"
+  [modules]="modules()"
+  [formats]="formats"
+  [placeholder]="placeholder()"
+  [readOnly]="readOnly()"
+  [sanitize]="true"
+  defaultEmptyValue=""
+  (onBlur)="blurred()"
+/>

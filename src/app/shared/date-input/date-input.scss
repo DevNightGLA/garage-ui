@@ -1,0 +1,32 @@
+:host {
+  display: block;
+}
+
+.di {
+  position: relative;
+  display: flex;
+}
+
+.di__field {
+  padding-right: 40px;
+}
+
+.di__btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: transparent;
+  color: var(--text-heading);
+  font-size: 14px;
+  cursor: pointer;
+
+  &:disabled {
+    color: var(--text-muted);
+    cursor: not-allowed;
+  }
+}

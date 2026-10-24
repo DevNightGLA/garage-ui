@@ -1,0 +1,234 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  flex: none;
+  position: sticky;
+  top: var(--space-4);
+  align-self: flex-start;
+  width: 256px;
+  min-height: calc(100vh - 2 * var(--space-4));
+  margin: var(--space-4) 0 var(--space-4) var(--space-4);
+  overflow: hidden;
+  border-radius: var(--radius-xl);
+  background: var(--surface-card);
+  box-shadow: var(--shadow-card);
+}
+
+:host(.is-collapsed) {
+  width: 72px;
+}
+
+.sb__brand {
+  padding: var(--space-6) var(--space-8);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-heading);
+  white-space: nowrap;
+}
+
+.sb__line {
+  height: 1px;
+  margin: 0 0 var(--space-2);
+  border: 0;
+  background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.4), transparent);
+}
+
+.sb__nav ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.sb__nav li {
+  margin-top: 2px;
+}
+
+.sb__link {
+  display: flex;
+  align-items: center;
+  margin: 0 var(--space-4);
+  padding: 10.8px var(--space-4);
+  border-radius: var(--radius-md);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-heading);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: all 0.2s var(--ease-soft);
+
+  &.is-active {
+    background: var(--white);
+    box-shadow: var(--shadow-xl);
+  }
+}
+
+.sb__tile {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  margin-right: var(--space-2);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  box-shadow: var(--shadow-sm);
+  font-size: 12px;
+  color: var(--text-heading);
+}
+
+.is-active .sb__tile {
+  background: var(--gradient-primary);
+  color: var(--white);
+}
+
+.sb__label {
+  margin-left: var(--space-1);
+}
+
+.sb__foot {
+  display: flex;
+  flex-direction: column;
+  margin-top: auto;
+
+  > .sb__line {
+    margin: 0;
+  }
+}
+
+.sb__user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: var(--space-4) var(--space-4) var(--space-3);
+}
+
+.sb__avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.sb__who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  font-size: 12px;
+
+  b {
+    overflow: hidden;
+    font-size: 13px;
+    color: var(--text-heading);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.sb__line--thin {
+  margin: 0 var(--space-4) var(--space-2);
+}
+
+.sb__action {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: calc(100% - 2 * var(--space-4));
+  height: 36px;
+  margin: 0 var(--space-4) 2px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-body);
+  white-space: nowrap;
+  cursor: pointer;
+
+  &:hover {
+    background: var(--surface-page);
+    color: var(--text-heading);
+  }
+}
+
+.sb__action-icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+}
+
+// Menu replié : une colonne d'icônes (boutons de 44 px) et l'avatar seul
+:host(.is-collapsed) {
+  .sb__brand,
+  .sb__who,
+  .sb__label {
+    display: none;
+  }
+
+  .sb__brand + .sb__line {
+    display: none;
+  }
+
+  .sb__nav {
+    padding: var(--space-5) 0;
+  }
+
+  .sb__nav ul {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-2);
+  }
+
+  .sb__link {
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    border-radius: var(--radius-lg);
+    background: transparent;
+    box-shadow: none;
+    font-size: 16px;
+
+    &.is-active {
+      background: var(--gradient-brand);
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+      color: var(--white);
+    }
+  }
+
+  .sb__tile {
+    width: auto;
+    height: auto;
+    margin: 0;
+    background: none;
+    box-shadow: none;
+    font-size: 16px;
+    color: inherit;
+  }
+
+  .is-active .sb__tile {
+    background: none;
+  }
+
+  .sb__user {
+    justify-content: center;
+    padding-inline: 0;
+  }
+
+  .sb__action {
+    justify-content: center;
+  }
+}

@@ -1,0 +1,56 @@
+.confirm__foot {
+  display: flex;
+  justify-content: center;
+  gap: var(--space-6);
+  width: 100%;
+}
+
+.confirm__refus {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.confirm__icon {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--gradient-danger);
+  box-shadow: 0 4px 8px rgba(212, 5, 5, 0.25);
+  color: var(--white);
+  font-size: 18px;
+}
+
+.confirm__refus-titre {
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.confirm__motifs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: var(--space-3) 0 0;
+  padding: 0;
+  list-style: none;
+
+  li {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+
+  i {
+    flex: none;
+    margin-top: 3px;
+    font-size: 12px;
+    color: var(--color-danger);
+  }
+}

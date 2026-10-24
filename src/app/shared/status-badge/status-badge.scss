@@ -1,0 +1,46 @@
+:host {
+  display: inline-block;
+  padding: 8.8px 14.4px;
+  border-radius: var(--radius-chip);
+  color: var(--white);
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+:host(.is-block) {
+  display: block;
+  width: 106px;
+  margin: 0 auto;
+}
+
+:host(.tone-primary) {
+  background: var(--gradient-primary);
+}
+
+:host(.tone-info) {
+  background: var(--gradient-info);
+}
+
+:host(.tone-success) {
+  background: var(--gradient-success);
+}
+
+:host(.tone-warning) {
+  background: var(--gradient-warning);
+}
+
+:host(.tone-danger) {
+  background: var(--gradient-danger);
+}
+
+:host(.tone-dark) {
+  background: var(--gradient-dark);
+}
+
+:host(.tone-ancien) {
+  background: var(--gradient-ancien);
+}
