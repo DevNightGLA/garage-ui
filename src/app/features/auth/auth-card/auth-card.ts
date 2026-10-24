@@ -1,10 +1,17 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
+import { LanguageSwitch } from '../../../core/layout/language-switch';
 
-/** Carte centrée des écrans publics (connexion, mot de passe oublié, réinitialisation). */
+/**
+ * Carte centrée des écrans publics (connexion, déconnexion, mot de passe oublié,
+ * réinitialisation), avec le choix FR/EN : l'utilisateur n'est pas encore dans
+ * l'application et ne voit donc pas l'en-tête.
+ */
 @Component({
   selector: 'app-auth-card',
+  imports: [LanguageSwitch],
   template: `
     <div class="auth">
+      <div class="auth__lang"><app-language-switch /></div>
       <div class="auth__card card">
         <div class="auth__head">
           <h1 class="auth__title">{{ title() }}</h1>
@@ -18,12 +25,19 @@ import { ChangeDetectionStrategy, Component, input } from '@angular/core';
   `,
   styles: `
     .auth {
+      position: relative;
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
       padding: var(--space-6);
       background: var(--surface-page);
+    }
+
+    .auth__lang {
+      position: absolute;
+      top: var(--space-6);
+      right: var(--space-6);
     }
 
     .auth__card {

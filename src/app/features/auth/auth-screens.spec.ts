@@ -4,6 +4,7 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router, convertToParamMap, provideRouter } from '@angular/router';
 import { provideTestTranslations } from '../../../testing/translations';
 import { AuthService } from '../../core/auth/auth-service';
+import { LanguageService } from '../../core/language-service';
 import { ChangePassword } from './change-password/change-password';
 import { ForgotPassword } from './forgot-password/forgot-password';
 import { Login } from './login/login';
@@ -31,6 +32,7 @@ abstract class Screen<T> {
 
   async setup(component: new () => T, query: Record<string, string> = {}) {
     sessionStorage.clear();
+    localStorage.clear();
     await TestBed.configureTestingModule({ imports: [component as never], providers: providers(query) }).compileComponents();
     this.http = TestBed.inject(HttpTestingController);
     this.router = TestBed.inject(Router);
@@ -64,6 +66,27 @@ abstract class Screen<T> {
     return this.root.querySelector('.message-error[role="alert"]')?.textContent?.trim() ?? null;
   }
 }
+
+describe('Écrans publics : choix de la langue', () => {
+  it.each([
+    ['Login', Login],
+    ['ForgotPassword', ForgotPassword],
+    ['ResetPassword', ResetPassword],
+  ] as [string, new () => unknown][])('%s propose FR et EN avant toute connexion', async (_name, component) => {
+    const screen = new (class extends Screen<unknown> {})();
+    await screen.setup(component);
+    const [fr, en] = Array.from(screen.root.querySelectorAll<HTMLButtonElement>('.ls__btn'));
+    expect([fr.textContent!.trim(), en.textContent!.trim()]).toEqual(['FR', 'EN']);
+    expect(fr.classList.contains('is-active')).toBe(true);
+
+    en.click();
+    await screen.fixture.whenStable();
+    expect(TestBed.inject(LanguageService).lang()).toBe('en');
+    expect(en.classList.contains('is-active')).toBe(true);
+    expect(fr.classList.contains('is-active')).toBe(false);
+    expect(localStorage.getItem('gg-lang')).toBe('en');
+  });
+});
 
 describe('Login', () => {
   const screen = new (class extends Screen<Login> {})();
