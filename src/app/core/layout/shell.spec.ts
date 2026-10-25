@@ -6,10 +6,10 @@ import { Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
 import { provideTestTranslations } from '../../../testing/translations';
 import { AuthService } from '../auth/auth-service';
-import { Role } from '../auth/auth.models';
+import { Role, Utilisateur } from '../auth/auth.models';
 import { LanguageService } from '../language-service';
 import { Shell } from './shell';
-import { initials } from './sidebar';
+import { displayName, initials, userInitials } from './sidebar';
 
 @Component({ template: `<p id="page">Page</p>` })
 class Page {}
@@ -23,6 +23,27 @@ describe('initials', () => {
     ['', ''],
   ])('%s → %s', (login, expected) => {
     expect(initials(login)).toBe(expected);
+  });
+});
+
+describe('displayName et userInitials', () => {
+  const base: Utilisateur = { id: 1, login: 'marie.dupont', email: 'm@e.c', role: 'GESTIONNAIRE', actif: true };
+
+  it('affiche « Prénom Nom » et leurs initiales', () => {
+    const user = { ...base, prenom: 'Marie', nom: 'Dupont' };
+    expect(displayName(user)).toBe('Marie Dupont');
+    expect(userInitials(user)).toBe('MD');
+  });
+
+  it('retombe sur le login quand le compte n\'a ni prénom ni nom', () => {
+    expect(displayName(base)).toBe('marie.dupont');
+    expect(displayName({ ...base, prenom: ' ', nom: null })).toBe('marie.dupont');
+    expect(userInitials(base)).toBe('MD');
+  });
+
+  it('se contente de ce qui est renseigné', () => {
+    expect(displayName({ ...base, nom: 'Dupont' })).toBe('Dupont');
+    expect(userInitials({ ...base, nom: 'dupont' })).toBe('D');
   });
 });
 
@@ -85,6 +106,15 @@ describe('Shell', () => {
     expect(root.querySelector('.sb__avatar')!.textContent).toBe('MD');
     expect(root.querySelector('.sb__who')!.textContent).toContain('marie.dupont');
     expect(root.querySelector('.sb__who')!.textContent).toContain('Lecture seule');
+  });
+
+  it('affiche le prénom et le nom de l\'utilisateur dans le menu plutôt que son login', async () => {
+    await open('/garages');
+    auth.user.set({ ...auth.user()!, prenom: 'Marie', nom: 'Dupont' });
+    harness.detectChanges();
+    expect(root.querySelector('.sb__avatar')!.textContent).toBe('MD');
+    expect(root.querySelector('.sb__who b')!.textContent).toBe('Marie Dupont');
+    expect(root.querySelector('.sb__who')!.textContent).not.toContain('marie.dupont');
   });
 
   it('propose les cinq écrans du menu et marque la page active', async () => {

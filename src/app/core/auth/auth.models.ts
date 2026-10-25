@@ -3,6 +3,9 @@ export type Role = 'ADMIN' | 'GESTIONNAIRE' | 'LECTURE_SEULE';
 export interface Utilisateur {
   id: number;
   login: string;
+  /** Facultatifs (RG-ROL-04) : `null` quand le compte n'en a pas, le menu affiche alors le login. */
+  prenom?: string | null;
+  nom?: string | null;
   email: string;
   role: Role;
   actif: boolean;

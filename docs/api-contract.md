@@ -104,7 +104,7 @@ Réponse 200 :
   "accessToken": "eyJ...",
   "tokenType": "Bearer",
   "expiresIn": 28800,
-  "utilisateur": { "id": 1, "login": "admin", "email": "admin@example.com", "role": "ADMIN", "actif": true }
+  "utilisateur": { "id": 1, "login": "admin", "prenom": "Alice", "nom": "Verhaegen", "email": "admin@example.com", "role": "ADMIN", "actif": true }
 }
 ```
 Erreurs :
@@ -144,9 +144,10 @@ Requête : `{ "jeton": "<jeton du lien>", "nouveauMotDePasse": "..." }`. Répons
 
 ## 3. Comptes utilisateurs (implémenté, `ADMIN` seulement, sans écran prévu pour l'instant)
 
-`UtilisateurDTO` : `{ "id": 2, "login": "paul", "email": "paul@example.com", "role": "GESTIONNAIRE", "actif": true }`. Le mot de passe n'est jamais renvoyé.
-- Création (`POST`) : `login`, `email`, `motDePasse` et `role` obligatoires ; `id` et `actif` ignorés (le compte est créé actif).
-- Modification (`PUT`) : `email`, `role` et `actif` obligatoires ; `id`, `login` et `motDePasse` ignorés.
+`UtilisateurDTO` : `{ "id": 2, "login": "paul", "prenom": "Paul", "nom": "Martin", "email": "paul@example.com", "role": "GESTIONNAIRE", "actif": true }`. Le mot de passe n'est jamais renvoyé.
+- Création (`POST`) : `login`, `email`, `motDePasse` et `role` obligatoires ; `prenom` et `nom` facultatifs ; `id` et `actif` ignorés (le compte est créé actif).
+- Modification (`PUT`) : `email`, `role` et `actif` obligatoires ; `prenom` et `nom` **remplacent** les valeurs actuelles (absents ou vides, ils sont effacés : renvoyer les deux à chaque `PUT`) ; `id`, `login` et `motDePasse` ignorés.
+- `prenom` et `nom` (RG-ROL-04) : facultatifs, 100 caractères au plus, espaces retirés ; un texte vide ou blanc est enregistré comme absent et renvoyé `null`. Les comptes existants et le premier administrateur créé au démarrage n'en ont pas : le front affiche alors le login.
 
 | Méthode et chemin | Requête | Réponse |
 | --- | --- | --- |
@@ -162,7 +163,7 @@ Requête : `{ "jeton": "<jeton du lien>", "nouveauMotDePasse": "..." }`. Répons
 | 409 | `UTIL_LOGIN_EXISTE` | Ce login existe déjà. |
 | 409 | `UTIL_EMAIL_EXISTE` | Cet e-mail existe déjà. |
 | 409 | `UTIL_DERNIER_ADMIN` | Il doit toujours rester au moins un administrateur actif. (désactivation, rétrogradation ou suppression du dernier admin actif) |
-| 422 | `VALIDATION` | login obligatoire (50 caractères au plus), e-mail obligatoire et valide, mot de passe de 8 à 72 caractères, rôle obligatoire |
+| 422 | `VALIDATION` | login obligatoire (50 caractères au plus), e-mail obligatoire et valide, mot de passe de 8 à 72 caractères, rôle obligatoire ; `fieldErrors.prenom` : Le prénom ne peut pas dépasser 100 caractères. ; `fieldErrors.nom` : Le nom ne peut pas dépasser 100 caractères. |
 
 Premier administrateur (hors profil `dev`) : au démarrage, si aucun compte n'existe, l'API crée un `ADMIN` actif à partir des variables d'environnement `ADMIN_LOGIN`, `ADMIN_EMAIL` et `ADMIN_PASSWORD` (définies toutes les trois, mot de passe de 8 à 72 caractères). Les comptes suivants se créent ensuite par `POST /api/utilisateurs`.
 
@@ -352,7 +353,7 @@ Comme pour les autres listes, les paramètres de recherche (`mois`, `statut`, `q
 
 **Les lignes d'un mois.** Il y a une ligne par **location dont la période touche le mois** : une location qui commence en cours de mois a sa ligne (loyer entier, sans prorata), une location terminée garde les lignes de ses mois passés, une location à venir a des lignes pour ses mois futurs (paiements anticipés). Le montant dû est le loyer en vigueur au 1er du mois (ou à la date de début si elle est plus tardive), **figé** dans l'échéance dès qu'elle existe.
 
-**Les échéances** (décision du 25/10/2026) : l'API crée l'échéance du mois courant de chaque location qui le couvre, **chaque jour** (tâche planifiée, `app.echeances.cron`, 1 h par défaut) et **à la création ou à la modification d'une location** ; elle crée aussi l'échéance d'un autre mois **au premier versement** (mois futur, ou mois passé non suivi). Les mois passés ne sont jamais rattrapés : une ligne de mois passé sans échéance enregistrée est « à payer » mais **jamais en retard**.
+**Les échéances** (décision du 25/10/2026) : l'API crée l'échéance du mois courant de chaque location qui le couvre, **chaque jour** (tâche planifiée, réglable dans `application.yaml` : `app.echeances.actif` pour la supprimer, `app.echeances.cron` pour choisir le moment, 1 h par défaut à l'heure de `app.timezone`) et **à la création ou à la modification d'une location** ; elle crée aussi l'échéance d'un autre mois **au premier versement** (mois futur, ou mois passé non suivi). Les mois passés ne sont jamais rattrapés : une ligne de mois passé sans échéance enregistrée est « à payer » mais **jamais en retard**.
 
 `PaiementDTO` (une ligne ; en entrée, tout sauf `locationId`, `mois`, `type`, `montant`, `modePaiement` et `datePaiement` est ignoré, et ces cinq derniers champs sont en écriture seule ou ne servent qu'à la saisie) :
 ```json

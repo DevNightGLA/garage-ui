@@ -22,10 +22,10 @@
 <div class="sb__foot">
   <hr class="sb__line" />
   @if (user(); as current) {
-    <div class="sb__user" [appTooltip]="collapsed() ? current.login + ' — ' + ('role.' + current.role | translate) : null">
+    <div class="sb__user" [appTooltip]="collapsed() ? name() + ' — ' + ('role.' + current.role | translate) : null">
       <span class="sb__avatar" aria-hidden="true">{{ avatar() }}</span>
       <div class="sb__who">
-        <b>{{ current.login }}</b>
+        <b>{{ name() }}</b>
         <span>{{ 'role.' + current.role | translate }}</span>
       </div>
     </div>

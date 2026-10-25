@@ -12,6 +12,18 @@ export function initials(login: string): string {
   return letters.toUpperCase();
 }
 
+/** « Prénom Nom » ; le login tant que le compte n'a ni prénom ni nom. */
+export function displayName(user: Utilisateur): string {
+  return [user.prenom, user.nom].map((part) => part?.trim()).filter(Boolean).join(' ') || user.login;
+}
+
+/** Initiales du prénom et du nom, ou celles du login à défaut. */
+export function userInitials(user: Utilisateur): string {
+  const first = user.prenom?.trim().charAt(0) ?? '';
+  const last = user.nom?.trim().charAt(0) ?? '';
+  return first || last ? (first + last).toUpperCase() : initials(user.login);
+}
+
 /** Menu latéral repliable : navigation, utilisateur connecté, mot de passe et déconnexion. */
 @Component({
   selector: 'app-sidebar',
@@ -31,5 +43,12 @@ export class Sidebar {
   readonly logout = output<void>();
 
   protected readonly items = NAV_ITEMS;
-  protected readonly avatar = computed(() => initials(this.user()?.login ?? ''));
+  protected readonly avatar = computed(() => {
+    const current = this.user();
+    return current ? userInitials(current) : '';
+  });
+  protected readonly name = computed(() => {
+    const current = this.user();
+    return current ? displayName(current) : '';
+  });
 }

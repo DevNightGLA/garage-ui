@@ -58,6 +58,7 @@ Convention : chaque règle porte un identifiant `RG-<domaine>-<n°>` pour la tra
 - **RG-ROL-01** – Pour un utilisateur Lecture seule, les boutons « Nouveau … », les boutons de paiement, « Nouvelle remarque » et les boutons résolu / rouvrir sont masqués. Les icônes « Modifier » deviennent « Visualiser ».
 - **RG-ROL-02** – Toute suppression définitive est réservée à l'Admin. Le Gestionnaire ne peut que désactiver (statut Indisponible), clôturer (date de fin) ou, pour un loyer à venir, supprimer le dernier loyer (RG-LOY-07).
 - **RG-ROL-03** – La gestion des comptes utilisateurs (création, désactivation, dernier admin) n'est pas présente dans la maquette. Voir chapitre 13.
+- **RG-ROL-04** – Un compte peut porter un prénom et un nom, tous deux facultatifs (100 caractères au plus, espaces retirés, un texte vide est enregistré comme absent). Le menu affiche « Prénom Nom » quand ils existent, sinon le login. Les comptes existants et le premier administrateur n'en ont pas.
 
 ---
 
