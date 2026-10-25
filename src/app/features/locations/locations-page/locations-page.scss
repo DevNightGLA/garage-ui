@@ -1,0 +1,113 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.locataire {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  text-align: left;
+
+  b {
+    min-width: 0;
+    overflow: hidden;
+    font-size: 13px;
+    line-height: 1.2;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    color: var(--text-heading);
+  }
+}
+
+.avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.avatar--a-venir {
+  background: linear-gradient(310deg, var(--orange-500), var(--yellow-400));
+}
+
+.avatar--terminee {
+  background: var(--gray-500);
+}
+
+.garage {
+  color: var(--text-heading);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.key {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.loyer {
+  font-variant-numeric: tabular-nums;
+}
+
+.actions {
+  display: inline-flex;
+  gap: var(--space-2);
+  white-space: nowrap;
+}
+
+// Période de fin des locations terminées (RG-LOC-05)
+.periode {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-4);
+}
+
+// Chaque borne garde son libellé : sur smartphone, les deux champs passent sur deux lignes sans les séparer
+.periode__champ {
+  display: flex;
+  align-items: center;
+  gap: var(--space-2);
+}
+
+.periode__texte {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.periode__date {
+  display: block;
+  width: 160px;
+}
+
+.icon-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-size: 14px;
+  color: var(--text-body);
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: var(--text-heading);
+  }
+}

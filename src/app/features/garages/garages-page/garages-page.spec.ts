@@ -2,6 +2,7 @@ import { HttpRequest, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { COMPTEURS, garage, libre, loyer, pageOf } from '../../../../testing/garage-fixtures';
+import { location } from '../../../../testing/location-fixtures';
 import { provideTestTranslations } from '../../../../testing/translations';
 import { AuthService } from '../../../core/auth/auth-service';
 import { Role } from '../../../core/auth/auth.models';
@@ -449,6 +450,26 @@ describe('GaragesPage', () => {
       await settle();
       expect(root.querySelector('app-loyers-history')).not.toBeNull();
       expect(root.querySelector('.pm')).toBeNull();
+    });
+
+    it('propose aussi l\'historique des locations, qui s\'ouvre au clic', async () => {
+      await open('ADMIN');
+      await click(root.querySelector('tbody tr:first-child td:nth-last-child(2) .icon-btn'));
+      expect(Array.from(root.querySelectorAll('.pm__item')).map((item) => text(item))).toEqual([
+        'Historique des loyers',
+        'Historique des locations',
+      ]);
+      await click(root.querySelectorAll('.pm__item')[1]);
+      const request = http.expectOne((r) => r.url === '/api/garages/1/locations');
+      expect(request.request.params.get('size')).toBe('5');
+      request.flush(pageOf([location()], 1, 0, 5));
+      await settle();
+      expect(text(root.querySelector('.modal__title'))).toBe('Historique des locations · G01');
+      expect(root.querySelector('app-loyers-history')).toBeNull();
+      expect(root.querySelector('.pm')).toBeNull();
+
+      await click(root.querySelector('.modal__foot .btn--primary'));
+      expect(root.querySelector('app-locations-history')).toBeNull();
     });
 
     it('recharge la liste quand un loyer change', async () => {

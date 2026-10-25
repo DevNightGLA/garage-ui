@@ -149,6 +149,17 @@
   }
 }
 
+// Carte (tablette, smartphone) : un tiret plutôt qu'une valeur vide, et pas de libellé sans valeur
+@media (max-width: 991.98px) {
+  .dash-if-empty:empty::before {
+    content: '—';
+  }
+
+  .dt td:has(> .cell-empty) {
+    display: none !important;
+  }
+}
+
 .sr-only {
   position: absolute;
   width: 1px;

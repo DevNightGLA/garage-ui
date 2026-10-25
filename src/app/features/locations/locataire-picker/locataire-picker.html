@@ -1,0 +1,55 @@
+<div class="picker">
+  <div class="picker__search">
+    <i class="fa-solid fa-magnifying-glass picker__icon" aria-hidden="true"></i>
+    <input
+      #field
+      class="input picker__field"
+      autocomplete="off"
+      [value]="text()"
+      [disabled]="disabled()"
+      [placeholder]="'locations.form.rechercheLocataire' | translate"
+      [attr.aria-label]="'locations.form.rechercheLocataire' | translate"
+      (input)="typed(field.value)"
+      (keydown.enter)="submit($event, field.value)"
+      (blur)="touched()"
+    />
+  </div>
+
+  <div class="picker__list" role="listbox" [attr.aria-label]="'locations.form.locataires' | translate">
+    @if (loadError(); as message) {
+      <div class="picker__state picker__state--error">
+        {{ message }}
+        <button type="button" class="link-muted" (click)="list.reload()">{{ 'commun.reessayer' | translate }}</button>
+      </div>
+    } @else if (list.isLoading() && rows().length === 0) {
+      <div class="picker__state">{{ 'commun.chargement' | translate }}</div>
+    } @else if (rows().length === 0) {
+      <div class="picker__state">{{ 'locations.form.aucunLocataire' | translate }}</div>
+    } @else {
+      @for (locataire of rows(); track locataire.id) {
+        <button
+          type="button"
+          role="option"
+          class="picker__row"
+          [class.is-selected]="locataire.id === selectedId()"
+          [attr.aria-selected]="locataire.id === selectedId()"
+          [disabled]="disabled()"
+          (click)="pick(locataire)"
+        >
+          <b>{{ fullName(locataire) }}</b>&ngsp;<span class="picker__statut">{{ 'locataires.statut.' + locataire.statut | translate }}</span>
+        </button>
+      }
+    }
+  </div>
+
+  @if (total() > pageSize) {
+    <app-pagination
+      class="picker__pager"
+      [page]="page()"
+      [size]="pageSize"
+      [total]="total()"
+      [noun]="'locataires.nom' | translate"
+      (pageChange)="page.set($event)"
+    />
+  }
+</div>

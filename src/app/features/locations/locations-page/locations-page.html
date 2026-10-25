@@ -1,0 +1,122 @@
+<app-filter-buttons [options]="filterOptions()" [value]="filter()" (valueChange)="setFilter($event)" />
+
+<app-data-table
+  [columns]="columns"
+  [rows]="rows()"
+  [total]="total()"
+  [size]="pageSize"
+  [noun]="'locations.nom' | translate"
+  [(page)]="page"
+  [(sort)]="sort"
+  [loading]="list.isLoading()"
+  [error]="loadError()"
+  [rowKey]="rowKey"
+  (retry)="refresh()"
+>
+  <app-search-input
+    dtToolbarStart
+    [value]="search()"
+    [placeholder]="'locations.recherche' | translate"
+    (valueChange)="setSearch($event)"
+  />
+  @if (roles.canWrite()) {
+    <button dtToolbarEnd type="button" class="btn btn--primary" (click)="openForm(null)">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'locations.nouvelle' | translate }}
+    </button>
+  }
+
+  @if (filter() === 'TERMINEE') {
+    <div dtAfterToolbar class="periode">
+      <div class="periode__champ">
+        <span class="periode__texte">{{ 'locations.periode.entre' | translate }}</span>
+        <app-date-input class="periode__date" [formControl]="finDu" />
+      </div>
+      <div class="periode__champ">
+        <span class="periode__texte">{{ 'locations.periode.et' | translate }}</span>
+        <app-date-input class="periode__date" [formControl]="finAu" />
+        @if (hasPeriod()) {
+          <button
+            type="button"
+            class="icon-link"
+            [appTooltip]="'locations.periode.effacer' | translate"
+            (click)="clearPeriod()"
+          >
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+    </div>
+  }
+
+  <ng-template appCell="locataire" let-location>
+    <span class="locataire">
+      <span
+        class="avatar"
+        [class.avatar--a-venir]="location.statut === 'A_VENIR'"
+        [class.avatar--terminee]="location.statut === 'TERMINEE'"
+        aria-hidden="true"
+        >{{ initials(location) }}</span
+      >
+      <b [attr.title]="location.locataire.prenom + ' ' + location.locataire.nom">{{ location.locataire.prenom }} {{ location.locataire.nom }}</b>
+    </span>
+  </ng-template>
+  <ng-template appCell="garage" let-location>
+    <b class="garage">{{ location.garage.numero }}</b>
+  </ng-template>
+  <ng-template appCell="dateDebut" let-location>
+    <span class="nowrap">{{ date(location.dateDebut) }}</span>
+  </ng-template>
+  <ng-template appCell="dateFin" let-location>
+    <span class="nowrap dash-if-empty">{{ date(location.dateFin) }}</span>
+  </ng-template>
+  <ng-template appCell="loyer" let-location>
+    @if (location.loyer !== null) {
+      <span class="loyer">{{ location.loyer | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</span>
+    }
+  </ng-template>
+  <ng-template appCell="nbClesRemises" let-location>
+    <span class="nowrap">{{ location.nbClesRemises }} <i class="fa-solid fa-key key" aria-hidden="true"></i></span>
+  </ng-template>
+  <ng-template appCell="actions" let-location>
+    <span class="actions" [class.cell-empty]="!isOpen(location)">
+      @if (isOpen(location)) {
+        <button
+          type="button"
+          class="icon-btn"
+          [appTooltip]="(roles.isReadOnly() ? 'locations.visualiser' : 'locations.modifier') | translate"
+          (click)="openForm(location)"
+        >
+          <i class="fa-solid" [class.fa-eye]="roles.isReadOnly()" [class.fa-pen]="!roles.isReadOnly()" aria-hidden="true"></i>
+        </button>
+        @if (roles.canDelete()) {
+          <button type="button" class="icon-btn" [appTooltip]="'locations.supprimer' | translate" (click)="askDelete(location)">
+            <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+          </button>
+        }
+      }
+    </span>
+  </ng-template>
+</app-data-table>
+
+@if (form(); as current) {
+  <app-location-form
+    [location]="current.location"
+    [readOnly]="roles.isReadOnly()"
+    (saved)="formSaved($event)"
+    (closed)="form.set(null)"
+  />
+}
+
+@if (deletion(); as current) {
+  <app-confirm
+    [title]="(current.refusal ? 'locations.suppression.refusTitre' : 'locations.suppression.titre') | translate"
+    [message]="
+      (current.refusal ? 'locations.suppression.refus' : 'locations.suppression.message')
+        | translate: { locataire: current.location.locataire.prenom + ' ' + current.location.locataire.nom, garage: current.location.garage.numero }
+    "
+    [reasons]="current.refusal ?? []"
+    [error]="current.error"
+    (confirmed)="confirmDelete()"
+    (cancelled)="deletion.set(null)"
+  />
+}

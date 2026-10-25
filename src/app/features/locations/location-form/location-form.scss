@@ -1,0 +1,32 @@
+// Le champ « clés remises » est étroit (120 px), comme dans la maquette
+@media (min-width: 576px) {
+  .lf-cles {
+    max-width: 120px;
+  }
+}
+
+// Clés disponibles, réserve et loyer du garage choisi : la hauteur est réservée pour que la fenêtre ne saute pas
+.lf-info {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  min-height: 18px;
+  font-size: 12px;
+}
+
+.lf-aide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+// Smartphone : une information par ligne, sans le point de séparation
+@media (max-width: 575.98px) {
+  .lf-info {
+    flex-direction: column;
+
+    [aria-hidden='true'] {
+      display: none;
+    }
+  }
+}

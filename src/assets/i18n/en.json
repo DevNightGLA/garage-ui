@@ -117,7 +117,8 @@
     "supprimer": "Delete garage",
     "historiqueMenu": "Rent and lease history",
     "menu": {
-      "loyers": "Rent history"
+      "loyers": "Rent history",
+      "locations": "Lease history"
     },
     "form": {
       "titreNouveau": "New garage",
@@ -229,6 +230,70 @@
       "message": "This action is final: the tenant and their remarks will be deleted."
     }
   },
+  "locations": {
+    "nom": "leases",
+    "nouvelle": "New lease",
+    "recherche": "Filter by tenant or garage",
+    "filtre": {
+      "ACTIVE": "Active",
+      "A_VENIR": "Upcoming",
+      "TERMINEE": "Ended"
+    },
+    "statut": {
+      "ACTIVE": "Active",
+      "A_VENIR": "Upcoming",
+      "TERMINEE": "Ended"
+    },
+    "col": {
+      "locataire": "Tenant",
+      "garage": "Garage",
+      "debut": "Start",
+      "fin": "End",
+      "loyer": "Rent",
+      "cles": "Keys",
+      "statut": "Status",
+      "actions": "Actions"
+    },
+    "modifier": "Edit lease",
+    "visualiser": "View lease",
+    "supprimer": "Delete lease",
+    "periode": {
+      "entre": "Ends between",
+      "et": "and",
+      "effacer": "Clear dates"
+    },
+    "form": {
+      "titreNouvelle": "New lease",
+      "titreModifier": "Edit lease",
+      "titreVisualiser": "View lease",
+      "locataire": "Tenant",
+      "locataires": "Tenants",
+      "rechercheLocataire": "Search for a tenant (last name, first name)…",
+      "aucunLocataire": "No tenant found.",
+      "garageLibre": "Available garage",
+      "garage": "Garage",
+      "debut": "Start",
+      "fin": "End date",
+      "cles": "Keys issued",
+      "infoCles": "Keys available: {{n}} (reserve: {{reserve}})",
+      "infoLoyer": "Rent at start date: {{montant}}/month",
+      "infoLoyerAbsent": "Rent at start date: —",
+      "aucunGarage": "No available garage at the moment.",
+      "aideFinPassee": "An end date in the past or today ends the lease: it becomes “Ended” and the garage becomes available again.",
+      "aideFinFuture": "A future end date is saved and the lease stays active until then.",
+      "aideFinDernierJour": "The end date must be the last day of a month."
+    },
+    "suppression": {
+      "titre": "Delete the lease?",
+      "message": "The lease of {{locataire}} on garage {{garage}} will be permanently deleted.",
+      "refusTitre": "Deletion not possible",
+      "refus": "The lease of {{locataire}} on garage {{garage}} cannot be deleted:"
+    },
+    "historique": {
+      "titre": "Lease history · {{numero}}",
+      "vide": "This garage has never been rented."
+    }
+  },
   "erreur": {
     "generique": "An error occurred.",
     "RESEAU": "Unable to reach the server.",
@@ -242,6 +307,15 @@
     "VALIDATION": "Required fields are missing or invalid.",
     "LOCT_DOUBLON": "A tenant with the same name and first name already exists. You can still save.",
     "LOCT_SUPPRESSION_REFUSEE": "This tenant cannot be deleted.",
-    "LOCT_INTROUVABLE": "Tenant not found."
+    "LOCT_INTROUVABLE": "Tenant not found.",
+    "LOC_INTROUVABLE": "Lease not found.",
+    "LOC_GARAGE_NON_LIBRE": "This garage is not available.",
+    "LOC_LOYER_ABSENT": "No rent is defined for this garage on this date.",
+    "LOC_CLES_NEGATIVES": "The number of keys issued cannot be negative.",
+    "LOC_FIN_PAS_DERNIER_JOUR": "The end date must be the last day of a month.",
+    "LOC_FIN_AVANT_DEBUT": "The end date must be on or after the start date.",
+    "LOC_FIN_INTERDITE": "An end date is only possible for an active lease.",
+    "LOC_TERMINEE_NON_MODIFIABLE": "An ended lease can no longer be edited.",
+    "LOC_TERMINEE_NON_SUPPRIMABLE": "An ended lease is part of the garage's history and cannot be deleted."
   }
 }

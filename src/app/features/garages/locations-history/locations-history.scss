@@ -1,0 +1,52 @@
+// Complète loyers-history.scss (tableau, cartes sur smartphone) pour les colonnes propres aux locations
+.lh__center {
+  text-align: center !important;
+}
+
+.lh__nowrap {
+  white-space: nowrap;
+}
+
+.lh__loyer {
+  font-variant-numeric: tabular-nums;
+}
+
+.lh__key {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.lh__locataire {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  text-align: left;
+
+  b {
+    color: var(--text-heading);
+    font-size: 13px;
+  }
+}
+
+.lh__avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.lh__avatar--a-venir {
+  background: linear-gradient(310deg, var(--orange-500), var(--yellow-400));
+}
+
+.lh__avatar--terminee {
+  background: var(--gray-500);
+}

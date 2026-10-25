@@ -17,6 +17,7 @@ import { Tooltip } from '../../../shared/tooltip/tooltip';
 import { GarageApi } from '../garage-api';
 import { GarageForm } from '../garage-form/garage-form';
 import { GarageDTO, GarageFilter, GarageStatut } from '../garage.models';
+import { LocationsHistory } from '../locations-history/locations-history';
 import { LoyersHistory } from '../loyers-history/loyers-history';
 
 export const GARAGES_PAGE_SIZE = 10;
@@ -63,6 +64,7 @@ interface Deletion {
     Confirm,
     GarageForm,
     LoyersHistory,
+    LocationsHistory,
   ],
   templateUrl: './garages-page.html',
   styleUrl: './garages-page.scss',
@@ -83,6 +85,7 @@ export class GaragesPage {
   /** Garage dont on édite la fiche (`null` dans l'objet : création), historique des loyers ouvert, menu (…) et suppression. */
   protected readonly form = signal<{ garage: GarageDTO | null } | null>(null);
   protected readonly history = signal<GarageDTO | null>(null);
+  protected readonly locationsHistory = signal<GarageDTO | null>(null);
   protected readonly menu = signal<{ garage: GarageDTO; x: number; y: number } | null>(null);
   protected readonly deletion = signal<Deletion | null>(null);
 
@@ -143,6 +146,11 @@ export class GaragesPage {
             icon: 'fa-solid fa-euro-sign',
             label: this.translate.instant('garages.menu.loyers'),
             action: () => this.history.set(garage),
+          },
+          {
+            icon: 'fa-solid fa-file-signature',
+            label: this.translate.instant('garages.menu.locations'),
+            action: () => this.locationsHistory.set(garage),
           },
         ]
       : [];
