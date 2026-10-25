@@ -7,6 +7,8 @@ import { Shell } from './core/layout/shell';
 
 /** Écrans construits ; les autres entrées du menu restent sur le gabarit provisoire. */
 const SCREENS: Record<string, () => Promise<Type<unknown>>> = {
+  'tableau-de-bord': () =>
+    import('./features/tableau-de-bord/tableau-de-bord-page/tableau-de-bord-page').then((m) => m.TableauDeBordPage),
   garages: () => import('./features/garages/garages-page/garages-page').then((m) => m.GaragesPage),
   locataires: () =>
     import('./features/locataires/locataires-page/locataires-page').then((m) => m.LocatairesPage),

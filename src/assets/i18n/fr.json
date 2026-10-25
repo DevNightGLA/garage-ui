@@ -398,6 +398,48 @@
       "date": "Date de résolution"
     }
   },
+  "tableauDeBord": {
+    "kpi": {
+      "occupation": {
+        "titre": "Taux d’occupation",
+        "note": "{{loues}} garages loués sur {{total}}"
+      },
+      "loyers": {
+        "titre": "Loyers mensuels",
+        "note": "Locations actives"
+      },
+      "impayes": {
+        "titre": "Impayés",
+        "note": "{{totaux}} impayés totaux · {{partiels}} partiels"
+      },
+      "libres": {
+        "titre": "Garages libres",
+        "note": "{{n}} indisponible"
+      }
+    },
+    "graphique": {
+      "loyers": {
+        "titre": "Loyers encaissés",
+        "legende": "12 derniers mois, en euros"
+      },
+      "occupation": {
+        "titre": "Taux d’occupation",
+        "legende": "Garages loués, 12 derniers mois, en %"
+      },
+      "precedent": "Graphique précédent",
+      "suivant": "Graphique suivant"
+    },
+    "impayes": {
+      "titre": "Impayés à relancer ({{n}})",
+      "vide": "Aucun impayé à relancer.",
+      "type": {
+        "TOTAL": "Total",
+        "PARTIEL": "Partiel"
+      },
+      "recu": "Reçu {{recu}} sur {{du}}",
+      "compteur": "{{from}}–{{to}} sur {{total}}"
+    }
+  },
   "erreur": {
     "generique": "Une erreur est survenue.",
     "RESEAU": "Impossible de joindre le serveur.",

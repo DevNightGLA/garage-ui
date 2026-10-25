@@ -1,0 +1,16 @@
+<figure class="bc">
+  <div class="bc__canvas" aria-hidden="true">
+    <canvas baseChart type="bar" [data]="data()" [options]="options()" [plugins]="plugins"></canvas>
+  </div>
+  <table class="sr-only">
+    <caption>{{ caption() }}</caption>
+    <tbody>
+      @for (row of rows(); track $index) {
+        <tr>
+          <th scope="row">{{ row.label }}</th>
+          <td>{{ row.text }}</td>
+        </tr>
+      }
+    </tbody>
+  </table>
+</figure>

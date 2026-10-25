@@ -1,0 +1,281 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.td__erreur {
+  padding: var(--space-4) var(--space-6);
+  color: var(--color-danger);
+}
+
+.td__etat {
+  padding: var(--space-4) 0;
+  font-size: 14px;
+  color: var(--text-muted);
+
+  &--erreur {
+    color: var(--color-danger);
+  }
+}
+
+// Taux d'occupation, loyers mensuels, impayés, garages libres
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-6);
+}
+
+.kpi {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-5);
+}
+
+.kpi__label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.kpi__valeur {
+  margin-top: var(--space-1);
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi__note {
+  min-height: 18px;
+  margin-top: 2px;
+  font-size: 12px;
+}
+
+.kpi__icone {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  border-radius: var(--radius-lg);
+  background: var(--gradient-brand);
+  font-size: 18px;
+  color: var(--white);
+
+  &--loyers {
+    background: var(--gradient-info);
+  }
+
+  &--impayes {
+    background: var(--gradient-danger);
+  }
+
+  &--libres {
+    background: var(--gradient-success);
+  }
+}
+
+// Tablette et petit ordinateur : deux indicateurs par ligne plutôt que trois puis un seul
+@media (min-width: 576px) and (max-width: 1279.98px) {
+  .kpis {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+// Graphique à gauche, impayés à relancer à droite
+.bas {
+  display: grid;
+  grid-template-columns: minmax(0, 3fr) minmax(280px, 2fr);
+  gap: var(--space-6);
+  align-items: stretch;
+}
+
+.graphique,
+.impayes {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  min-width: 0;
+  padding: var(--space-6);
+}
+
+.graphique__tete {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.graphique__titre,
+.impayes__titre {
+  margin: 0;
+  color: var(--text-heading);
+}
+
+.graphique__titre {
+  font-size: 16px;
+  font-weight: 600;
+  line-height: 26px;
+}
+
+.graphique__legende {
+  font-size: 14px;
+  color: var(--text-body);
+
+  i {
+    font-size: 12px;
+    color: var(--color-success);
+  }
+}
+
+.graphique__nav {
+  display: flex;
+  flex: none;
+  align-items: center;
+  gap: 6px;
+}
+
+.graphique__numero {
+  margin-right: var(--space-1);
+  font-size: 12px;
+  color: var(--text-body);
+}
+
+.graphique__fleche {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--white);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  color: var(--text-heading);
+  cursor: pointer;
+}
+
+.impayes__titre {
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.impayes__liste {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.impaye {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--surface-border);
+}
+
+.impaye__haut,
+.impaye__bas {
+  display: flex;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.impaye__haut {
+  align-items: baseline;
+}
+
+.impaye__bas {
+  align-items: center;
+}
+
+.impaye__locataire {
+  min-width: 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+.impaye__montant {
+  flex: none;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--color-danger);
+  white-space: nowrap;
+}
+
+.impaye__periode {
+  min-width: 0;
+  font-size: 12px;
+}
+
+.impaye__badge {
+  flex: none;
+}
+
+.impayes__pied {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+  margin-top: auto;
+  padding-top: var(--space-3);
+  border-top: 1px solid var(--surface-border);
+  font-size: 13px;
+}
+
+.impayes__pages {
+  display: flex;
+  gap: 6px;
+}
+
+.impayes__page {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--white);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  color: var(--text-heading);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+// Tablette et smartphone : les impayés passent sous le graphique
+@media (max-width: 991.98px) {
+  .bas {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+// Smartphone : cartes plus compactes, le numéro et les flèches passent sous le titre du graphique
+@media (max-width: 575.98px) {
+  .kpis {
+    gap: var(--space-3);
+  }
+
+  .graphique,
+  .impayes {
+    padding: var(--space-4);
+  }
+
+  .graphique__tete {
+    flex-direction: column;
+  }
+}

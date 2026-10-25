@@ -1,0 +1,14 @@
+:host {
+  display: block;
+  min-width: 0;
+}
+
+.bc {
+  margin: 0;
+}
+
+// Hauteur fixe : Chart.js remplit le conteneur (maintainAspectRatio désactivé)
+.bc__canvas {
+  position: relative;
+  height: 240px;
+}
