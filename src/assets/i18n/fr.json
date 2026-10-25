@@ -117,7 +117,8 @@
     "supprimer": "Supprimer le garage",
     "historiqueMenu": "Historique des loyers et des locations",
     "menu": {
-      "loyers": "Historique des loyers"
+      "loyers": "Historique des loyers",
+      "locations": "Historique des locations"
     },
     "form": {
       "titreNouveau": "Nouveau garage",
@@ -227,6 +228,70 @@
       "titre": "Supprimer {{nom}} ?",
       "refusTitre": "Suppression impossible",
       "message": "Cette action est définitive : le locataire et ses remarques seront supprimés."
+    }
+  },
+  "locations": {
+    "nom": "locations",
+    "nouvelle": "Nouvelle location",
+    "recherche": "Filtrer par locataire ou garage",
+    "filtre": {
+      "ACTIVE": "Actives",
+      "A_VENIR": "À venir",
+      "TERMINEE": "Terminées"
+    },
+    "statut": {
+      "ACTIVE": "Active",
+      "A_VENIR": "À venir",
+      "TERMINEE": "Terminée"
+    },
+    "col": {
+      "locataire": "Locataire",
+      "garage": "Garage",
+      "debut": "Début",
+      "fin": "Fin",
+      "loyer": "Loyer",
+      "cles": "Clés",
+      "statut": "Statut",
+      "actions": "Actions"
+    },
+    "modifier": "Modifier la location",
+    "visualiser": "Visualiser la location",
+    "supprimer": "Supprimer la location",
+    "periode": {
+      "entre": "Comprises entre le",
+      "et": "et le",
+      "effacer": "Effacer les dates"
+    },
+    "form": {
+      "titreNouvelle": "Nouvelle location",
+      "titreModifier": "Modifier la location",
+      "titreVisualiser": "Visualiser la location",
+      "locataire": "Locataire",
+      "locataires": "Locataires",
+      "rechercheLocataire": "Rechercher un locataire (nom, prénom)…",
+      "aucunLocataire": "Aucun locataire trouvé.",
+      "garageLibre": "Garage libre",
+      "garage": "Garage",
+      "debut": "Début",
+      "fin": "Date de fin",
+      "cles": "Clés remises",
+      "infoCles": "Clés disponibles : {{n}} (réserve : {{reserve}})",
+      "infoLoyer": "Loyer à la date de début : {{montant}}/mois",
+      "infoLoyerAbsent": "Loyer à la date de début : —",
+      "aucunGarage": "Aucun garage libre pour le moment.",
+      "aideFinPassee": "Une date de fin passée ou du jour termine la location : elle passe à « Terminée » et le garage redevient libre.",
+      "aideFinFuture": "Une date de fin future est enregistrée et la location reste active jusque-là.",
+      "aideFinDernierJour": "La date de fin doit être le dernier jour d'un mois."
+    },
+    "suppression": {
+      "titre": "Supprimer la location ?",
+      "message": "La location de {{locataire}} sur le garage {{garage}} sera supprimée définitivement.",
+      "refusTitre": "Suppression impossible",
+      "refus": "La location de {{locataire}} sur le garage {{garage}} ne peut pas être supprimée :"
+    },
+    "historique": {
+      "titre": "Historique des locations · {{numero}}",
+      "vide": "Ce garage n'a jamais été loué."
     }
   },
   "erreur": {

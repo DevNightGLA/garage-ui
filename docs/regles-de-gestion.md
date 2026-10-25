@@ -135,11 +135,12 @@ Convention : chaque règle porte un identifiant `RG-<domaine>-<n°>` pour la tra
 
 ### 7.2 Statut du locataire (calculé)
 
-- **RG-LOCT-10** – Un locataire est :
+- **RG-LOCT-10** – Un locataire a un seul statut, déduit de ses locations à la date du jour (priorité dans cet ordre) :
   - **Actuel** : il a au moins un garage loué actuellement. Badge **À jour** ou **En retard** selon ses paiements (RG-PAI-30) ;
-  - **Ancien** : il a eu des locations mais n'en a plus d'active. Badge « Ancien », ligne atténuée ;
+  - **À venir** : aucune location active, mais au moins une location à venir (même s'il en a eu d'autres avant). Badge « À venir » ;
+  - **Ancien** : il a eu des locations, n'en a plus d'active et n'en a aucune à venir. Badge « Ancien », ligne atténuée ;
   - **Sans location** : jamais loué. Badge « Sans location ».
-- **RG-LOCT-11** – Filtres : Actuels (par défaut), Anciens, Sans location, Tous. La colonne Garage liste les garages actuellement loués.
+- **RG-LOCT-11** – Filtres : Actuels (par défaut), À venir, Anciens, Sans location, Tous. La colonne Garage liste les garages actuellement loués.
 - **RG-LOCT-12** – Colonnes : locataire, remarques, garage, statut, actions. Toutes triables sauf les actions. L'adresse et le téléphone sont affichés sous le nom.
 
 ### 7.3 Suppression (Admin uniquement)
@@ -164,7 +165,7 @@ Convention : chaque règle porte un identifiant `RG-<domaine>-<n°>` pour la tra
 ### 8.2 Création
 
 - **RG-LOC-10** – Champs obligatoires : locataire, garage, date de début, clés remises.
-- **RG-LOC-11** – Choix du locataire par recherche (nom, prénom, insensible aux accents) dans la liste triée par nom, 5 par page. Chaque ligne indique « Actuel » (a une location active) ou « Ancien ». Tout locataire, actuel ou ancien, peut être choisi : un locataire peut avoir plusieurs locations, sur des garages différents.
+- **RG-LOC-11** – Choix du locataire par recherche (nom, prénom, insensible aux accents) dans la liste triée par nom, 5 par page. Chaque ligne indique son statut (Actuel, À venir, Ancien ou Sans location, RG-LOCT-10). Tout locataire, quel que soit son statut, peut être choisi : un locataire peut avoir plusieurs locations, sur des garages différents.
 - **RG-LOC-12** – Seuls les garages au statut **Libre** sont proposés ; sinon « Aucun garage libre pour le moment. » (Un garage Indisponible ou Loué n'est jamais proposé.)
 - **RG-LOC-13** – Contrôles à l'enregistrement, dans cet ordre :
   1. le garage doit être Libre : « Ce garage n'est pas libre. » ;
@@ -174,6 +175,7 @@ Convention : chaque règle porte un identifiant `RG-<domaine>-<n°>` pour la tra
 - **RG-LOC-14** – Les clés remises sont proposées par défaut à la valeur maximale (clés − réserve) et recalculées au changement de garage. Le formulaire affiche les clés disponibles, la réserve et le loyer à la date de début.
 - **RG-LOC-15** – La location est créée sans date de fin. Elle est « Active » si le début est ≤ date du jour, sinon « À venir ». La liste bascule automatiquement sur le filtre correspondant.
 - **RG-LOC-16** – Une date de début passée ou future est acceptée.
+- **RG-LOC-17** – Deux locations d'un même garage ne se chevauchent pas, à la création comme à la modification (début, fin, fin effacée) : « Cette location chevauche une autre location du garage (du jj/mm/aaaa au jj/mm/aaaa). » (ou « à partir du jj/mm/aaaa » si elle n'a pas de fin). Une location sans date de fin couvre tout l'avenir ; la date de fin est exclue de la période, comme dans le calcul des statuts : une location peut commencer le jour où la précédente se termine.
 
 ### 8.3 Modification et clôture
 
@@ -185,12 +187,13 @@ Convention : chaque règle porte un identifiant `RG-<domaine>-<n°>` pour la tra
 - **RG-LOC-25** – **Date de fin passée ou du jour** : la location passe à « Terminée », le garage redevient Libre, le loyer et les clés sont conservés dans l'historique. Pour une location à venir, la modification du début déplace la location et ajuste le filtre affiché (À venir ou Actives).
 - **RG-LOC-26** – Effacer la date de fin d'une location active la rend de nouveau sans échéance.
 - **RG-LOC-27** – Une location terminée n'a plus d'action de modification dans la liste (consultation via les historiques).
+- **RG-LOC-28** – Mois payés : le début d'une location ne peut pas suivre son premier mois ayant un versement (« La date de début ne peut pas suivre juin 2026 : un paiement est déjà enregistré pour ce mois. Annulez d'abord ce paiement dans l'écran Paiements. ») et sa fin ne peut pas précéder son dernier mois ayant un versement (« La date de fin ne peut pas précéder septembre 2026 : … »). Une échéance sans versement ne compte pas.
 
 ### 8.4 Suppression (Admin uniquement)
 
 - **RG-LOC-30** – Seules les locations **Active** et **À venir** exposent l'action de suppression.
-- **RG-LOC-31** – **À venir** : supprimable, avec confirmation « Oui / Non », sans autre condition.
-- **RG-LOC-32** – **Active** : refusée si au moins un paiement a déjà été effectué sur le garage : « n paiement(s) ont déjà été effectué(s) pour cette location. » Sinon la location est supprimée et le garage repasse Libre.
+- **RG-LOC-31** – **À venir** : supprimable, avec confirmation « Oui / Non », sans autre condition que l'absence de paiement anticipé (RG-LOC-32).
+- **RG-LOC-32** – **Active** (ou **À venir** avec un paiement anticipé) : refusée si au moins un paiement a déjà été effectué sur cette location : « n paiement(s) ont déjà été effectué(s) pour cette location. » Sinon la location est supprimée avec ses échéances sans versement et le garage repasse Libre.
 - **RG-LOC-33** – **Terminée** : jamais supprimable, car elle fait partie de l'historique du garage.
 - **RG-LOC-34** – Dans tous les autres cas, la clôture se fait par la date de fin (RG-LOC-23 à 25).
 
@@ -292,5 +295,11 @@ Convention : chaque règle porte un identifiant `RG-<domaine>-<n°>` pour la tra
 | Date de début d'un nouveau loyer | Non précisée | Doit seulement être postérieure au début du précédent (peut être dans le passé) |
 | Montant dû d'une échéance | Loyer en vigueur à la période, figé à la génération | Loyer courant du garage, non figé par période |
 | Défaut de paiement | Échéance « à payer » dont la période est passée | Idem pour les mois passés ; pour le mois courant, certains impayés sont fixés dans les données de démonstration |
+| Statut d'un locataire | — | Trois statuts : Actuel, Ancien, Sans location (un locataire qui n'a qu'une location à venir n'est classé nulle part) |
+| Locataire « en retard » (RG-PAI-30) | Au moins une échéance non soldée dont la période est passée | « Impayé signalé du mois courant » (indicateur non stocké) |
+
+Décisions du 24/10/2026 (module 3.2) : un quatrième statut **À venir** pour un locataire qui n'a que des locations à venir (RG-LOCT-10 et 11) ; un locataire est en retard seulement pour une échéance non soldée dont le mois est **strictement avant le mois courant** : le mois courant n'est jamais en retard, car aucun « signalement » n'est stocké. Cette dernière règle est à reprendre à l'identique pour l'écran Paiements (3.4) et le tableau de bord (3.6).
+
+Décisions du 25/10/2026 (module 3.3) : deux locations d'un même garage ne se chevauchent pas, même si la maquette l'autorise (RG-LOC-17) ; le loyer affiché d'une location est le loyer en vigueur à la date utile : aujourd'hui pour une location active, sa date de début pour une location à venir, sa date de fin pour une location terminée (RG-LOC-04) ; une location à venir qui a reçu un paiement anticipé n'est pas supprimable, la clé étrangère des échéances l'interdisant (RG-LOC-31 et 32) ; la fin et le début d'une location sont contrôlés par rapport aux mois déjà payés (RG-LOC-28).
 
 Les données (garages, locataires, paiements) de la maquette sont des données de démonstration : les règles ci-dessus décrivent le comportement attendu, pas les valeurs.

@@ -1,0 +1,96 @@
+<app-modal
+  [title]="titleKey() | translate"
+  [width]="isCreation ? 520 : 480"
+  [error]="error()"
+  (closed)="closed.emit()"
+>
+  <form id="location-form" class="modal-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    @if (isCreation) {
+      <app-form-field [label]="'locations.form.locataire' | translate" [error]="fieldErrors()['locataireId']">
+        <app-locataire-picker formControlName="locataireId" />
+      </app-form-field>
+
+      <div class="form-row">
+        <app-form-field [label]="'locations.form.garageLibre' | translate" [error]="fieldErrors()['garageId']">
+          <select class="input" formControlName="garageId">
+            @for (garage of freeGarages(); track garage.id) {
+              <option [ngValue]="garage.id">{{ garage.numero }}</option>
+            }
+          </select>
+        </app-form-field>
+        <app-form-field [label]="'locations.form.debut' | translate" [error]="fieldErrors()['dateDebut']">
+          <app-date-input formControlName="dateDebut" />
+        </app-form-field>
+      </div>
+
+      <app-form-field class="lf-cles" [label]="'locations.form.cles' | translate" [error]="fieldErrors()['nbClesRemises']">
+        <input class="input" type="number" [attr.min]="0" [attr.max]="keysMax()" step="1" formControlName="nbClesRemises" />
+      </app-form-field>
+
+      <div class="lf-info">
+        @if (conditions.hasValue()) {
+          @let c = conditions.value();
+          <span>{{ 'locations.form.infoCles' | translate: { n: c.nbClesDisponibles, reserve: c.nbClesReserve } }}</span>
+          &ngsp;<span aria-hidden="true">·</span>&ngsp;
+          <span>
+            @if (c.loyer !== null) {
+              {{ 'locations.form.infoLoyer' | translate: { montant: money(c.loyer) } }}
+            } @else {
+              {{ 'locations.form.infoLoyerAbsent' | translate }}
+            }
+          </span>
+        }
+      </div>
+
+      @if (noFreeGarage()) {
+        <div class="message-warning" role="alert">{{ 'locations.form.aucunGarage' | translate }}</div>
+      }
+    } @else {
+      <div class="form-row">
+        <app-form-field [label]="'locations.form.locataire' | translate" [requiredMark]="false">
+          <input class="input" disabled [value]="tenantName()" />
+        </app-form-field>
+        <app-form-field [label]="'locations.form.garage' | translate" [requiredMark]="false">
+          <input class="input" disabled [value]="location()?.garage?.numero" />
+        </app-form-field>
+      </div>
+
+      <div class="form-row">
+        <app-form-field [label]="'locations.form.debut' | translate" [error]="fieldErrors()['dateDebut']">
+          <app-date-input formControlName="dateDebut" />
+        </app-form-field>
+        @if (hasEndDate) {
+          <app-form-field [label]="'locations.form.fin' | translate" [error]="fieldErrors()['dateFin']">
+            <app-date-input formControlName="dateFin" />
+          </app-form-field>
+        }
+      </div>
+
+      <app-form-field class="lf-cles" [label]="'locations.form.cles' | translate" [error]="fieldErrors()['nbClesRemises']">
+        <input class="input" type="number" [attr.min]="0" step="1" formControlName="nbClesRemises" />
+      </app-form-field>
+
+      @if (hasEndDate && !readOnly()) {
+        <div class="message-info">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+          <span class="lf-aide">
+            <span>{{ 'locations.form.aideFinPassee' | translate }}</span>
+            <span>{{ 'locations.form.aideFinFuture' | translate }}</span>
+            <span>{{ 'locations.form.aideFinDernierJour' | translate }}</span>
+          </span>
+        </div>
+      }
+    }
+  </form>
+
+  <div modalFooter>
+    <button type="button" class="btn btn--secondary" (click)="closed.emit()">
+      {{ 'commun.annuler' | translate }}
+    </button>
+    @if (!readOnly()) {
+      <button type="submit" form="location-form" class="btn btn--primary" [disabled]="pending()">
+        {{ 'commun.enregistrer' | translate }}
+      </button>
+    }
+  </div>
+</app-modal>

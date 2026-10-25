@@ -40,7 +40,8 @@ app-form-field.is-invalid {
   select,
   textarea,
   .ql-toolbar.ql-snow,
-  .ql-container.ql-snow {
+  .ql-container.ql-snow,
+  .picker__list {
     border-color: var(--color-danger);
   }
 }

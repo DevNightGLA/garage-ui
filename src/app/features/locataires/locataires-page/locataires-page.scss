@@ -81,13 +81,6 @@
   color: var(--text-heading);
 }
 
-// Carte (tablette, smartphone) : un tiret plutôt qu'une valeur vide pour un locataire sans garage actuel
-@media (max-width: 991.98px) {
-  .garages:empty::before {
-    content: '—';
-  }
-}
-
 // Pastille « remarques » : une icône bordée, avec le nombre en badge
 .remarques {
   position: relative;

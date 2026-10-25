@@ -14,6 +14,8 @@
   <ng-content select="[dtToolbarEnd]" />
 </div>
 
+<ng-content select="[dtAfterToolbar]" />
+
 <div class="card dt-card">
   <div class="dt-scroll">
     <table class="dt" [class.is-loading]="loading() && rows().length > 0" [attr.aria-busy]="loading()">

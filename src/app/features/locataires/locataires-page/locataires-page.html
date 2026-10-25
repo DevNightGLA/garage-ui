@@ -63,7 +63,7 @@
     </span>
   </ng-template>
   <ng-template appCell="garages" let-locataire>
-    <span class="garages">{{ locataire.garages.join(', ') }}</span>
+    <span class="garages dash-if-empty">{{ locataire.garages.join(', ') }}</span>
   </ng-template>
   <ng-template appCell="statut" let-locataire>
     <app-status-badge [tone]="tone(locataire)" [block]="true" [width]="120">{{

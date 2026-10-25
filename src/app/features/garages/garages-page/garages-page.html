@@ -110,6 +110,10 @@
   <app-loyers-history [garage]="garage" (changed)="refresh()" (closed)="history.set(null)" />
 }
 
+@if (locationsHistory(); as garage) {
+  <app-locations-history [garage]="garage" (closed)="locationsHistory.set(null)" />
+}
+
 @if (menu(); as current) {
   <app-popover-menu
     [items]="menuItems()"

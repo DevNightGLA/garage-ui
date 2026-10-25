@@ -201,7 +201,7 @@ Les paramètres de recherche d'une liste (ici `statut` et `q`) sont reçus côt�
 | `PUT /api/garages/{id}` | `GarageDTO` : `{ adresse?, nbClesTotal, nbClesReserve, statutModifiable? }` (numéro et loyer non modifiables, RG-GAR-20). `statutModifiable` est ignoré tant que le garage est `LOUE` (RG-GAR-03) et inchangé s'il est absent. | écriture |
 | `DELETE /api/garages/{id}` | supprime aussi ses loyers et remarques (RG-GAR-31). Réponse 204. | admin |
 
-L'historique des locations d'un garage (`GET /api/garages/{id}/locations`, RG-GAR-43) arrive avec le module des locations (étape 3.3), car il dépend du statut calculé d'une location.
+L'historique des locations d'un garage (`GET /api/garages/{id}/locations`, RG-GAR-43) est décrit avec les locations (section 6).
 
 Erreurs :
 
@@ -289,11 +289,13 @@ Une suppression est refusée dès qu'un locataire a une location, même à venir
 
 ---
 
-## 6. Locations (proposé, étape 3.3, RG chapitre 8)
+## 6. Locations (implémenté, étape 3.3, RG chapitre 8)
 
-**Énumération** : `statut` `A_VENIR | ACTIVE | TERMINEE`.
+Comme pour les garages et les locataires, les paramètres de recherche (`statut`, `q`, `finDu`, `finAu`, `garageId`) sont reçus côté serveur dans un objet `LocationCriteria` ; l'API HTTP reste de simples paramètres de requête. Un `statut`, une date ou un tri invalide renvoie 400 `REQUETE_INVALIDE`.
 
-`LocationDTO` :
+**Énumération** : `statut` `A_VENIR | ACTIVE | TERMINEE`, calculé à la date du jour (RG-LOC-01 à 03) : `A_VENIR` = début après aujourd'hui ; `TERMINEE` = date de fin passée ou égale à aujourd'hui ; `ACTIVE` = le reste (sans fin, ou fin future).
+
+`LocationDTO` (en entrée, `id`, `statut`, `locataire`, `garage` et `loyer` sont ignorés ; `locataireId` et `garageId` sont en écriture seule et jamais renvoyés) :
 ```json
 {
   "id": 4, "statut": "ACTIVE",
@@ -302,32 +304,43 @@ Une suppression est refusée dès qu'un locataire a une location, même à venir
   "dateDebut": "2025-03-01", "dateFin": "2026-12-31", "loyer": 100.00, "nbClesRemises": 2
 }
 ```
-`loyer` est celui du garage ; pour une location terminée, il est figé à sa valeur de fin (RG-LOC-04).
+`loyer` est le loyer du garage **en vigueur à la date utile** : aujourd'hui pour une location active, la date de début pour une location à venir, la date de fin pour une location terminée (figé, RG-LOC-04). Il vaut `null` si aucun loyer n'est en vigueur à cette date.
 
 | Méthode et chemin | Détail | Droit |
 | --- | --- | --- |
-| `GET /api/locations` | `statut=ACTIVE|A_VENIR|TERMINEE` (le front envoie `ACTIVE` par défaut), `finDu` et `finAu` (inclusifs, facultatifs, **uniquement avec `TERMINEE`**, sur la date de fin), `q` (locataire, garage), tri sur toutes les colonnes sauf les actions | lecture |
-| `GET /api/locations/compteurs?q=` | `{ "ACTIVE": 7, "A_VENIR": 1, "TERMINEE": 2 }` | lecture |
-| `GET /api/garages/{id}/conditions-location?dateDebut=` | aide du formulaire (RG-LOC-14) : `{ nbClesDisponibles, nbClesReserve, loyer }` (`loyer` à la date de début, `null` s'il n'y en a pas). Les garages à proposer : `GET /api/garages?statut=LIBRE` (RG-LOC-12). | lecture |
-| `POST /api/locations` | `{ locataireId, garageId, dateDebut, nbClesRemises }` ; sans date de fin (RG-LOC-15) | écriture |
-| `PUT /api/locations/{id}` | `{ dateDebut, nbClesRemises, dateFin? }` ; `dateFin` réservée aux locations actives ; locataire et garage figés | écriture |
-| `DELETE /api/locations/{id}` | locations `ACTIVE` et `A_VENIR` seulement | admin |
+| `GET /api/locations` | filtre `statut=A_VENIR|ACTIVE|TERMINEE` (**absent = toutes** : le front envoie `ACTIVE` par défaut), `q` (nom et prénom du locataire dans les deux ordres, numéro du garage ; sans casse ni accents), `garageId`, `finDu` et `finAu` (`yyyy-MM-dd`, bornes **incluses** sur la date de fin, facultatives, **appliquées seulement avec `statut=TERMINEE`** et ignorées sinon, RG-LOC-05 ; `finDu` après `finAu` donne une liste vide) ; tri sur `locataire` (nom puis prénom), `garage` (ordre naturel G2 avant G10), `dateDebut`, `dateFin`, `loyer`, `nbClesRemises` (les locations sans date de fin en dernier) ; **sans tri, dans l'ordre de création** (RG-LST-06). | lecture |
+| `GET /api/locations/compteurs?q=` | `{ "A_VENIR": 1, "ACTIVE": 7, "TERMINEE": 2, "TOUS": 10 }`, qui tient compte de `q` (et de `garageId`) mais couvre tous les statuts et ignore les bornes de fin (RG-LST-03) | lecture |
+| `GET /api/locations/{id}` | 404 `LOC_INTROUVABLE` si inconnue | lecture |
+| `GET /api/garages/{id}/locations` | historique du garage (RG-GAR-43) : mêmes filtres et mêmes tris, le garage étant imposé par l'URL ; **sans tri, du plus récent au plus ancien** (`dateDebut` décroissant) ; l'écran demande `size=5`. Une location à venir y est `A_VENIR`. 404 `GAR_INTROUVABLE`. | lecture |
+| `GET /api/garages/{id}/conditions-location?dateDebut=` | aide du formulaire (RG-LOC-14) : `{ nbClesDisponibles, nbClesReserve, loyer }` ; `loyer` à la date de début, `null` s'il n'y en a pas ou si `dateDebut` est absente. Les garages à proposer : `GET /api/garages?statut=LIBRE` (RG-LOC-12) ; le locataire : `GET /api/locataires` (RG-LOC-11). | lecture |
+| `POST /api/locations` | `{ locataireId, garageId, dateDebut, nbClesRemises }` ; sans date de fin (une `dateFin` envoyée est ignorée, RG-LOC-15) ; une date de début passée ou future est acceptée. Réponse 201 + `Location`. | écriture |
+| `PUT /api/locations/{id}` | `{ dateDebut, nbClesRemises, dateFin? }` ; locataire et garage figés (ignorés). `dateFin` est réservée aux locations actives ; **un `PUT` sans `dateFin` l'efface** (RG-LOC-26). Le statut qui compte est celui d'avant la modification. | écriture |
+| `DELETE /api/locations/{id}` | locations `ACTIVE` et `A_VENIR` seulement, et sans paiement ; supprime aussi leurs échéances sans versement. Réponse 204. | admin |
 
-Contrôles à l'enregistrement, dans cet ordre (RG-LOC-13) :
+**Contrôles à l'enregistrement, dans cet ordre.** Création : locataire et garage existants (404), puis RG-LOC-13 (garage libre, loyer, clés négatives, clés maximum), puis le chevauchement. Modification : location terminée, fin interdite, puis loyer et clés (RG-LOC-21), fin (RG-LOC-23, toujours contrôlée par rapport au début envoyé), mois payés, chevauchement.
 
-| HTTP | Code | Message |
-| --- | --- | --- |
-| 409 | `LOC_GARAGE_NON_LIBRE` | Ce garage n'est pas libre. |
-| 409 | `LOC_LOYER_ABSENT` | Aucun loyer n'est défini pour ce garage à cette date. |
-| 409 | `LOC_CLES_NEGATIVES` | Le nombre de clés remises ne peut pas être négatif. *(proposé)* |
-| 409 | `LOC_CLES_MAX` | Maximum n clés remises (hors réserve). |
-| 409 | `LOC_FIN_PAS_DERNIER_JOUR` | La date de fin doit être le dernier jour d'un mois. |
-| 409 | `LOC_FIN_AVANT_DEBUT` | La date de fin doit être postérieure ou égale au début. |
-| 409 | `LOC_FIN_INTERDITE` | La date de fin n'est possible que pour une location active. *(proposé)* |
-| 409 | `LOC_TERMINEE_NON_MODIFIABLE` | Une location terminée ne peut plus être modifiée. *(proposé)* |
-| 409 | `LOC_SUPPRESSION_REFUSEE` | n paiement(s) ont déjà été effectué(s) pour cette location. (location active) |
-| 409 | `LOC_TERMINEE_NON_SUPPRIMABLE` | Une location terminée fait partie de l'historique du garage et ne peut pas être supprimée. *(proposé)* |
-| 422 | `VALIDATION` | locataire, garage, date de début et clés remises obligatoires |
+| HTTP | Code | Message | Règle |
+| --- | --- | --- | --- |
+| 409 | `LOC_GARAGE_NON_LIBRE` | Ce garage n'est pas libre. (loué ou indisponible ; un garage qui a une location à venir reste libre) | RG-LOC-13 |
+| 409 | `LOC_LOYER_ABSENT` | Aucun loyer n'est défini pour ce garage à cette date. | RG-LOC-13, 21 |
+| 409 | `LOC_CLES_NEGATIVES` | Le nombre de clés remises ne peut pas être négatif. *(proposé)* | RG-LOC-13, 21 |
+| 409 | `LOC_CLES_MAX` | Maximum n clés remises (hors réserve). (n = clés moins réserve du garage) | RG-LOC-13, 21 |
+| 409 | `LOC_CHEVAUCHEMENT` | Cette location chevauche une autre location du garage (du 01/01/2025 au 31/12/2025). ou (à partir du 01/11/2026). *(proposé)* | RG-LOC-17 |
+| 409 | `LOC_FIN_PAS_DERNIER_JOUR` | La date de fin doit être le dernier jour d'un mois. | RG-LOC-23 |
+| 409 | `LOC_FIN_AVANT_DEBUT` | La date de fin doit être postérieure ou égale au début. | RG-LOC-23 |
+| 409 | `LOC_FIN_INTERDITE` | La date de fin n'est possible que pour une location active. *(proposé)* | RG-LOC-22 |
+| 409 | `LOC_FIN_AVANT_PAIEMENT` | La date de fin ne peut pas précéder septembre 2026 : un paiement est déjà enregistré pour ce mois. Annulez d'abord ce paiement dans l'écran Paiements. *(proposé)* | RG-LOC-28 |
+| 409 | `LOC_DEBUT_APRES_PAIEMENT` | La date de début ne peut pas suivre juin 2026 : un paiement est déjà enregistré pour ce mois. Annulez d'abord ce paiement dans l'écran Paiements. *(proposé)* | RG-LOC-28 |
+| 409 | `LOC_TERMINEE_NON_MODIFIABLE` | Une location terminée ne peut plus être modifiée. *(proposé)* | RG-LOC-27 |
+| 409 | `LOC_SUPPRESSION_REFUSEE` | n paiement(s) ont déjà été effectué(s) pour cette location. (n versements ; location active **ou à venir**) | RG-LOC-32 |
+| 409 | `LOC_TERMINEE_NON_SUPPRIMABLE` | Une location terminée fait partie de l'historique du garage et ne peut pas être supprimée. *(proposé)* | RG-LOC-33 |
+| 404 | `LOC_INTROUVABLE`, `LOCT_INTROUVABLE`, `GAR_INTROUVABLE` | Location introuvable. · Locataire introuvable. · Garage introuvable. | |
+| 422 | `VALIDATION` | `fieldErrors` (tous d'un coup) : `locataireId` Le locataire est obligatoire. · `garageId` Le garage est obligatoire. (création) · `dateDebut` La date de début est obligatoire. · `nbClesRemises` Le nombre de clés remises est obligatoire. | RG-LOC-10, 21 |
+
+Règles apportées par ce module (décidées avec l'utilisateur le 25/10/2026) :
+- **Chevauchement** (RG-LOC-17) : deux locations d'un même garage ne se chevauchent pas, à la création comme à la modification (début, fin, fin effacée). Une location sans fin couvre tout l'avenir. La date de fin est exclue de la période, comme dans le calcul des statuts : une location peut commencer le jour où la précédente se termine. Conséquence : un garage libre qui a une location à venir ne peut pas recevoir une location qui commence avant elle.
+- **Mois payés** (RG-LOC-28) : le début d'une location ne peut pas suivre son premier mois ayant un versement, et sa fin ne peut pas précéder son dernier mois ayant un versement. Une échéance sans versement ne compte pas.
+- **Suppression** : même une location à venir est refusée dès qu'un versement existe (la clé étrangère interdit de supprimer une location qui porte des échéances). Il faut d'abord annuler les versements (Admin, RG-PAI-25).
 
 Une date de fin passée ou du jour termine la location et libère le garage (RG-LOC-25) : aucun appel supplémentaire.
 

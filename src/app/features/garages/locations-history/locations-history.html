@@ -1,0 +1,81 @@
+<app-modal
+  [title]="'locations.historique.titre' | translate: { numero: garage().numero }"
+  [width]="760"
+  (closed)="closed.emit()"
+>
+  <div class="lh__scroll">
+    <table class="lh">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'locations.col.locataire' | translate }}</th>
+          <th scope="col">{{ 'locations.col.debut' | translate }}</th>
+          <th scope="col">{{ 'locations.col.fin' | translate }}</th>
+          <th scope="col" class="lh__center">{{ 'locations.col.cles' | translate }}</th>
+          <th scope="col" class="lh__end">{{ 'locations.col.loyer' | translate }}</th>
+          <th scope="col" class="lh__center">{{ 'locations.col.statut' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loadError(); as message) {
+          <tr>
+            <td class="lh__state lh__state--error" colspan="6">
+              {{ message }}
+              <button type="button" class="link-muted" (click)="list.reload()">{{ 'commun.reessayer' | translate }}</button>
+            </td>
+          </tr>
+        } @else if (list.isLoading() && rows().length === 0) {
+          <tr><td class="lh__state" colspan="6">{{ 'commun.chargement' | translate }}</td></tr>
+        } @else if (rows().length === 0) {
+          <tr><td class="lh__state" colspan="6">{{ 'locations.historique.vide' | translate }}</td></tr>
+        } @else {
+          @for (location of rows(); track location.id) {
+            <tr>
+              <td [attr.data-label]="'locations.col.locataire' | translate">
+                <span class="lh__locataire">
+                  <span
+                    class="lh__avatar"
+                    [class.lh__avatar--a-venir]="location.statut === 'A_VENIR'"
+                    [class.lh__avatar--terminee]="location.statut === 'TERMINEE'"
+                    aria-hidden="true"
+                    >{{ initials(location) }}</span
+                  >
+                  <b>{{ location.locataire.prenom }} {{ location.locataire.nom }}</b>
+                </span>
+              </td>
+              <td class="lh__nowrap" [attr.data-label]="'locations.col.debut' | translate">{{ date(location.dateDebut) }}</td>
+              <td class="lh__nowrap" [attr.data-label]="'locations.col.fin' | translate">
+                <span class="dash-if-empty">{{ date(location.dateFin) }}</span>
+              </td>
+              <td class="lh__center lh__nowrap" [attr.data-label]="'locations.col.cles' | translate">
+                <span>{{ location.nbClesRemises }} <i class="fa-solid fa-key lh__key" aria-hidden="true"></i></span>
+              </td>
+              <td class="lh__end lh__nowrap lh__loyer" [attr.data-label]="'locations.col.loyer' | translate">
+                @if (location.loyer !== null) {
+                  <span>{{ location.loyer | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</span>
+                }
+              </td>
+              <td class="lh__center" [attr.data-label]="'locations.col.statut' | translate">
+                <app-status-badge [tone]="tone(location.statut)" [block]="true" [width]="96">{{
+                  'locations.statut.' + location.statut | translate
+                }}</app-status-badge>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-pagination
+    class="lh__pager"
+    [page]="page()"
+    [size]="pageSize"
+    [total]="total()"
+    [noun]="'locations.nom' | translate"
+    (pageChange)="page.set($event)"
+  />
+
+  <div modalFooter>
+    <button type="button" class="btn btn--primary" (click)="closed.emit()">{{ 'commun.fermer' | translate }}</button>
+  </div>
+</app-modal>

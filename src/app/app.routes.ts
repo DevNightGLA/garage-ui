@@ -10,6 +10,7 @@ const SCREENS: Record<string, () => Promise<Type<unknown>>> = {
   garages: () => import('./features/garages/garages-page/garages-page').then((m) => m.GaragesPage),
   locataires: () =>
     import('./features/locataires/locataires-page/locataires-page').then((m) => m.LocatairesPage),
+  locations: () => import('./features/locations/locations-page/locations-page').then((m) => m.LocationsPage),
 };
 
 export const routes: Routes = [
