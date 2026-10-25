@@ -19,7 +19,7 @@ export function initials(login: string): string {
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.is-collapsed]': 'collapsed()', '[class.is-open]': 'open()' },
+  host: { role: 'complementary', '[class.is-collapsed]': 'collapsed()', '[class.is-open]': 'open()' },
 })
 export class Sidebar {
   /** Ordinateur : colonne d'icônes. */

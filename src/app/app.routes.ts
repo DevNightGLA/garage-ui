@@ -5,7 +5,7 @@ import { NAV_ITEMS } from './core/layout/nav-items';
 import { NavigationMemory } from './core/layout/navigation-memory';
 import { Shell } from './core/layout/shell';
 
-/** Écrans construits ; les autres entrées du menu restent sur le gabarit provisoire. */
+/** Un écran par entrée du menu (RG-NAV-01) : `app.routes.spec.ts` vérifie qu'aucune n'en manque. */
 const SCREENS: Record<string, () => Promise<Type<unknown>>> = {
   'tableau-de-bord': () =>
     import('./features/tableau-de-bord/tableau-de-bord-page/tableau-de-bord-page').then((m) => m.TableauDeBordPage),
@@ -20,16 +20,19 @@ export const routes: Routes = [
   {
     path: 'connexion',
     canActivate: [guestGuard],
+    data: { titleKey: 'auth.connexion.titre' },
     loadComponent: () => import('./features/auth/login/login').then((m) => m.Login),
   },
   {
     path: 'mot-de-passe-oublie',
     canActivate: [guestGuard],
+    data: { titleKey: 'auth.oubli.titre' },
     loadComponent: () =>
       import('./features/auth/forgot-password/forgot-password').then((m) => m.ForgotPassword),
   },
   {
     path: 'reinitialisation',
+    data: { titleKey: 'auth.reinit.titre' },
     loadComponent: () =>
       import('./features/auth/reset-password/reset-password').then((m) => m.ResetPassword),
   },
@@ -39,12 +42,10 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', pathMatch: 'full', redirectTo: () => inject(NavigationMemory).lastPath() },
-      // Les écrans remplacent ces gabarits un par un (étape 5 de TASKS.md).
       ...NAV_ITEMS.map((item) => ({
         path: item.path,
         data: { titleKey: item.labelKey },
-        loadComponent:
-          SCREENS[item.path] ?? (() => import('./features/placeholder/placeholder').then((m) => m.Placeholder)),
+        loadComponent: SCREENS[item.path],
       })),
     ],
   },

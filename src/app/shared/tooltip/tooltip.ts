@@ -1,10 +1,18 @@
 import { DOCUMENT } from '@angular/common';
 import { Directive, ElementRef, OnDestroy, inject, input } from '@angular/core';
 
+/** Vrai si l'élément contient du texte que lit un lecteur d'écran (descendants `aria-hidden` exclus). */
+const hasReadableText = (node: Node): boolean =>
+  Array.from(node.childNodes).some((child) =>
+    child.nodeType === Node.TEXT_NODE
+      ? !!child.textContent?.trim()
+      : child instanceof HTMLElement && child.getAttribute('aria-hidden') !== 'true' && hasReadableText(child),
+  );
+
 /**
  * Info-bulle noire au survol ou au focus : `<button [appTooltip]="'garage.modifier' | translate">`.
  * Un seul élément partagé est ajouté au `body`. Le texte sert aussi de nom accessible
- * quand l'élément n'en a pas.
+ * quand l'élément n'a pas de texte lisible (un nombre `aria-hidden` ne compte pas).
  */
 @Directive({
   selector: '[appTooltip]',
@@ -26,8 +34,7 @@ export class Tooltip implements OnDestroy {
   private static bubble: HTMLElement | null = null;
 
   protected ariaLabel(): string | null {
-    const hasOwnName = this.host.textContent?.trim();
-    return hasOwnName ? null : this.text() || null;
+    return hasReadableText(this.host) ? null : this.text() || null;
   }
 
   protected show(): void {

@@ -10,7 +10,7 @@ import { LanguageSwitch } from '../../../core/layout/language-switch';
   selector: 'app-auth-card',
   imports: [LanguageSwitch],
   template: `
-    <div class="auth">
+    <main class="auth">
       <div class="auth__lang"><app-language-switch /></div>
       <div class="auth__card card">
         <div class="auth__head">
@@ -21,7 +21,7 @@ import { LanguageSwitch } from '../../../core/layout/language-switch';
         </div>
         <ng-content />
       </div>
-    </div>
+    </main>
   `,
   styles: `
     .auth {

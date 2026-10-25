@@ -9,7 +9,15 @@
     "non": "Non",
     "fermer": "Fermer",
     "reessayer": "Réessayer",
-    "chargement": "Chargement…"
+    "chargement": "Chargement…",
+    "editeur": {
+      "gras": "Gras",
+      "italique": "Italique",
+      "souligne": "Souligné",
+      "listeNumerotee": "Liste numérotée",
+      "listePuces": "Liste à puces",
+      "lien": "Lien"
+    }
   },
   "nav": {
     "pages": "Pages /",
@@ -19,8 +27,7 @@
     "locations": "Locations",
     "paiements": "Paiements",
     "afficherMasquerMenu": "Afficher / masquer le menu",
-    "principale": "Navigation principale",
-    "enConstruction": "Cet écran sera disponible prochainement."
+    "principale": "Navigation principale"
   },
   "role": {
     "ADMIN": "Admin",

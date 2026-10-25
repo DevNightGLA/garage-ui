@@ -13,12 +13,11 @@ import { Tooltip } from '../../shared/tooltip/tooltip';
       type="button"
       class="remarques"
       [appTooltip]="label()"
-      [attr.aria-label]="label()"
       (click)="$event.stopPropagation(); opened.emit()"
     >
       <i class="fa-regular fa-comment" aria-hidden="true"></i>
       @if (count() > 0) {
-        <b class="remarques__n">{{ count() }}</b>
+        <b class="remarques__n" aria-hidden="true">{{ count() }}</b>
       }
     </button>
   `,
@@ -28,7 +27,7 @@ import { Tooltip } from '../../shared/tooltip/tooltip';
 export class RemarquesButton {
   /** Nombre de remarques ; rien n'est affiché pour zéro. */
   readonly count = input.required<number>();
-  /** Info-bulle et nom accessible, déjà traduits : « Remarques (2) ». */
+  /** Info-bulle et nom accessible (posé par `appTooltip`), déjà traduits : « Remarques (2) ». */
   readonly label = input.required<string>();
   readonly opened = output<void>();
 }

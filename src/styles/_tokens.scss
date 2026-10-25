@@ -13,7 +13,7 @@
   --slate-200: #e4e8ed;
   --slate-300: #a8b8d8;
   --slate-400: #8392ab;
-  --slate-500: #67748e;
+  --slate-500: #66738d; // maquette : #67748e (4,46:1 sur #f8f9fa) ; AA ≥ 4,5:1
   --slate-600: #627594;
   --slate-650: #4d5e7c;
   --slate-700: #344767;
@@ -112,8 +112,8 @@
   --surface-border: var(--gray-200); // #e9ecef
   --surface-border-input: var(--gray-300); // #d2d6da
   --text-heading: var(--slate-700); // #344767
-  --text-body: var(--slate-500); // #67748e
-  --text-muted: var(--slate-400); // #8392ab
+  --text-body: var(--slate-500); // #66738d
+  --text-muted: var(--slate-500); // maquette : #8392ab (3,0:1 sur #f8f9fa) ; AA ≥ 4,5:1
 
   --color-primary: var(--fuchsia-500); // #cb0c9f
   --color-danger: #d40505; // texte et bordure d'erreur (RG-VAL-01)
