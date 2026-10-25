@@ -1,17 +1,22 @@
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { SortSpec } from '../../../core/api/list-params';
+import { LanguageService } from '../../../core/language-service';
 import { RoleService } from '../../../core/role-service';
 import { Confirm } from '../../../shared/confirm/confirm';
 import { DataTable, DataTableColumn } from '../../../shared/data-table/data-table';
 import { DataTableCell } from '../../../shared/data-table/data-table-cell';
 import { FilterButtons, FilterOption } from '../../../shared/filter-buttons/filter-buttons';
 import { SearchInput } from '../../../shared/search-input/search-input';
+import { SummaryCard, SummaryField } from '../../../shared/summary-card/summary-card';
 import { BadgeTone, StatusBadge } from '../../../shared/status-badge/status-badge';
 import { Tooltip } from '../../../shared/tooltip/tooltip';
+import { RemarquesButton } from '../../remarques/remarques-button';
+import { RemarquesView } from '../../remarques/remarques-view/remarques-view';
+import { RemarqueCible } from '../../remarques/remarque.models';
 import { LocataireApi } from '../locataire-api';
 import { LocataireForm } from '../locataire-form/locataire-form';
 import { LocataireDTO, LocataireFilter } from '../locataire.models';
@@ -59,6 +64,9 @@ interface Deletion {
     Tooltip,
     Confirm,
     LocataireForm,
+    RemarquesButton,
+    RemarquesView,
+    SummaryCard,
   ],
   templateUrl: './locataires-page.html',
   styleUrl: './locataires-page.scss',
@@ -68,6 +76,8 @@ export class LocatairesPage {
   protected readonly roles = inject(RoleService);
   private readonly api = inject(LocataireApi);
   private readonly errors = inject(ErrorMessageService);
+  private readonly translate = inject(TranslateService);
+  private readonly language = inject(LanguageService);
 
   protected readonly pageSize = LOCATAIRES_PAGE_SIZE;
   protected readonly filter = signal<LocataireFilter>('ACTUEL');
@@ -78,6 +88,13 @@ export class LocatairesPage {
   /** Locataire dont on édite la fiche (`null` dans l'objet : création) et suppression en cours. */
   protected readonly form = signal<{ locataire: LocataireDTO | null } | null>(null);
   protected readonly deletion = signal<Deletion | null>(null);
+  /** Locataire dont on consulte les remarques : elles remplacent la liste (RG-REM-01). */
+  protected readonly remarks = signal<LocataireDTO | null>(null);
+  /** Mémorisée : un nouvel objet à chaque rendu relancerait la requête des remarques. */
+  protected readonly remarksTarget = computed<RemarqueCible | null>(() => {
+    const locataire = this.remarks();
+    return locataire ? { type: 'locataire', id: locataire.id, libelle: `${locataire.prenom} ${locataire.nom}` } : null;
+  });
 
   protected readonly list = rxResource({
     params: () => ({ page: this.page(), sort: this.sort(), q: this.search(), statut: this.filter() }),
@@ -141,6 +158,32 @@ export class LocatairesPage {
   /** « Marie Dupont » → « MD ». */
   protected initials(locataire: LocataireDTO): string {
     return `${locataire.prenom.charAt(0)}${locataire.nom.charAt(0)}`.toUpperCase();
+  }
+
+  protected fullName(locataire: LocataireDTO): string {
+    const civilite = locataire.civilite ? `${this.translate.instant(`locataires.civilite.${locataire.civilite}`)} ` : '';
+    return `${civilite}${locataire.prenom} ${locataire.nom}`;
+  }
+
+  protected openRemarks(locataire: LocataireDTO): void {
+    this.remarks.set(locataire);
+  }
+
+  protected closeRemarks(): void {
+    this.remarks.set(null);
+  }
+
+  /** Adresse, téléphones, e-mail, garages loués (maquette). */
+  protected summaryFields(locataire: LocataireDTO): SummaryField[] {
+    this.language.lang();
+    const t = (key: string) => this.translate.instant(key);
+    return [
+      { label: t('locataires.fiche.adresse'), value: this.address(locataire) },
+      { label: t('locataires.form.tel1'), value: locataire.tel1 },
+      { label: t('locataires.form.tel2'), value: locataire.tel2 || '—' },
+      { label: t('locataires.form.email'), value: locataire.email || '—' },
+      { label: t('locataires.fiche.garages'), value: locataire.garages.join(', ') || '—' },
+    ];
   }
 
   /** « 14 Rue de la Station, 1050 Ixelles », comme dans la maquette. */

@@ -1,0 +1,95 @@
+<div class="card rv">
+  <div class="rv__head">
+    <h2 class="rv__titre">{{ 'remarques.titre' | translate }}</h2>
+    @if (roles.canWrite()) {
+      <button type="button" class="btn btn--primary" (click)="openForm(null)">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'remarques.nouvelle' | translate }}
+      </button>
+    }
+  </div>
+
+  @if (actionError(); as message) {
+    <div class="message-warning" role="alert"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> {{ message }}</div>
+  }
+
+  @if (loadError(); as message) {
+    <div class="rv__etat rv__etat--erreur">
+      {{ message }}
+      <button type="button" class="link-muted" (click)="list.reload()">{{ 'commun.reessayer' | translate }}</button>
+    </div>
+  } @else if (list.isLoading() && remarques().length === 0) {
+    <div class="rv__etat">{{ 'commun.chargement' | translate }}</div>
+  } @else if (remarques().length === 0) {
+    <div class="rv__etat">{{ 'remarques.vide' | translate }}</div>
+  } @else {
+    @for (remarque of remarques(); track remarque.id) {
+      <article class="rem">
+        <div class="rem__corps">
+          <div class="rem__meta">
+            <app-status-badge [tone]="tone(remarque)" [block]="true" [width]="120">{{
+              'remarques.type.' + remarque.type | translate
+            }}</app-status-badge>
+            <span class="rem__date">{{ created(remarque) }}</span>
+            @if (remarque.type === 'PROBLEME' && remarque.resolu) {
+              <span class="rem__resolu">{{
+                (resolvedOn(remarque) ? 'remarques.resoluLe' : 'remarques.resolu') | translate: { date: resolvedOn(remarque) }
+              }}</span>
+            }
+          </div>
+          <!-- eslint-disable-next-line @angular-eslint/template/click-events-have-key-events -->
+          <div class="rem__texte rich-content" [innerHTML]="html(remarque)" (click)="openLink($event)"></div>
+        </div>
+        <div class="rem__actions">
+          @if (remarque.type === 'PROBLEME' && roles.canWrite()) {
+            @if (remarque.resolu) {
+              <button
+                type="button"
+                class="icon-btn icon-btn--round"
+                [appTooltip]="'remarques.rouvrir' | translate"
+                (click)="reopen(remarque)"
+              >
+                <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+              </button>
+            } @else {
+              <button
+                type="button"
+                class="icon-btn icon-btn--round"
+                [appTooltip]="'remarques.marquerResolu' | translate"
+                (click)="resolution.set(remarque)"
+              >
+                <i class="fa-solid fa-check" aria-hidden="true"></i>
+              </button>
+            }
+          }
+          <button
+            type="button"
+            class="icon-btn"
+            [appTooltip]="(roles.isReadOnly() ? 'remarques.visualiser' : 'remarques.modifier') | translate"
+            (click)="openForm(remarque)"
+          >
+            <i class="fa-solid" [class.fa-eye]="roles.isReadOnly()" [class.fa-pen]="!roles.isReadOnly()" aria-hidden="true"></i>
+          </button>
+          @if (roles.canDelete()) {
+            <button type="button" class="icon-btn" [appTooltip]="'remarques.supprimer' | translate" (click)="remove(remarque)">
+              <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+            </button>
+          }
+        </div>
+      </article>
+    }
+  }
+</div>
+
+@if (form(); as current) {
+  <app-remarque-form
+    [cible]="cible()"
+    [remarque]="current.remarque"
+    [readOnly]="roles.isReadOnly()"
+    (saved)="saved()"
+    (closed)="form.set(null)"
+  />
+}
+
+@if (resolution(); as current) {
+  <app-resolution-form [remarque]="current" (saved)="saved()" (closed)="resolution.set(null)" />
+}

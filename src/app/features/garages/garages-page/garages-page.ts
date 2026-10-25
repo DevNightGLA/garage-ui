@@ -1,10 +1,11 @@
-import { CurrencyPipe } from '@angular/common';
+import { CurrencyPipe, formatCurrency } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { SortSpec } from '../../../core/api/list-params';
+import { LanguageService } from '../../../core/language-service';
 import { RoleService } from '../../../core/role-service';
 import { Confirm } from '../../../shared/confirm/confirm';
 import { DataTable, DataTableColumn } from '../../../shared/data-table/data-table';
@@ -12,8 +13,12 @@ import { DataTableCell } from '../../../shared/data-table/data-table-cell';
 import { FilterButtons, FilterOption } from '../../../shared/filter-buttons/filter-buttons';
 import { PopoverMenu, PopoverMenuItem } from '../../../shared/popover-menu/popover-menu';
 import { SearchInput } from '../../../shared/search-input/search-input';
+import { SummaryCard, SummaryField } from '../../../shared/summary-card/summary-card';
 import { BadgeTone, StatusBadge } from '../../../shared/status-badge/status-badge';
 import { Tooltip } from '../../../shared/tooltip/tooltip';
+import { RemarquesButton } from '../../remarques/remarques-button';
+import { RemarquesView } from '../../remarques/remarques-view/remarques-view';
+import { RemarqueCible } from '../../remarques/remarque.models';
 import { GarageApi } from '../garage-api';
 import { GarageForm } from '../garage-form/garage-form';
 import { GarageDTO, GarageFilter, GarageStatut } from '../garage.models';
@@ -65,6 +70,9 @@ interface Deletion {
     GarageForm,
     LoyersHistory,
     LocationsHistory,
+    RemarquesButton,
+    RemarquesView,
+    SummaryCard,
   ],
   templateUrl: './garages-page.html',
   styleUrl: './garages-page.scss',
@@ -75,6 +83,7 @@ export class GaragesPage {
   private readonly api = inject(GarageApi);
   private readonly errors = inject(ErrorMessageService);
   private readonly translate = inject(TranslateService);
+  private readonly language = inject(LanguageService);
 
   protected readonly pageSize = GARAGES_PAGE_SIZE;
   protected readonly filter = signal<GarageFilter>('TOUS');
@@ -86,6 +95,13 @@ export class GaragesPage {
   protected readonly form = signal<{ garage: GarageDTO | null } | null>(null);
   protected readonly history = signal<GarageDTO | null>(null);
   protected readonly locationsHistory = signal<GarageDTO | null>(null);
+  /** Garage dont on consulte les remarques : elles remplacent la liste (RG-REM-01). */
+  protected readonly remarks = signal<GarageDTO | null>(null);
+  /** Mémorisée : un nouvel objet à chaque rendu relancerait la requête des remarques. */
+  protected readonly remarksTarget = computed<RemarqueCible | null>(() => {
+    const garage = this.remarks();
+    return garage ? { type: 'garage', id: garage.id, libelle: garage.numero } : null;
+  });
   protected readonly menu = signal<{ garage: GarageDTO; x: number; y: number } | null>(null);
   protected readonly deletion = signal<Deletion | null>(null);
 
@@ -158,6 +174,28 @@ export class GaragesPage {
 
   protected readonly rowKey = (garage: GarageDTO) => garage.id;
   protected readonly rowClass = (garage: GarageDTO) => (garage.id === this.history()?.id ? 'is-selected' : null);
+
+  protected openRemarks(garage: GarageDTO): void {
+    this.remarks.set(garage);
+  }
+
+  protected closeRemarks(): void {
+    this.remarks.set(null);
+  }
+
+  /** Statut, locataire actuel, clés et réserve, loyer actuel (maquette). */
+  protected summaryFields(garage: GarageDTO): SummaryField[] {
+    this.language.lang();
+    const t = (key: string) => this.translate.instant(key);
+    const tenant = garage.locataire ? `${garage.locataire.prenom} ${garage.locataire.nom}` : '—';
+    const rent = garage.loyerCourant === null ? '—' : formatCurrency(garage.loyerCourant, 'fr', '€', 'EUR', '1.2-2');
+    return [
+      { label: t('garages.fiche.statut'), value: t(`garages.statut.${garage.statut}`) },
+      { label: t('garages.fiche.locataireActuel'), value: tenant },
+      { label: t('garages.fiche.cles'), value: `${garage.nbClesTotal} / ${garage.nbClesReserve}` },
+      { label: t('garages.fiche.loyerActuel'), value: rent },
+    ];
+  }
 
   protected tone(statut: GarageStatut): BadgeTone {
     return STATUT_TONE[statut];

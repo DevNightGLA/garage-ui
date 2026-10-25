@@ -2,9 +2,7 @@
 
 Contrat entre `garages-api` (Spring Boot) et `garages-web` (Angular). À copier dans le projet front.
 
-Statut de chaque partie :
-- **Implémenté** : testé, le front peut s'y brancher (conventions, authentification, comptes).
-- **Proposé** : tiré des règles de gestion (`docs/regles-de-gestion.md`, notées `RG-xxx`), à valider avant l'implémentation du module correspondant (étape 3). Les messages d'erreur sont ceux des règles, mot pour mot. Un message marqué *(proposé)* n'existe pas dans les règles : il est à valider.
+Toutes les parties sont **implémentées et testées** : le front peut s'y brancher. Les règles de gestion sont dans `docs/regles-de-gestion.md` (notées `RG-xxx`) ; les messages d'erreur sont ceux des règles, mot pour mot. Un message marqué *(proposé)* n'existe pas dans les règles : il a été ajouté par l'implémentation et reste à valider.
 
 ---
 
@@ -392,56 +390,71 @@ Le solde d'un locataire (section 5) et, plus tard, les impayés du tableau de bo
 
 ---
 
-## 8. Remarques (proposé, étape 3.5, RG chapitre 10)
+## 8. Remarques (implémenté, étape 3.5, RG chapitre 10)
 
 **Énumération** : `type` `INFORMATION | PROBLEME | AUTRE`.
 
-`RemarqueDTO` :
+`RemarqueDTO` (en entrée, seuls `type` et `texte` comptent ; `id`, `dateCreation`, `resolu` et `dateResolution` sont ignorés) :
 ```json
 { "id": 5, "type": "PROBLEME", "texte": "<p>Porte <b>difficile à ouvrir</b>.</p>",
   "dateCreation": "2026-10-02T09:00:00", "resolu": false, "dateResolution": null }
 ```
-`resolu` et `dateResolution` valent `null` pour les types autres que `PROBLEME` (RG-REM-04). `texte` est du HTML limité (gras, italique, souligné, listes, liens) : **le back le nettoie à l'enregistrement** (liste blanche de balises) avant de le stocker.
+- `dateCreation` : date et heure du serveur (heure de Bruxelles), non modifiable (RG-REM-03).
+- `resolu` et `dateResolution` valent `null` pour les types autres que `PROBLEME` (RG-REM-04). Un problème est créé avec `resolu: false`.
+- `texte` est du HTML limité. **Le back le nettoie à l'enregistrement** (bibliothèque jsoup, liste blanche) : il garde `p`, `br`, `b`, `strong`, `i`, `em`, `u`, `ul`, `ol`, `li` et `a` ; seul l'attribut `href` d'un lien est conservé, et seulement en `http`, `https` ou `mailto` (`rel="noopener noreferrer"` est ajouté) ; tout le reste (scripts, styles, images, autres balises et attributs, adresses `javascript:`) est retiré, et le texte renvoyé est le texte nettoyé. Le front n'a donc pas à se fier à son propre éditeur. Un texte sans caractère visible une fois nettoyé (`<p><br></p>`, espaces, `&nbsp;`) est refusé comme un texte absent.
 
 | Méthode et chemin | Détail | Droit |
 | --- | --- | --- |
-| `GET /api/garages/{id}/remarques` · `GET /api/locataires/{id}/remarques` | liste non paginée, plus récentes d'abord (« Aucune remarque. » si vide, géré par le front) | lecture |
-| `POST /api/garages/{id}/remarques` · `POST /api/locataires/{id}/remarques` | `{ type, texte }` ; la date de création est ajoutée par le serveur (RG-REM-03) | écriture |
-| `PUT /api/remarques/{id}` | `{ type, texte }` ; passer à `PROBLEME` l'initialise non résolu, modifier un problème conserve son état | écriture |
-| `POST /api/remarques/{id}/resolution` | `{ dateResolution }` (par défaut proposée à la date du jour par le front) : marque résolu (RG-REM-05) | écriture |
-| `DELETE /api/remarques/{id}/resolution` | rouvre : efface l'état résolu et sa date (RG-REM-06) | écriture |
-| `DELETE /api/remarques/{id}` | | admin |
+| `GET /api/garages/{id}/remarques` · `GET /api/locataires/{id}/remarques` | liste **non paginée**, de la plus récente à la plus ancienne (« Aucune remarque. » si vide, géré par le front) ; 404 `GAR_INTROUVABLE` / `LOCT_INTROUVABLE` | lecture |
+| `GET /api/remarques/{id}` | 404 `REM_INTROUVABLE` | lecture |
+| `POST /api/garages/{id}/remarques` · `POST /api/locataires/{id}/remarques` | `{ type, texte }` ; la remarque est rattachée au garage ou au locataire, jamais aux deux (RG-REM-01). Réponse 201 + `Location`. | écriture |
+| `PUT /api/remarques/{id}` | `{ type, texte }` ; passer à `PROBLEME` l'initialise non résolu, modifier un problème garde son état, **quitter `PROBLEME` efface l'état résolu et sa date** ; le rattachement et la date de création ne changent pas | écriture |
+| `POST /api/remarques/{id}/resolution` | `{ dateResolution }` (proposée à la date du jour par le front) : marque résolu (RG-REM-05). Sur un problème déjà résolu, la date est remplacée. Réponse 200 : la remarque. | écriture |
+| `DELETE /api/remarques/{id}/resolution` | rouvre : efface l'état résolu et sa date (RG-REM-06) ; sans effet sur un problème déjà ouvert. Réponse 200 : la remarque. | écriture |
+| `DELETE /api/remarques/{id}` | réponse 204 | admin |
 
-| HTTP | Code | Message |
-| --- | --- | --- |
-| 409 | `REM_RESOLUTION_IMPOSSIBLE` | Seul un problème peut être marqué comme résolu. *(proposé)* |
-| 404 | `REM_INTROUVABLE` | Remarque introuvable. *(proposé)* |
-| 422 | `VALIDATION` | type et texte obligatoires (texte non vide) ; date de résolution obligatoire |
+| HTTP | Code | Message | Règle |
+| --- | --- | --- | --- |
+| 409 | `REM_RESOLUTION_IMPOSSIBLE` | Seul un problème peut être marqué comme résolu. / Seul un problème peut être rouvert. *(proposé)* | RG-REM-04 |
+| 409 | `REM_RESOLUTION_FUTURE` | La date de résolution ne peut pas être dans le futur. *(proposé)* | RG-REM-05 |
+| 409 | `REM_RESOLUTION_AVANT_CREATION` | La date de résolution ne peut pas précéder la création de la remarque (jj/mm/aaaa). *(proposé ; la date est celle de la création)* | RG-REM-05 |
+| 404 | `REM_INTROUVABLE` | Remarque introuvable. *(proposé)* | |
+| 422 | `VALIDATION` | `fieldErrors` (tous d'un coup) : `type` Le type est obligatoire. · `texte` Le texte est obligatoire. · `dateResolution` La date de résolution est obligatoire. (résolution) | RG-REM-02, 05 |
+
+Un type inconnu ou une date de résolution illisible renvoie 400 `REQUETE_INVALIDE`. Supprimer un garage ou un locataire supprime ses remarques. Le nombre de remarques de chaque garage et de chaque locataire (`nbRemarques`) est déjà dans leurs listes.
 
 ---
 
-## 9. Tableau de bord (proposé, étape 3.6, RG chapitre 11)
+## 9. Tableau de bord (implémenté, étape 3.6, RG chapitre 11)
+
+Tous les rôles peuvent le consulter. Tout est calculé à la date du jour du serveur.
 
 ### `GET /api/tableau-de-bord` — lecture
 ```json
 {
   "tauxOccupation": { "pourcentage": 58, "garagesLoues": 7, "garagesTotal": 12 },
-  "loyersMensuels": 620.00,
-  "impayes": { "montant": 210.00, "nbTotaux": 2, "nbPartiels": 1 },
-  "garagesLibres": { "nombre": 3, "nombreIndisponibles": 1 },
-  "loyersEncaisses12Mois": [ { "mois": "2025-11", "montant": 540.00 }, "..." ],
-  "tauxOccupation12Mois": [ { "mois": "2025-11", "pourcentage": 50 }, "..." ]
+  "loyersMensuels": 600.00,
+  "impayes": { "montant": 120.00, "nbTotaux": 1, "nbPartiels": 1 },
+  "garagesLibres": { "nombre": 4, "nombreIndisponibles": 1 },
+  "loyersEncaisses12Mois": [ { "mois": "2025-11", "montant": 0.00 }, "..." ],
+  "tauxOccupation12Mois": [ { "mois": "2025-11", "pourcentage": 58 }, "..." ]
 }
 ```
-Les séries comptent 12 points, du plus ancien au mois courant (RG-DAS-05).
+- **Taux d'occupation** (RG-DAS-01) : garages loués sur le total, `pourcentage` arrondi à l'entier le plus proche (12,5 donne 13), 0 s'il n'y a aucun garage. Un garage est loué selon RG-GAR-02 : un garage indisponible qui a une location active est loué.
+- **Loyers mensuels** (RG-DAS-02) : somme des loyers en vigueur aujourd'hui des garages actuellement loués.
+- **Impayés** (RG-DAS-03) : somme des restes dus de **toutes les échéances enregistrées en retard**, c'est-à-dire non soldées et d'un mois strictement avant le mois courant (le mois courant n'est jamais en retard). `nbTotaux` = échéances sans aucun versement, `nbPartiels` = échéances avec des versements et un reste dû. Même définition que le solde d'un locataire (section 5) et que l'écran Paiements (section 7).
+- **Garages libres** (RG-DAS-04) : garages au statut affiché `LIBRE` et `INDISPONIBLE` (un garage indisponible mais loué est compté loué).
+- **Séries** (RG-DAS-05) : 12 points, du plus ancien (mois courant moins 11) au mois courant, `mois` au format `yyyy-MM`.
+  - `loyersEncaisses12Mois` : somme des versements des échéances de chaque **mois de loyer** (comme l'« encaissé » de l'écran Paiements), pas de la date de paiement : un paiement tardif de septembre augmente septembre. 0.00 pour un mois sans versement.
+  - `tauxOccupation12Mois` : pourcentage de garages loués **au dernier jour de chaque mois** (une location qui se termine le dernier jour libère le garage ce jour-là, RG-GAR-02), et **à la date du jour pour le mois courant** : le dernier point est donc exactement `tauxOccupation.pourcentage`. Le total est le nombre **actuel** de garages (un garage n'a pas de date de création).
 
 ### `GET /api/tableau-de-bord/impayes` — lecture
-Pagination (le front demande `size=3`). Élément (RG-DAS-06) :
+Liste « Impayés à relancer » (RG-DAS-06), paginée, **3 par page par défaut**. Une ligne par échéance en retard, de la plus ancienne à la plus récente (période, puis locataire et garage). **L'ordre n'est pas modifiable** : un paramètre `sort` est ignoré. Élément :
 ```json
 { "locataire": { "id": 6, "nom": "Dubois", "prenom": "Pierre" }, "garage": { "id": 6, "numero": "G06" },
   "periode": "2026-09-01", "resteDu": 40.00, "type": "PARTIEL", "montantRecu": 40.00, "montantDu": 80.00 }
 ```
-`type` : `TOTAL` (aucun versement) ou `PARTIEL`.
+`type` : `TOTAL` (aucun versement, badge rouge) ou `PARTIEL` (badge orange, « Reçu `montantRecu` sur `montantDu` » en info-bulle). Les montants ont toujours 2 décimales.
 
 ---
 

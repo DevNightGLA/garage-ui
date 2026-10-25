@@ -140,6 +140,14 @@
       "titre": "Delete garage {{numero}}?",
       "refusTitre": "Deletion not possible",
       "message": "This action is final: the garage, its rents and its remarks will be deleted."
+    },
+    "retour": "Back to garages",
+    "fiche": {
+      "garage": "Garage",
+      "statut": "Status",
+      "locataireActuel": "Current tenant",
+      "cles": "Keys / reserve",
+      "loyerActuel": "Current rent"
     }
   },
   "loyers": {
@@ -231,6 +239,12 @@
       "titre": "Delete {{nom}}?",
       "refusTitre": "Deletion not possible",
       "message": "This action is final: the tenant and their remarks will be deleted."
+    },
+    "retour": "Back to tenants",
+    "fiche": {
+      "locataire": "Tenant",
+      "adresse": "Address",
+      "garages": "Rented garages"
     }
   },
   "locations": {
@@ -354,6 +368,36 @@
       "vide": "No payments."
     }
   },
+  "remarques": {
+    "titre": "Remarks",
+    "nouvelle": "New remark",
+    "vide": "No remarks.",
+    "type": {
+      "INFORMATION": "Information",
+      "PROBLEME": "Issue",
+      "AUTRE": "Other"
+    },
+    "resolu": "Resolved",
+    "resoluLe": "Resolved on {{date}}",
+    "marquerResolu": "Mark as resolved",
+    "rouvrir": "Reopen",
+    "modifier": "Edit remark",
+    "visualiser": "View remark",
+    "supprimer": "Delete remark",
+    "form": {
+      "titreNouvelle": "New remark · {{cible}}",
+      "titreModifier": "Edit remark · {{cible}}",
+      "titreVisualiser": "View remark · {{cible}}",
+      "type": "Type",
+      "texte": "Text",
+      "placeholder": "Enter the remark…",
+      "aideCreation": "The creation date is added automatically and cannot be edited."
+    },
+    "resolution": {
+      "titre": "Mark as resolved",
+      "date": "Resolution date"
+    }
+  },
   "erreur": {
     "generique": "An error occurred.",
     "RESEAU": "Unable to reach the server.",
@@ -380,6 +424,8 @@
     "PAI_DEJA_SOLDE": "This payment is already settled.",
     "PAI_LOCATION_NON_COUVERTE": "No lease covers this month.",
     "PAI_LOYER_ABSENT": "No rent is defined for this garage on this date.",
-    "PAI_VERSEMENT_INTROUVABLE": "Payment not found."
+    "PAI_VERSEMENT_INTROUVABLE": "Payment not found.",
+    "REM_INTROUVABLE": "Remark not found.",
+    "REM_RESOLUTION_FUTURE": "The resolution date cannot be in the future."
   }
 }

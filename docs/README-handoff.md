@@ -7,7 +7,7 @@ L'application doit être réalisée en **deux projets séparés** :
 
 | Projet | Techno | Dossier | Fichier de consignes |
 | --- | --- | --- | --- |
-| Back-end | Java 21, Spring Boot 3, Maven, JPA, Flyway, PostgreSQL | `garages-api/` | `api/CLAUDE.md` (à copier à la racine du projet) |
+| Back-end | Java 25, Spring Boot 4.1, Maven, JPA, Liquibase, PostgreSQL | `garages-api/` | `api/CLAUDE.md` (à copier à la racine du projet) |
 | Front-end | Angular (dernière version stable), standalone + signals, SCSS | `garages-web/` | `web/CLAUDE.md` (à copier à la racine du projet) |
 
 ## À propos des fichiers de design
@@ -23,7 +23,7 @@ Pour ouvrir la maquette : ouvrir `maquette/Gestion Garages.dc.html` dans un navi
 2. `maquette/Modele de donnees.dc.html` : modèle relationnel (8 tables : LOCATAIRE, LOCATION, GARAGE, LOYER_GARAGE, ECHEANCE, VERSEMENT, REMARQUE, UTILISATEUR), relations, CHECK/UNIQUE, données calculées, règles applicatives.
 3. `maquette/Gestion Garages.dc.html` : comportement visuel et interactions.
 
-En cas de conflit : règles de gestion > modèle de données > maquette. Le chapitre 13 des règles de gestion liste les écarts à trancher (voir « Décisions ouvertes » ci-dessous).
+En cas de conflit : règles de gestion > modèle de données > maquette. Le chapitre 13 des règles de gestion liste les écarts à trancher (voir « Décisions du chapitre 13 » ci-dessous).
 
 ## Principes d'architecture
 - **Règles métier uniquement dans les services du back.** Le front masque les boutons selon le rôle et affiche les erreurs, mais ne fait confiance à rien : le back refuse toute action non autorisée.
@@ -46,7 +46,7 @@ Pour chaque écran, le détail des colonnes, filtres, tris, formulaires et valid
 | Tableau de bord | 11 | 4 indicateurs (occupation, loyers mensuels, impayés, garages libres), 2 graphiques 12 mois (loyers encaissés, taux d'occupation), liste « Impayés à relancer » paginée par 3 |
 | Garages | 5 | Filtres Loué/Libre/Indisponible/Tous, tri multi-colonnes, remarques en pastille, menu (…) historiques loyers et locations, formulaire, suppression Admin avec motifs de refus |
 | Historique des loyers | 6 | Fenêtre : liste 5 par page, nouveau / modifier / supprimer le dernier loyer, blocages RG-LOY-08 et 09 |
-| Locataires | 7 | Filtres Actuels (défaut)/Anciens/Sans location/Tous, badges À jour/En retard/Ancien, alerte doublon |
+| Locataires | 7 | Filtres Actuels (défaut)/À venir/Anciens/Sans location/Tous, badges À jour/En retard/À venir/Ancien/Sans location, alerte doublon |
 | Locations | 8 | Filtres Actives/À venir/Terminées, filtre par période de fin, choix du locataire par recherche, date de fin = dernier jour d'un mois |
 | Paiements | 9 | Sélecteur mois/année, une ligne par garage loué, paiement total ou partiel, détail des versements, annulation Admin |
 | Remarques | 10 | Fenêtre rattachée à un garage ou à un locataire, éditeur riche (Quill dans la maquette), type Problème avec résolution |
@@ -84,14 +84,14 @@ Typographie observée dans la maquette
 
 Pour toute valeur non listée ici, lire directement le style en ligne dans `maquette/Gestion Garages.dc.html`.
 
-## Décisions ouvertes (chapitre 13 des règles de gestion)
-À valider avec le métier avant ou pendant l'implémentation. Proposition par défaut entre parenthèses :
-1. **Création des échéances** : la maquette n'a pas d'écran de génération. (Défaut : l'écran Paiements calcule une ligne par garage loué pour le mois affiché ; l'échéance est créée en base au premier versement, `montant_du` = loyer en vigueur à la période, figé.)
-2. **Maximum 20 garages** : contrôle applicatif non présent dans la maquette. (Défaut : contrôler.)
-3. **Gestion des utilisateurs** : absente de la maquette. (Défaut : back seulement — CRUD Admin sans écran, dernier admin actif protégé ; écran à prévoir plus tard.)
-4. **Adresse du garage** : colonne présente, jamais saisie. (Défaut : colonne facultative, pas d'écran.)
-5. **Historique des locations d'un garage** : une location « À venir » doit afficher « À venir » (la maquette affiche « Terminée » par erreur).
-6. **Clés totales** : ≥ 0 (maquette) ou > 0 (règles initiales). (Défaut : ≥ 0.)
+## Décisions du chapitre 13 (tranchées)
+Toutes les décisions ouvertes ont été tranchées et implémentées dans le back. Le détail et les dates sont au chapitre 13 de `docs/regles-de-gestion.md`.
+1. **Création des échéances** : le montant dû est le loyer en vigueur, figé dans l'échéance. L'échéance du mois courant est créée automatiquement chaque jour et à la création ou à la modification d'une location ; les autres mois naissent au premier versement. Les mois passés ne sont jamais rattrapés (décision du 25/10/2026).
+2. **Maximum 20 garages** : contrôlé à la création (`GAR_MAX_ATTEINT`).
+3. **Gestion des utilisateurs** : back seulement, CRUD Admin sans écran, dernier admin actif protégé ; l'écran est à prévoir plus tard.
+4. **Adresse du garage** : colonne facultative, exposée par l'API (`adresse`), sans écran de saisie dans la maquette.
+5. **Historique des locations d'un garage** : une location à venir y est `A_VENIR`.
+6. **Clés totales** : ≥ 0.
 
 ## Fichiers
 - `maquette/Gestion Garages.dc.html` : maquette interactive complète

@@ -21,35 +21,6 @@
   font-variant-numeric: tabular-nums;
 }
 
-// Pastille « remarques » : une icône bordée, avec le nombre en badge
-.remarques {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 32px;
-  height: 32px;
-  border: 1px solid var(--color-primary);
-  border-radius: var(--radius-md);
-  background: var(--white);
-  color: var(--color-primary);
-  font-size: 13px;
-}
-
-.remarques__n {
-  position: absolute;
-  top: -8px;
-  right: -8px;
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-  background: var(--gradient-brand);
-  font-size: 9px;
-  line-height: 16px;
-  text-align: center;
-  color: var(--white);
-}
-
 .locataire {
   display: flex;
   align-items: center;

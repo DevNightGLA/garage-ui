@@ -10,6 +10,7 @@ import {
   locataireAncien,
   locataireSansLocation,
 } from '../../../../testing/locataire-fixtures';
+import { probleme, remarque } from '../../../../testing/remarque-fixtures';
 import { provideTestTranslations } from '../../../../testing/translations';
 import { AuthService } from '../../../core/auth/auth-service';
 import { Role } from '../../../core/auth/auth.models';
@@ -591,6 +592,62 @@ describe('LocatairesPage', () => {
       await settle();
       expect(text(root.querySelector('app-confirm .message-error'))).toBe('Droits insuffisants pour cette action.');
       expect(root.querySelector('app-confirm')).not.toBeNull();
+    });
+  });
+
+  describe('remarques (RG-REM-01)', () => {
+    const isRemarques = (r: HttpRequest<unknown>) => r.method === 'GET' && r.url === '/api/locataires/1/remarques';
+    const openRemarks = async (role: Role = 'ADMIN', rows: LocataireDTO[] = [locataire(), locataireAJour()]) => {
+      await open(role, rows);
+      click(root.querySelector('tbody tr:first-child .remarques'));
+      http.expectOne((r) => r.method === 'GET' && r.url === `/api/locataires/${rows[0].id}/remarques`).flush([probleme(), remarque()]);
+      await settle();
+    };
+
+    it('la pastille ouvre les remarques du locataire à la place de la liste', async () => {
+      await openRemarks();
+      expect(root.querySelector('app-data-table')).toBeNull();
+      expect(root.querySelector('app-filter-buttons')).toBeNull();
+      expect(text(root.querySelector('.back-link'))).toBe('Retour aux locataires');
+      expect(root.querySelectorAll('app-remarques-view .rem')).toHaveLength(2);
+    });
+
+    it('résume le locataire : civilité et nom, adresse, téléphones, e-mail, garages loués', async () => {
+      await openRemarks();
+      expect(text(root.querySelector('.sc__kicker'))).toBe('Locataire');
+      expect(text(root.querySelector('.sc__title'))).toBe('Mme Marie Dupont');
+      expect(text(root.querySelector('.sc__avatar'))).toBe('MD');
+      expect(Array.from(root.querySelectorAll('.sc__field')).map((f) => text(f))).toEqual([
+        'Adresse14 Rue de la Station, 1050 Ixelles',
+        'Téléphone 10470 00 00 01',
+        'Téléphone 2—',
+        'E-mailmarie.dupont@example.com',
+        'Garages loués' + 'G01, G12',
+      ]);
+    });
+
+    it('affiche des tirets pour un locataire sans e-mail ni garage', async () => {
+      await openRemarks('ADMIN', [locataireSansLocation()]);
+      const fields = Array.from(root.querySelectorAll('.sc__field')).map((f) => text(f));
+      expect(fields).toContain('E-mail—');
+      expect(fields).toContain('Garages loués—');
+    });
+
+    it('« Retour aux locataires » revient à la liste, avec son filtre', async () => {
+      await openRemarks();
+      click(root.querySelector('.back-link'));
+      expect(root.querySelector('app-remarques-view')).toBeNull();
+      expect(rowsText()).toHaveLength(2);
+      expect(text(root.querySelector('.fb__btn.is-active'))).toBe('Actuels (6)');
+    });
+
+    it('recharge la liste et les compteurs quand une remarque change, pour que la pastille suive', async () => {
+      await openRemarks();
+      click(root.querySelector('app-remarques-view .rem .fa-trash-can')!.closest('button'));
+      http.expectOne((r) => r.method === 'DELETE' && r.url === '/api/remarques/2').flush(null, { status: 204, statusText: 'No Content' });
+      render();
+      http.expectOne(isRemarques).flush([remarque()]);
+      await flushReload();
     });
   });
 });
