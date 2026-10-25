@@ -3,6 +3,7 @@ import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@a
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { COMPTEURS, garage, libre, loyer, pageOf } from '../../../../testing/garage-fixtures';
 import { location } from '../../../../testing/location-fixtures';
+import { probleme, remarque } from '../../../../testing/remarque-fixtures';
 import { provideTestTranslations } from '../../../../testing/translations';
 import { AuthService } from '../../../core/auth/auth-service';
 import { Role } from '../../../core/auth/auth.models';
@@ -482,6 +483,74 @@ describe('GaragesPage', () => {
       render();
       expectLoyers().flush(pageOf([loyer()], 1, 0, 5));
       await flushReload();
+    });
+  });
+
+  describe('remarques (RG-REM-01)', () => {
+    const isRemarques = (r: HttpRequest<unknown>) => r.method === 'GET' && r.url === '/api/garages/1/remarques';
+    const openRemarks = async (role: Role = 'ADMIN') => {
+      await open(role);
+      await click(root.querySelector('tbody tr:first-child .remarques'));
+      http.expectOne(isRemarques).flush([probleme(), remarque()]);
+      await settle();
+    };
+
+    it('la pastille ouvre les remarques du garage à la place de la liste, sans ouvrir l\'historique des loyers', async () => {
+      await openRemarks();
+      expect(root.querySelector('app-data-table')).toBeNull();
+      expect(root.querySelector('app-filter-buttons')).toBeNull();
+      expect(root.querySelector('app-loyers-history')).toBeNull();
+      http.expectNone((r) => r.url === '/api/garages/1/loyers');
+      expect(text(root.querySelector('.back-link'))).toBe('Retour aux garages');
+      expect(Array.from(root.querySelectorAll('app-remarques-view .rem')).map((item) => text(item.querySelector('.rem__texte')))).toEqual([
+        'Fuite au plafond près de la porte.',
+        'Télécommande de porte remplacée.',
+      ]);
+    });
+
+    it('résume le garage : statut, locataire actuel, clés et réserve, loyer actuel', async () => {
+      await openRemarks();
+      expect(text(root.querySelector('.sc__kicker'))).toBe('Garage');
+      expect(text(root.querySelector('.sc__title'))).toBe('G01');
+      expect(Array.from(root.querySelectorAll('.sc__field')).map((f) => text(f))).toEqual([
+        'StatutLoué',
+        'Locataire actuelMarie Dupont',
+        'Clés / réserve3 / 1',
+        'Loyer actuel90,00 €',
+      ]);
+    });
+
+    it('affiche des tirets pour un garage libre, sans locataire ni loyer', async () => {
+      await open('ADMIN', [libre({ loyerCourant: null })]);
+      await click(root.querySelector('tbody tr:first-child .remarques'));
+      http.expectOne((r) => r.url === '/api/garages/2/remarques').flush([]);
+      await settle();
+      const fields = Array.from(root.querySelectorAll('.sc__field')).map((f) => text(f));
+      expect(fields).toContain('Locataire actuel—');
+      expect(fields).toContain('Loyer actuel—');
+      expect(text(root.querySelector('app-remarques-view .rv__etat'))).toBe('Aucune remarque.');
+    });
+
+    it('« Retour aux garages » revient à la liste', async () => {
+      await openRemarks();
+      await click(root.querySelector('.back-link'));
+      expect(root.querySelector('app-remarques-view')).toBeNull();
+      expect(root.querySelector('app-data-table')).not.toBeNull();
+      expect(rowsText()).toHaveLength(2);
+    });
+
+    it('recharge la liste et les compteurs quand une remarque change, pour que la pastille suive', async () => {
+      await openRemarks();
+      await click(root.querySelector('app-remarques-view .rem .fa-trash-can')!.closest('button'));
+      http.expectOne((r) => r.method === 'DELETE' && r.url === '/api/remarques/2').flush(null, { status: 204, statusText: 'No Content' });
+      render();
+      http.expectOne(isRemarques).flush([remarque()]);
+      await flushReload();
+    });
+
+    it('Lecture seule : consulte les remarques sans pouvoir en ajouter', async () => {
+      await openRemarks('LECTURE_SEULE');
+      expect(root.querySelector('app-remarques-view .rv__head .btn--primary')).toBeNull();
     });
   });
 });

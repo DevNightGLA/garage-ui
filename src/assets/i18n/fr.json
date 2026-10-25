@@ -140,6 +140,14 @@
       "titre": "Supprimer le garage {{numero}} ?",
       "refusTitre": "Suppression impossible",
       "message": "Cette action est définitive : le garage, ses loyers et ses remarques seront supprimés."
+    },
+    "retour": "Retour aux garages",
+    "fiche": {
+      "garage": "Garage",
+      "statut": "Statut",
+      "locataireActuel": "Locataire actuel",
+      "cles": "Clés / réserve",
+      "loyerActuel": "Loyer actuel"
     }
   },
   "loyers": {
@@ -231,6 +239,12 @@
       "titre": "Supprimer {{nom}} ?",
       "refusTitre": "Suppression impossible",
       "message": "Cette action est définitive : le locataire et ses remarques seront supprimés."
+    },
+    "retour": "Retour aux locataires",
+    "fiche": {
+      "locataire": "Locataire",
+      "adresse": "Adresse",
+      "garages": "Garages loués"
     }
   },
   "locations": {
@@ -352,6 +366,36 @@
       "montant": "Montant",
       "annuler": "Annuler ce versement",
       "vide": "Aucun versement."
+    }
+  },
+  "remarques": {
+    "titre": "Remarques",
+    "nouvelle": "Nouvelle remarque",
+    "vide": "Aucune remarque.",
+    "type": {
+      "INFORMATION": "Information",
+      "PROBLEME": "Problème",
+      "AUTRE": "Autre"
+    },
+    "resolu": "Résolu",
+    "resoluLe": "Résolu le {{date}}",
+    "marquerResolu": "Marquer résolu",
+    "rouvrir": "Rouvrir",
+    "modifier": "Modifier la remarque",
+    "visualiser": "Visualiser la remarque",
+    "supprimer": "Supprimer la remarque",
+    "form": {
+      "titreNouvelle": "Nouvelle remarque · {{cible}}",
+      "titreModifier": "Modifier la remarque · {{cible}}",
+      "titreVisualiser": "Visualiser la remarque · {{cible}}",
+      "type": "Type",
+      "texte": "Texte",
+      "placeholder": "Saisir la remarque…",
+      "aideCreation": "La date de création est ajoutée automatiquement et n'est pas modifiable."
+    },
+    "resolution": {
+      "titre": "Marquer résolu",
+      "date": "Date de résolution"
     }
   },
   "erreur": {

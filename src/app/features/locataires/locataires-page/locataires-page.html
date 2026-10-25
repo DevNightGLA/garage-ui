@@ -1,3 +1,15 @@
+@if (remarks(); as locataire) {
+  <button type="button" class="back-link" (click)="closeRemarks()">
+    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ 'locataires.retour' | translate }}
+  </button>
+  <app-summary-card
+    [avatar]="initials(locataire)"
+    [kicker]="'locataires.fiche.locataire' | translate"
+    [title]="fullName(locataire)"
+    [fields]="summaryFields(locataire)"
+  />
+  <app-remarques-view [cible]="remarksTarget()!" (changed)="refresh()" />
+} @else {
 <app-filter-buttons [options]="filterOptions()" [value]="filter()" (valueChange)="setFilter($event)" />
 
 <app-data-table
@@ -51,16 +63,11 @@
     </span>
   </ng-template>
   <ng-template appCell="nbRemarques" let-locataire>
-    <span
-      class="remarques"
-      [appTooltip]="'locataires.remarques' | translate: { n: locataire.nbRemarques }"
-      [attr.aria-label]="'locataires.remarques' | translate: { n: locataire.nbRemarques }"
-    >
-      <i class="fa-regular fa-comment" aria-hidden="true"></i>
-      @if (locataire.nbRemarques > 0) {
-        <b class="remarques__n">{{ locataire.nbRemarques }}</b>
-      }
-    </span>
+    <app-remarques-button
+      [count]="locataire.nbRemarques"
+      [label]="'locataires.remarques' | translate: { n: locataire.nbRemarques }"
+      (opened)="openRemarks(locataire)"
+    />
   </ng-template>
   <ng-template appCell="garages" let-locataire>
     <span class="garages dash-if-empty">{{ locataire.garages.join(', ') }}</span>
@@ -88,6 +95,7 @@
     </span>
   </ng-template>
 </app-data-table>
+}
 
 @if (form(); as current) {
   <app-locataire-form

@@ -1,3 +1,16 @@
+@if (remarks(); as garage) {
+  <button type="button" class="back-link" (click)="closeRemarks()">
+    <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ 'garages.retour' | translate }}
+  </button>
+  <app-summary-card
+    shape="square"
+    [avatar]="garage.numero"
+    [kicker]="'garages.fiche.garage' | translate"
+    [title]="garage.numero"
+    [fields]="summaryFields(garage)"
+  />
+  <app-remarques-view [cible]="remarksTarget()!" (changed)="refresh()" />
+} @else {
 <app-filter-buttons [options]="filterOptions()" [value]="filter()" (valueChange)="setFilter($event)" />
 
 <app-data-table
@@ -43,16 +56,11 @@
     }
   </ng-template>
   <ng-template appCell="nbRemarques" let-garage>
-    <span
-      class="remarques"
-      [appTooltip]="'garages.remarques' | translate: { n: garage.nbRemarques }"
-      [attr.aria-label]="'garages.remarques' | translate: { n: garage.nbRemarques }"
-    >
-      <i class="fa-regular fa-comment" aria-hidden="true"></i>
-      @if (garage.nbRemarques > 0) {
-        <b class="remarques__n">{{ garage.nbRemarques }}</b>
-      }
-    </span>
+    <app-remarques-button
+      [count]="garage.nbRemarques"
+      [label]="'garages.remarques' | translate: { n: garage.nbRemarques }"
+      (opened)="openRemarks(garage)"
+    />
   </ng-template>
   <ng-template appCell="locataire" let-garage>
     @if (garage.locataire) {
@@ -96,6 +104,7 @@
     </span>
   </ng-template>
 </app-data-table>
+}
 
 @if (form(); as current) {
   <app-garage-form

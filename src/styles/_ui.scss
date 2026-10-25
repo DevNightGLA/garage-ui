@@ -106,6 +106,28 @@
   border-color: var(--surface-border-input);
 }
 
+// Retour de la fiche des remarques vers la liste
+.back-link {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  align-self: flex-start;
+  min-height: 32px;
+  padding: 0;
+  border: 0;
+  background: none;
+  font-family: var(--font-sans);
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-body);
+  cursor: pointer;
+
+  &:hover {
+    color: var(--black);
+  }
+}
+
 .link-muted {
   padding: 0;
   border: 0;
@@ -163,6 +185,26 @@
 
   .dt td:has(> .cell-empty) {
     display: none !important;
+  }
+}
+
+// Texte enrichi affiché (remarques) : le HTML injecté n'a pas les attributs d'encapsulation d'un composant
+.rich-content {
+  :is(p, ul, ol) {
+    margin: 0 0 var(--space-2);
+  }
+
+  :is(ul, ol) {
+    padding-left: var(--space-5);
+  }
+
+  a {
+    color: var(--color-primary);
+    text-decoration: underline;
+  }
+
+  > :last-child {
+    margin-bottom: 0;
   }
 }
 

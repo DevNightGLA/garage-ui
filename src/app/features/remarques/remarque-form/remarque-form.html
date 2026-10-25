@@ -1,0 +1,36 @@
+<app-modal
+  [title]="titleKey() | translate: { cible: cible().libelle }"
+  [width]="480"
+  [error]="error()"
+  (closed)="closed.emit()"
+>
+  <form id="remarque-form" class="modal-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <app-form-field [label]="'remarques.form.type' | translate" [error]="fieldErrors()['type']">
+      <select class="input" formControlName="type">
+        <option value="INFORMATION">{{ 'remarques.type.INFORMATION' | translate }}</option>
+        <option value="PROBLEME">{{ 'remarques.type.PROBLEME' | translate }}</option>
+        <option value="AUTRE">{{ 'remarques.type.AUTRE' | translate }}</option>
+      </select>
+    </app-form-field>
+
+    <app-form-field [label]="'remarques.form.texte' | translate" [error]="fieldErrors()['texte']">
+      <app-rich-text formControlName="texte" [placeholder]="'remarques.form.placeholder' | translate" />
+    </app-form-field>
+
+    <div class="message-info">
+      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+      <span>{{ 'remarques.form.aideCreation' | translate }}</span>
+    </div>
+  </form>
+
+  <div modalFooter>
+    <button type="button" class="btn btn--secondary" (click)="closed.emit()">
+      {{ 'commun.annuler' | translate }}
+    </button>
+    @if (!readOnly()) {
+      <button type="submit" form="remarque-form" class="btn btn--primary" [disabled]="pending()">
+        {{ 'commun.enregistrer' | translate }}
+      </button>
+    }
+  </div>
+</app-modal>

@@ -237,14 +237,14 @@ Convention : chaque règle porte un identifiant `RG-<domaine>-<n°>` pour la tra
 ## 10. Remarques
 
 - **RG-REM-01** – Une remarque est rattachée soit à un **garage** (écran Garages, icône commentaire), soit à un **locataire** (écran Locataires). Elle n'est jamais rattachée à une location.
-- **RG-REM-02** – Champs obligatoires : type (Information, Problème, Autre) et texte. Le texte est un éditeur riche : gras, italique, souligné, listes numérotées et à puces, liens. Un texte vide est refusé.
+- **RG-REM-02** – Champs obligatoires : type (Information, Problème, Autre) et texte. Le texte est un éditeur riche : gras, italique, souligné, listes numérotées et à puces, liens. Un texte vide est refusé : le back nettoie le HTML (liste blanche de balises) et refuse un texte sans caractère visible.
 - **RG-REM-03** – La date et l'heure de création sont ajoutées automatiquement à la création, non modifiables (mention affichée dans le formulaire).
 - **RG-REM-04** – La notion de **résolu** n'existe que pour le type **Problème**.
   - Nouvelle remarque Problème : non résolue.
   - Type autre que Problème : aucune notion de résolution (valeur vide).
   - Passer une remarque d'un autre type à Problème l'initialise non résolue ; modifier une remarque Problème conserve son état.
-- **RG-REM-05** – **Marquer résolu** (Problème uniquement, hors Lecture seule) : demande une **date de résolution** obligatoire, proposée à la date du jour. Affichage « Résolu le jj/mm/aaaa ».
-- **RG-REM-06** – **Rouvrir** une remarque résolue efface l'état résolu et sa date.
+- **RG-REM-05** – **Marquer résolu** (Problème uniquement, hors Lecture seule) : demande une **date de résolution** obligatoire, proposée à la date du jour. Affichage « Résolu le jj/mm/aaaa ». Cette date ne peut être ni future ni antérieure à la création de la remarque ; sur un problème déjà résolu, elle est remplacée.
+- **RG-REM-06** – **Rouvrir** une remarque résolue efface l'état résolu et sa date. Changer le type d'un problème en un autre type efface aussi l'état résolu et sa date.
 - **RG-REM-07** – Suppression d'une remarque : Admin uniquement.
 - **RG-REM-08** – Tri du plus récent au plus ancien. Message « Aucune remarque. » si vide. Le nombre de remarques s'affiche en pastille sur l'icône de chaque garage et chaque locataire.
 - **RG-REM-09** – Les Gestionnaires peuvent ajouter, modifier et résoudre. La Lecture seule consulte uniquement.
@@ -255,9 +255,9 @@ Convention : chaque règle porte un identifiant `RG-<domaine>-<n°>` pour la tra
 
 - **RG-DAS-01** – **Taux d'occupation** = garages loués / total des garages (arrondi, en %), avec « n garages loués sur N ».
 - **RG-DAS-02** – **Loyers mensuels** = somme des loyers des garages actuellement loués.
-- **RG-DAS-03** – **Impayés** = somme des restes dus des échéances en retard (mois précédent et mois courant dans la maquette). La note distingue les impayés totaux (aucun versement) et partiels.
+- **RG-DAS-03** – **Impayés** = somme des restes dus des échéances en retard (RG-PAI-12 : toutes les échéances enregistrées non soldées d'un mois passé ; le mois courant n'est jamais en retard). La note distingue les impayés totaux (aucun versement) et partiels.
 - **RG-DAS-04** – **Garages libres** = nombre de garages au statut Libre, avec le nombre d'indisponibles.
-- **RG-DAS-05** – Deux graphiques sur 12 mois, avec navigation entre eux : loyers encaissés (euros) et taux d'occupation (%). Le dernier point correspond aux valeurs courantes.
+- **RG-DAS-05** – Deux graphiques sur 12 mois, avec navigation entre eux : loyers encaissés (euros) et taux d'occupation (%). Le dernier point correspond aux valeurs courantes. Les loyers encaissés d'un mois sont les versements des échéances de ce mois de loyer ; le taux d'occupation d'un mois passé est celui du dernier jour du mois (celui du jour pour le mois courant), sur le nombre actuel de garages.
 - **RG-DAS-06** – Liste « Impayés à relancer » : locataire, garage, période, reste dû, badge **Total** (rouge) ou **Partiel** (orange, avec « Reçu x sur y » en info-bulle), paginée par 3.
 
 ---
@@ -274,7 +274,7 @@ Convention : chaque règle porte un identifiant `RG-<domaine>-<n°>` pour la tra
 
 ## 13. Écarts avec le document de règles métier initial et points non couverts par la maquette
 
-À trancher avant l'implémentation technique.
+Tous ces points ont été tranchés pendant l'implémentation du back (voir les décisions datées sous le tableau).
 
 | Sujet | Document initial | Maquette |
 | --- | --- | --- |
@@ -303,5 +303,9 @@ Décisions du 24/10/2026 (module 3.2) : un quatrième statut **À venir** pour u
 Décisions du 25/10/2026 (module 3.3) : deux locations d'un même garage ne se chevauchent pas, même si la maquette l'autorise (RG-LOC-17) ; le loyer affiché d'une location est le loyer en vigueur à la date utile : aujourd'hui pour une location active, sa date de début pour une location à venir, sa date de fin pour une location terminée (RG-LOC-04) ; une location à venir qui a reçu un paiement anticipé n'est pas supprimable, la clé étrangère des échéances l'interdisant (RG-LOC-31 et 32) ; la fin et le début d'une location sont contrôlés par rapport aux mois déjà payés (RG-LOC-28).
 
 Décisions du 25/10/2026 (module 3.4) : les échéances sont **créées automatiquement pour le mois courant** (tâche quotidienne et création d'une location), avec le loyer en vigueur pour montant dû figé, et au premier versement pour les autres mois (RG-PAI-03) ; les mois passés ne sont jamais rattrapés, donc une ligne de mois passé sans échéance enregistrée est « à payer » mais pas en retard (RG-PAI-12) ; une ligne existe pour chaque location dont la période touche le mois, début en cours de mois et fin comprises, sans prorata (RG-PAI-01) ; le dernier versement est celui de la date de paiement la plus récente (RG-PAI-23) ; annuler le dernier versement d'un mois futur supprime son échéance (RG-PAI-25).
+
+Décisions du 25/10/2026 (module 3.5) : la date de résolution d'une remarque n'est ni future ni antérieure à sa création (RG-REM-05) ; le texte enrichi est nettoyé par le back avec une liste blanche de balises (jsoup) : `p`, `br`, `b`, `strong`, `i`, `em`, `u`, `ul`, `ol`, `li` et `a` avec `href` en http, https ou mailto seulement (RG-REM-02) ; quitter le type Problème efface l'état résolu (RG-REM-04).
+
+Décisions du 25/10/2026 (module 3.6) : les impayés du tableau de bord sont toutes les échéances enregistrées en retard, pas seulement celles du mois précédent (RG-DAS-03) ; les loyers encaissés d'un mois sont rangés par mois de loyer, pas par date de paiement (RG-DAS-05) ; le taux d'occupation d'un mois passé se lit au dernier jour du mois, avec la règle RG-GAR-02, et celui du mois courant à la date du jour (RG-DAS-05).
 
 Les données (garages, locataires, paiements) de la maquette sont des données de démonstration : les règles ci-dessus décrivent le comportement attendu, pas les valeurs.

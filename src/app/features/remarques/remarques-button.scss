@@ -1,0 +1,43 @@
+:host {
+  display: inline-block;
+}
+
+// Une icône bordée, avec le nombre en badge
+.remarques {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--color-primary);
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+
+  &:hover,
+  &:focus-visible {
+    background: var(--gradient-brand);
+    border-color: transparent;
+    color: var(--white);
+    box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+  }
+}
+
+.remarques__n {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 9px;
+  line-height: 16px;
+  text-align: center;
+  color: var(--white);
+}
