@@ -1,0 +1,68 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  min-height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: var(--font-sans);
+  font-size: var(--fs-body-sm);
+  line-height: var(--lh-body-sm);
+  color: var(--text-body);
+  background: var(--surface-page);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  color: var(--text-heading);
+}
+
+select,
+input,
+textarea,
+button,
+option {
+  font-family: var(--font-sans);
+}
+
+select,
+input[type='date'],
+input[type='number'],
+input[type='text'] {
+  color: var(--text-heading);
+}
+
+input::placeholder,
+textarea::placeholder {
+  font-style: italic;
+}
+
+// Champs désactivés (rôle Lecture seule : fenêtres en consultation)
+input:disabled,
+select:disabled,
+textarea:disabled {
+  background: var(--surface-border) !important;
+  color: var(--text-muted) !important;
+  border-color: var(--surface-border) !important;
+  cursor: not-allowed;
+  opacity: 1;
+  -webkit-text-fill-color: var(--text-muted);
+}
+
+// Focus visible (accessibilité)
+:focus-visible {
+  outline: none;
+  box-shadow: var(--shadow-focus-primary);
+}
