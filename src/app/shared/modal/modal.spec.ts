@@ -10,7 +10,7 @@ import { Modal } from './modal';
   imports: [Modal],
   template: `
     @if (open()) {
-      <app-modal title="Nouveau garage" [error]="error()" (closed)="open.set(false)">
+      <app-modal title="Nouveau garage" [subtitle]="subtitle()" [error]="error()" (closed)="open.set(false)">
         <input id="premier" />
         <button id="dernier" type="button">Autre</button>
         <div modalFooter><button id="pied" type="button">Enregistrer</button></div>
@@ -21,6 +21,7 @@ import { Modal } from './modal';
 class Host {
   open = signal(true);
   error = signal<string | null>(null);
+  subtitle = signal('');
 }
 
 describe('Modal', () => {
@@ -34,6 +35,14 @@ describe('Modal', () => {
     host = fixture.componentInstance;
     root = fixture.nativeElement;
     await fixture.whenStable();
+  });
+
+  it('affiche une ligne sous le titre seulement quand elle est renseignée', async () => {
+    expect(root.querySelector('.modal__subtitle')).toBeNull();
+    host.subtitle.set('Marie Dupont · G01 · Octobre 2026');
+    await fixture.whenStable();
+    expect(root.querySelector('.modal__subtitle')?.textContent?.trim()).toBe('Marie Dupont · G01 · Octobre 2026');
+    expect(root.querySelector('.modal__title')?.textContent?.trim()).toBe('Nouveau garage');
   });
 
   it('affiche le titre, le corps et le pied dans une boîte de dialogue', () => {

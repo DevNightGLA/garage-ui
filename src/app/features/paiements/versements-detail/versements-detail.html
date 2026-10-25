@@ -1,0 +1,79 @@
+<app-modal
+  [title]="'paiements.detail.titre' | translate"
+  [subtitle]="who()"
+  [width]="520"
+  [error]="cancelError()"
+  (closed)="closed.emit()"
+>
+  @if (loadError(); as message) {
+    <div class="vd__state vd__state--error">
+      {{ message }}
+      <button type="button" class="link-muted" (click)="detail.reload()">{{ 'commun.reessayer' | translate }}</button>
+    </div>
+  } @else if (data(); as d) {
+    <div class="vd__totaux">
+      <div class="vd__total">
+        <div class="vd__label">{{ 'paiements.detail.montantDu' | translate }}</div>
+        <div class="vd__valeur">{{ d.montantDu | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</div>
+      </div>
+      <div class="vd__total">
+        <div class="vd__label">{{ 'paiements.detail.recu' | translate }}</div>
+        <div class="vd__valeur">{{ d.montantRecu | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</div>
+      </div>
+      <div class="vd__total">
+        <div class="vd__label">{{ 'paiements.detail.resteDu' | translate }}</div>
+        <div class="vd__valeur" [class.is-due]="d.resteDu > 0">{{ d.resteDu | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</div>
+      </div>
+    </div>
+
+    @if (d.versements.length === 0) {
+      <div class="vd__state">{{ 'paiements.detail.vide' | translate }}</div>
+    } @else {
+      <table class="vd">
+        <thead>
+          <tr>
+            <th scope="col">{{ 'paiements.detail.date' | translate }}</th>
+            <th scope="col">{{ 'paiements.detail.mode' | translate }}</th>
+            <th scope="col" class="vd__end">{{ 'paiements.detail.montant' | translate }}</th>
+            <th scope="col"><span class="sr-only">{{ 'paiements.col.actions' | translate }}</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (versement of d.versements; track versement.id) {
+            <tr>
+              <td>{{ date(versement.datePaiement) }}</td>
+              <td>
+                <i
+                  class="fa-solid vd__mode"
+                  [class.fa-credit-card]="versement.modePaiement === 'VIREMENT'"
+                  [class.fa-coins]="versement.modePaiement === 'ESPECES'"
+                  [appTooltip]="'paiements.mode.' + versement.modePaiement | translate"
+                  tabindex="0"
+                ></i>
+              </td>
+              <td class="vd__end vd__montant">{{ versement.montant | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</td>
+              <td class="vd__end">
+                @if (roles.canDelete()) {
+                  <button
+                    type="button"
+                    class="icon-btn icon-btn--round"
+                    [appTooltip]="'paiements.detail.annuler' | translate"
+                    (click)="cancel(versement)"
+                  >
+                    <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+                  </button>
+                }
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    }
+  } @else {
+    <div class="vd__state">{{ 'commun.chargement' | translate }}</div>
+  }
+
+  <div modalFooter>
+    <button type="button" class="btn btn--primary" (click)="closed.emit()">{{ 'commun.fermer' | translate }}</button>
+  </div>
+</app-modal>

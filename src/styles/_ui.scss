@@ -100,6 +100,12 @@
   }
 }
 
+// Variante ronde, bordure grise : les actions des paiements dans la maquette
+.icon-btn--round {
+  border-radius: 50%;
+  border-color: var(--surface-border-input);
+}
+
 .link-muted {
   padding: 0;
   border: 0;

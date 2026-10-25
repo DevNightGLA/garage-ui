@@ -1,0 +1,143 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.mois {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+// Attendu, encaissé, en retard
+.kpis {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: var(--space-6);
+}
+
+.kpi {
+  padding: var(--space-5);
+}
+
+.kpi__label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.kpi__ligne {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  margin-top: var(--space-1);
+}
+
+.kpi__valeur {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--text-heading);
+  font-variant-numeric: tabular-nums;
+}
+
+.kpi__detail {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  font-size: 13px;
+}
+
+.kpi__mode {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    color: var(--color-primary);
+  }
+
+  b {
+    color: var(--text-heading);
+  }
+}
+
+.locataire {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+  text-align: left;
+
+  b {
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--text-heading);
+  }
+}
+
+.avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.garage {
+  color: var(--text-heading);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.montant {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: flex-end;
+  font-variant-numeric: tabular-nums;
+}
+
+// Reste dû d'un paiement partiel : rouge s'il est en retard (RG-PAI-13)
+.montant__reste {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--text-body);
+
+  &.is-late {
+    color: var(--color-danger);
+  }
+}
+
+.mode {
+  font-size: 16px;
+  color: var(--text-heading);
+}
+
+.actions {
+  display: inline-flex;
+  gap: var(--space-1);
+  white-space: nowrap;
+}
+
+// Smartphone : indicateurs plus compacts pour laisser la place à la liste
+@media (max-width: 575.98px) {
+  .kpis {
+    gap: var(--space-3);
+  }
+
+  .kpi {
+    padding: var(--space-4);
+  }
+}

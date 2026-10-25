@@ -1,0 +1,88 @@
+.vd__totaux {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: var(--space-3);
+}
+
+.vd__total {
+  min-width: 0;
+  padding: 10px 12px;
+  border-radius: var(--radius-md);
+  background: var(--surface-page);
+}
+
+.vd__label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+.vd__valeur {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text-heading);
+  white-space: nowrap;
+
+  &.is-due {
+    color: var(--color-danger);
+  }
+}
+
+.vd {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+
+  th {
+    padding: 8px 6px 8px 0;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: left;
+    text-transform: uppercase;
+    opacity: 0.7;
+  }
+
+  td {
+    padding: 8px 6px 8px 0;
+    border-top: 1px solid var(--surface-border);
+    color: var(--text-heading);
+  }
+}
+
+.vd__end {
+  text-align: right !important;
+}
+
+.vd__montant {
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+}
+
+.vd__mode {
+  font-size: 15px;
+}
+
+.vd__state {
+  padding: var(--space-4) 0;
+  text-align: center;
+  color: var(--text-muted);
+
+  &--error {
+    color: var(--color-danger);
+  }
+}
+
+// Smartphone : trois indicateurs empilés plutôt que serrés
+@media (max-width: 575.98px) {
+  .vd__totaux {
+    grid-template-columns: 1fr;
+  }
+
+  .vd__total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+  }
+}

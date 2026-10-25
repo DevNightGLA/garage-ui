@@ -1,0 +1,10 @@
+// Montant à verser ; en rouge pour un paiement partiel, comme le reste dû de la maquette
+.pf-info {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-heading);
+
+  &.is-partial {
+    color: var(--color-danger);
+  }
+}

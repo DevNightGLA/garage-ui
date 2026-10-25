@@ -1,0 +1,98 @@
+:host {
+  position: relative;
+  display: inline-block;
+}
+
+.mp__btn {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+  padding: 10px 14px;
+  border: 1px solid var(--surface-border-input);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-heading);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.mp__chevron {
+  font-size: 10px;
+}
+
+.mp__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+}
+
+.mp__panel {
+  position: absolute;
+  top: 48px;
+  left: 0;
+  z-index: 60;
+  width: 280px;
+  max-width: calc(100vw - 2 * var(--space-4));
+  padding: var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--white);
+  box-shadow: 0 20px 27px rgba(0, 0, 0, 0.15);
+  outline: none;
+}
+
+.mp__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: var(--space-3);
+}
+
+.mp__year {
+  color: var(--text-heading);
+}
+
+.mp__nav {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--surface-border);
+  color: var(--text-heading);
+  cursor: pointer;
+}
+
+.mp__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 6px;
+}
+
+.mp__month {
+  min-height: 38px;
+  padding: 10px 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--white);
+  font-family: var(--font-sans);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-heading);
+  cursor: pointer;
+
+  &:hover:not(.is-selected) {
+    background: var(--surface-page);
+  }
+
+  &.is-selected {
+    background: var(--gradient-brand);
+    color: var(--white);
+  }
+
+  &.is-current {
+    outline: 2px solid var(--color-primary);
+  }
+}
