@@ -1,0 +1,110 @@
+<app-filter-buttons [options]="filterOptions()" [value]="filter()" (valueChange)="setFilter($event)" />
+
+<app-data-table
+  [columns]="columns()"
+  [rows]="rows()"
+  [total]="total()"
+  [size]="pageSize"
+  [noun]="'locataires.nom' | translate"
+  [(page)]="page"
+  [(sort)]="sort"
+  [loading]="list.isLoading()"
+  [error]="loadError()"
+  [rowKey]="rowKey"
+  [rowClass]="rowClass"
+  (retry)="refresh()"
+>
+  <app-search-input
+    dtToolbarStart
+    [value]="search()"
+    [placeholder]="'locataires.recherche' | translate"
+    (valueChange)="setSearch($event)"
+  />
+  @if (roles.canWrite()) {
+    <button dtToolbarEnd type="button" class="btn btn--primary" (click)="openForm(null)">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'locataires.nouveau' | translate }}
+    </button>
+  }
+
+  <ng-template appCell="locataire" let-locataire>
+    <span class="identite">
+      <span
+        class="avatar"
+        [class.avatar--ancien]="locataire.statut === 'ANCIEN'"
+        [class.avatar--sans-location]="locataire.statut === 'SANS_LOCATION'"
+        aria-hidden="true"
+        >{{ initials(locataire) }}</span
+      >
+      <span class="identite__texte">
+        <b>{{ locataire.prenom }} {{ locataire.nom }}</b>
+        <span class="identite__details">
+          <span class="detail">
+            <i class="fa-solid fa-phone" aria-hidden="true"></i>
+            <span>{{ locataire.tel1 }}</span>
+          </span>
+          <span class="detail detail--adresse">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            <span>{{ address(locataire) }}</span>
+          </span>
+        </span>
+      </span>
+    </span>
+  </ng-template>
+  <ng-template appCell="nbRemarques" let-locataire>
+    <span
+      class="remarques"
+      [appTooltip]="'locataires.remarques' | translate: { n: locataire.nbRemarques }"
+      [attr.aria-label]="'locataires.remarques' | translate: { n: locataire.nbRemarques }"
+    >
+      <i class="fa-regular fa-comment" aria-hidden="true"></i>
+      @if (locataire.nbRemarques > 0) {
+        <b class="remarques__n">{{ locataire.nbRemarques }}</b>
+      }
+    </span>
+  </ng-template>
+  <ng-template appCell="garages" let-locataire>
+    <span class="garages">{{ locataire.garages.join(', ') }}</span>
+  </ng-template>
+  <ng-template appCell="statut" let-locataire>
+    <app-status-badge [tone]="tone(locataire)" [block]="true" [width]="120">{{
+      'locataires.statut.' + badgeKey(locataire) | translate
+    }}</app-status-badge>
+  </ng-template>
+  <ng-template appCell="actions" let-locataire>
+    <span class="actions">
+      <button
+        type="button"
+        class="icon-btn"
+        [appTooltip]="(roles.isReadOnly() ? 'locataires.visualiser' : 'locataires.modifier') | translate"
+        (click)="openForm(locataire)"
+      >
+        <i class="fa-solid" [class.fa-eye]="roles.isReadOnly()" [class.fa-pen]="!roles.isReadOnly()" aria-hidden="true"></i>
+      </button>
+      @if (roles.canDelete()) {
+        <button type="button" class="icon-btn" [appTooltip]="'locataires.supprimer' | translate" (click)="askDelete(locataire)">
+          <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+        </button>
+      }
+    </span>
+  </ng-template>
+</app-data-table>
+
+@if (form(); as current) {
+  <app-locataire-form
+    [locataire]="current.locataire"
+    [readOnly]="roles.isReadOnly()"
+    (saved)="formSaved()"
+    (closed)="form.set(null)"
+  />
+}
+
+@if (deletion(); as current) {
+  <app-confirm
+    [title]="(current.refusal ? 'locataires.suppression.refusTitre' : 'locataires.suppression.titre') | translate: { nom: current.locataire.prenom + ' ' + current.locataire.nom }"
+    [message]="current.refusal ? current.refusal.message : ('locataires.suppression.message' | translate)"
+    [reasons]="current.refusal?.reasons ?? []"
+    [error]="current.error"
+    (confirmed)="confirmDelete()"
+    (cancelled)="deletion.set(null)"
+  />
+}
