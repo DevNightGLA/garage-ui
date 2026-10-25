@@ -1,0 +1,27 @@
+<div class="di">
+  <input
+    #field
+    type="text"
+    inputmode="numeric"
+    maxlength="10"
+    autocomplete="off"
+    class="input di__field"
+    [value]="text()"
+    [disabled]="disabled()"
+    [placeholder]="'calendrier.placeholder' | translate"
+    (input)="typed(field)"
+    (blur)="left(field)"
+  />
+  <button
+    type="button"
+    class="di__btn"
+    [disabled]="disabled()"
+    [appTooltip]="'calendrier.choisir' | translate"
+    (click)="calendarOpen.set(true)"
+  >
+    <i class="fa-regular fa-calendar"></i>
+  </button>
+</div>
+@if (calendarOpen()) {
+  <app-calendar [selected]="value()" (picked)="pick($event)" (closed)="closeCalendar()" />
+}

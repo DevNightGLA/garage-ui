@@ -77,6 +77,8 @@
     var(--secondary-gradient-start),
     var(--secondary-gradient-accent)
   );
+  // Boutons principaux, pastilles et éléments actifs de la maquette
+  --gradient-brand: linear-gradient(310deg, #7928ca, #ff0080);
   // Valeurs de la maquette (≠ design system)
   --gradient-danger: linear-gradient(to top left, #d40505, #f2566f);
   --gradient-success: linear-gradient(to top left, #0c7a25, #62bd1d);

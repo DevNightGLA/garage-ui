@@ -1,0 +1,88 @@
+<div class="dt-toolbar">
+  <div class="dt-toolbar__start">
+    <ng-content select="[dtToolbarStart]" />
+    @if (sort().length > 0) {
+      <button type="button" class="btn btn--secondary" (click)="clearSort()">
+        <i class="fa-solid fa-xmark"></i>
+        {{ 'liste.annulerTris' | translate: { n: sort().length } }}
+      </button>
+    }
+  </div>
+  <ng-content select="[dtToolbarEnd]" />
+</div>
+
+<div class="card dt-card">
+  <div class="dt-scroll">
+    <table class="dt" [class.is-loading]="loading() && rows().length > 0" [attr.aria-busy]="loading()">
+      <thead>
+        <tr>
+          @for (col of columns(); track col.key) {
+            <th
+              scope="col"
+              [style.width]="col.width"
+              [style.text-align]="col.align ?? 'left'"
+              [attr.aria-sort]="ariaSort(col)"
+              [attr.title]="col.title ? (col.title | translate) : null"
+            >
+              @if (isSortable(col)) {
+                <button type="button" class="dt__sort" (click)="toggleSort(col)">
+                  {{ col.label | translate }}
+                  <span class="dt__ind" [class.is-on]="direction(col)" aria-hidden="true">{{
+                    indicator(col)
+                  }}</span>
+                </button>
+              } @else if (col.label) {
+                {{ col.label | translate }}
+              }
+            </th>
+          }
+        </tr>
+      </thead>
+      <tbody>
+        @if (error(); as message) {
+          <tr>
+            <td class="dt__state dt__state--error" [attr.colspan]="columns().length">
+              {{ message }}
+              <button type="button" class="link-muted" (click)="retry.emit()">
+                {{ 'commun.reessayer' | translate }}
+              </button>
+            </td>
+          </tr>
+        } @else if (loading() && rows().length === 0) {
+          <tr>
+            <td class="dt__state" [attr.colspan]="columns().length">
+              {{ 'commun.chargement' | translate }}
+            </td>
+          </tr>
+        } @else if (rows().length === 0) {
+          <tr>
+            <td class="dt__state" [attr.colspan]="columns().length">
+              {{ emptyMessage() | translate }}
+            </td>
+          </tr>
+        } @else {
+          @for (row of rows(); track rowKey()(row, $index)) {
+            <tr [class]="rowClass()?.(row)" [class.is-clickable]="clickable()" (click)="onRowClick(row)">
+              @for (col of columns(); track col.key) {
+                <td [style.text-align]="col.align ?? 'left'">
+                  @if (cellTemplates().get(col.key); as template) {
+                    <ng-container *ngTemplateOutlet="template; context: { $implicit: row, index: $index }" />
+                  } @else {
+                    {{ cellText(row, col.key) }}
+                  }
+                </td>
+              }
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+  <app-pagination
+    [page]="page()"
+    [size]="size()"
+    [total]="total()"
+    [noun]="noun()"
+    (pageChange)="page.set($event)"
+  />
+</div>

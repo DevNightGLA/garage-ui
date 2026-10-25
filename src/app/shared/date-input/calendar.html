@@ -1,0 +1,49 @@
+<div class="cal-backdrop" (click)="closed.emit()">
+  <div
+    #panel
+    class="cal"
+    role="dialog"
+    aria-modal="true"
+    tabindex="-1"
+    [attr.aria-label]="'calendrier.titre' | translate"
+    (click)="$event.stopPropagation()"
+  >
+    <div class="cal__head">
+      <button type="button" class="cal__nav" [attr.aria-label]="'calendrier.moisPrecedent' | translate" (click)="shift(-1)">
+        <i class="fa-solid fa-chevron-left"></i>
+      </button>
+      <b class="cal__label" aria-live="polite">{{ label() }}</b>
+      <button type="button" class="cal__nav" [attr.aria-label]="'calendrier.moisSuivant' | translate" (click)="shift(1)">
+        <i class="fa-solid fa-chevron-right"></i>
+      </button>
+    </div>
+    <div class="cal__grid cal__weekdays" aria-hidden="true">
+      @for (weekday of weekdays(); track $index) {
+        <span>{{ weekday }}</span>
+      }
+    </div>
+    <div class="cal__grid">
+      @for (cell of cells(); track $index) {
+        @if (cell) {
+          <button
+            type="button"
+            class="cal__day"
+            [class.is-selected]="cell.selected"
+            [class.is-today]="cell.today"
+            [attr.aria-pressed]="cell.selected"
+            [attr.aria-current]="cell.today ? 'date' : null"
+            (click)="pick(cell.iso)"
+          >
+            {{ cell.day }}
+          </button>
+        } @else {
+          <span></span>
+        }
+      }
+    </div>
+    <div class="cal__foot">
+      <button type="button" class="cal__today" (click)="pickToday()">{{ 'calendrier.aujourdhui' | translate }}</button>
+      <button type="button" class="btn btn--primary" (click)="closed.emit()">{{ 'commun.fermer' | translate }}</button>
+    </div>
+  </div>
+</div>

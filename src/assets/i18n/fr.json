@@ -1,5 +1,96 @@
 {
   "app": {
     "titre": "Gestion de garages"
+  },
+  "commun": {
+    "annuler": "Annuler",
+    "enregistrer": "Enregistrer",
+    "oui": "Oui",
+    "non": "Non",
+    "fermer": "Fermer",
+    "reessayer": "Réessayer",
+    "chargement": "Chargement…"
+  },
+  "nav": {
+    "pages": "Pages /",
+    "tableauDeBord": "Tableau de bord",
+    "garages": "Garages",
+    "locataires": "Locataires",
+    "locations": "Locations",
+    "paiements": "Paiements",
+    "afficherMasquerMenu": "Afficher / masquer le menu",
+    "principale": "Navigation principale",
+    "enConstruction": "Cet écran sera disponible prochainement."
+  },
+  "role": {
+    "ADMIN": "Admin",
+    "GESTIONNAIRE": "Gestionnaire",
+    "LECTURE_SEULE": "Lecture seule"
+  },
+  "langue": {
+    "francais": "Français",
+    "anglais": "English"
+  },
+  "liste": {
+    "compteur": "{{from}}–{{to}} sur {{total}} {{libelle}}",
+    "annulerTris": "Annuler les tris ({{n}})",
+    "vide": "Aucun résultat.",
+    "pagination": "Pagination",
+    "precedent": "Page précédente",
+    "suivant": "Page suivante"
+  },
+  "calendrier": {
+    "placeholder": "jj/mm/aaaa",
+    "choisir": "Choisir une date",
+    "titre": "Calendrier",
+    "aujourdhui": "Aujourd'hui",
+    "moisPrecedent": "Mois précédent",
+    "moisSuivant": "Mois suivant"
+  },
+  "auth": {
+    "connexion": {
+      "titre": "Connexion",
+      "sousTitre": "Connectez-vous pour accéder à l'application.",
+      "deconnecte": "Votre session a été fermée.",
+      "expiree": "Votre session a expiré. Veuillez vous reconnecter.",
+      "mdpModifie": "Mot de passe modifié. Vous pouvez vous connecter.",
+      "identifiant": "Identifiant",
+      "motDePasse": "Mot de passe",
+      "seConnecter": "Se connecter",
+      "mdpOublie": "Mot de passe oublié ?"
+    },
+    "oubli": {
+      "titre": "Mot de passe oublié",
+      "aide": "Saisissez votre adresse e-mail pour recevoir un lien de réinitialisation.",
+      "email": "Adresse e-mail",
+      "envoyer": "Envoyer le lien",
+      "retour": "Retour à la connexion",
+      "envoyeTitre": "Vérifiez votre messagerie",
+      "envoye": "Si un compte correspond à cette adresse, un lien de réinitialisation vient d'être envoyé."
+    },
+    "reinit": {
+      "titre": "Nouveau mot de passe",
+      "aide": "Choisissez un nouveau mot de passe.",
+      "lienManquant": "Le lien de réinitialisation est invalide ou incomplet."
+    },
+    "mdp": {
+      "titre": "Modifier mon mot de passe",
+      "actuel": "Mot de passe actuel",
+      "nouveau": "Nouveau mot de passe",
+      "confirmer": "Confirmer le nouveau mot de passe",
+      "differents": "Les deux mots de passe ne sont pas identiques.",
+      "afficher": "Afficher le mot de passe",
+      "masquer": "Masquer le mot de passe"
+    },
+    "deconnexion": {
+      "bouton": "Se déconnecter",
+      "titre": "Se déconnecter ?",
+      "message": "Votre session sera fermée."
+    }
+  },
+  "erreur": {
+    "generique": "Une erreur est survenue.",
+    "RESEAU": "Impossible de joindre le serveur.",
+    "ERREUR_INCONNUE": "Une erreur est survenue."
   }
 }

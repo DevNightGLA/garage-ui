@@ -1,0 +1,116 @@
+// Champs de formulaire : libellé, astérisque, surlignage rouge (RG-VAL-01) et éditeur riche.
+
+app-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  min-width: 0;
+}
+
+.ff {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--fs-form-label);
+  font-weight: 700;
+  text-transform: uppercase;
+
+  .input,
+  select,
+  textarea {
+    font-weight: 400;
+    text-transform: none;
+  }
+}
+
+.ff__star {
+  color: var(--color-danger);
+}
+
+.ff__error {
+  text-transform: none;
+}
+
+app-form-field.is-invalid {
+  .ff__label {
+    color: var(--color-danger);
+  }
+
+  .input,
+  select,
+  textarea,
+  .ql-toolbar.ql-snow,
+  .ql-container.ql-snow {
+    border-color: var(--color-danger);
+  }
+}
+
+// Formulaire des écrans publics et des fenêtres de mot de passe
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+
+  .btn {
+    padding: 12px var(--space-6);
+  }
+
+  .link-muted--end {
+    align-self: flex-end;
+    margin-top: calc(-1 * var(--space-3));
+  }
+
+  .link-muted--center {
+    align-self: center;
+  }
+}
+
+.modal-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+select.input {
+  padding-right: var(--space-2);
+}
+
+// Quill (thème snow) aux couleurs de l'application
+quill-editor.rt {
+  display: block;
+  width: 100%;
+}
+
+.ql-toolbar.ql-snow {
+  border: 1px solid var(--surface-border-input);
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+  font-family: var(--font-sans);
+}
+
+.ql-container.ql-snow {
+  min-height: 140px;
+  border: 1px solid var(--surface-border-input);
+  border-top: 0;
+  border-radius: 0 0 var(--radius-md) var(--radius-md);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 400;
+  text-transform: none;
+  color: var(--text-heading);
+}
+
+// Consultation (rôle Lecture seule) : pas de barre d'outils
+.rt:has(.ql-container.ql-disabled) .ql-toolbar {
+  display: none;
+}
+
+.ql-container.ql-snow.ql-disabled {
+  border-top: 1px solid var(--surface-border-input);
+  border-radius: var(--radius-md);
+  background: var(--surface-border);
+}
+
+.ql-editor.ql-blank::before {
+  font-style: italic;
+  color: var(--text-muted);
+}

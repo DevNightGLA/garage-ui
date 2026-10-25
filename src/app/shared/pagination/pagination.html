@@ -1,0 +1,40 @@
+<div class="pg">
+  <span class="pg__count">{{
+    'liste.compteur' | translate: { from: from(), to: to(), total: total(), libelle: noun() }
+  }}</span>
+  <nav class="pg__nav" [attr.aria-label]="'liste.pagination' | translate">
+    <button
+      type="button"
+      class="pg__btn"
+      [disabled]="current() === 0"
+      [attr.aria-label]="'liste.precedent' | translate"
+      (click)="go(current() - 1)"
+    >
+      <i class="fa-solid fa-chevron-left"></i>
+    </button>
+    @for (item of items(); track $index) {
+      @if (item === null) {
+        <span class="pg__gap" aria-hidden="true">…</span>
+      } @else {
+        <button
+          type="button"
+          class="pg__btn pg__btn--num"
+          [class.is-active]="item === current()"
+          [attr.aria-current]="item === current() ? 'page' : null"
+          (click)="go(item)"
+        >
+          {{ item + 1 }}
+        </button>
+      }
+    }
+    <button
+      type="button"
+      class="pg__btn"
+      [disabled]="current() >= pageCount() - 1"
+      [attr.aria-label]="'liste.suivant' | translate"
+      (click)="go(current() + 1)"
+    >
+      <i class="fa-solid fa-chevron-right"></i>
+    </button>
+  </nav>
+</div>

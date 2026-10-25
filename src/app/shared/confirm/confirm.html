@@ -1,0 +1,35 @@
+<app-modal [title]="title()" [error]="error()" (closed)="cancelled.emit()">
+  @if (reasons().length === 0) {
+    <div>{{ message() }}</div>
+  } @else {
+    <div class="confirm__refus">
+      <span class="confirm__icon" aria-hidden="true"><i class="fa-solid fa-ban"></i></span>
+      <span class="confirm__refus-titre">{{ message() }}</span>
+    </div>
+    <ul class="confirm__motifs">
+      @for (reason of reasons(); track $index) {
+        <li>
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          <span>{{ reason }}</span>
+        </li>
+      }
+    </ul>
+  }
+
+  @if (reasons().length === 0) {
+    <div modalFooter class="confirm__foot">
+      <button type="button" class="btn btn--secondary btn--wide" (click)="cancelled.emit()">
+        {{ 'commun.non' | translate }}
+      </button>
+      <button type="button" class="btn btn--primary btn--wide" (click)="confirmed.emit()">
+        {{ 'commun.oui' | translate }}
+      </button>
+    </div>
+  } @else {
+    <div modalFooter>
+      <button type="button" class="btn btn--primary btn--wide" (click)="cancelled.emit()">
+        {{ 'commun.fermer' | translate }}
+      </button>
+    </div>
+  }
+</app-modal>

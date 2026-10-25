@@ -1,0 +1,7 @@
+<label class="ff">
+  <span class="ff__label">{{ label() }}@if (required && requiredMark()) {<span class="ff__star"> *</span>}</span>
+  <ng-content />
+</label>
+@if (message(); as text) {
+  <div class="message-error ff__error" role="alert">{{ text }}</div>
+}

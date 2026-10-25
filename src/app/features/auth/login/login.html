@@ -1,0 +1,38 @@
+<app-auth-card [title]="'auth.connexion.titre' | translate" [subtitle]="subtitleKey | translate">
+  @if (passwordChanged) {
+    <div class="message-info">
+      <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+      <span>{{ 'auth.connexion.mdpModifie' | translate }}</span>
+    </div>
+  }
+
+  <form class="auth-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <app-form-field
+      [label]="'auth.connexion.identifiant' | translate"
+      [requiredMark]="false"
+      [error]="fieldErrors()['login']"
+    >
+      <input class="input" formControlName="login" autocomplete="username" />
+    </app-form-field>
+
+    <app-form-field
+      [label]="'auth.connexion.motDePasse' | translate"
+      [requiredMark]="false"
+      [error]="fieldErrors()['motDePasse']"
+    >
+      <app-password-input formControlName="motDePasse" autocomplete="current-password" />
+    </app-form-field>
+
+    <a class="link-muted link-muted--end" routerLink="/mot-de-passe-oublie">{{
+      'auth.connexion.mdpOublie' | translate
+    }}</a>
+
+    @if (error(); as message) {
+      <div class="message-error" role="alert">{{ message }}</div>
+    }
+
+    <button type="submit" class="btn btn--primary" [disabled]="pending()">
+      {{ 'auth.connexion.seConnecter' | translate }}
+    </button>
+  </form>
+</app-auth-card>

@@ -1,0 +1,53 @@
+:host {
+  display: block;
+}
+
+.pg {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--surface-border);
+  font-size: 13px;
+}
+
+.pg__nav {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.pg__btn {
+  width: 34px;
+  height: 34px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-md);
+  background: var(--white);
+  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
+  color: var(--text-heading);
+  font-family: var(--font-sans);
+  cursor: pointer;
+
+  &:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+}
+
+.pg__btn--num {
+  font-size: 13px;
+  font-weight: 700;
+
+  &.is-active {
+    background: var(--gradient-brand);
+    color: var(--white);
+  }
+}
+
+.pg__gap {
+  width: 20px;
+  text-align: center;
+}

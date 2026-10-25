@@ -1,5 +1,103 @@
 {
   "app": {
     "titre": "Garage management"
+  },
+  "commun": {
+    "annuler": "Cancel",
+    "enregistrer": "Save",
+    "oui": "Yes",
+    "non": "No",
+    "fermer": "Close",
+    "reessayer": "Retry",
+    "chargement": "Loading…"
+  },
+  "nav": {
+    "pages": "Pages /",
+    "tableauDeBord": "Dashboard",
+    "garages": "Garages",
+    "locataires": "Tenants",
+    "locations": "Leases",
+    "paiements": "Payments",
+    "afficherMasquerMenu": "Show / hide menu",
+    "principale": "Main navigation",
+    "enConstruction": "This screen will be available soon."
+  },
+  "role": {
+    "ADMIN": "Admin",
+    "GESTIONNAIRE": "Manager",
+    "LECTURE_SEULE": "Read-only"
+  },
+  "langue": {
+    "francais": "Français",
+    "anglais": "English"
+  },
+  "liste": {
+    "compteur": "{{from}}–{{to}} of {{total}} {{libelle}}",
+    "annulerTris": "Clear sorts ({{n}})",
+    "vide": "No results.",
+    "pagination": "Pagination",
+    "precedent": "Previous page",
+    "suivant": "Next page"
+  },
+  "calendrier": {
+    "placeholder": "dd/mm/yyyy",
+    "choisir": "Pick a date",
+    "titre": "Calendar",
+    "aujourdhui": "Today",
+    "moisPrecedent": "Previous month",
+    "moisSuivant": "Next month"
+  },
+  "auth": {
+    "connexion": {
+      "titre": "Sign in",
+      "sousTitre": "Sign in to access the application.",
+      "deconnecte": "Your session has been closed.",
+      "expiree": "Your session has expired. Please sign in again.",
+      "mdpModifie": "Password changed. You can now sign in.",
+      "identifiant": "Username",
+      "motDePasse": "Password",
+      "seConnecter": "Sign in",
+      "mdpOublie": "Forgot password?"
+    },
+    "oubli": {
+      "titre": "Forgot password",
+      "aide": "Enter your e-mail address to receive a reset link.",
+      "email": "E-mail address",
+      "envoyer": "Send link",
+      "retour": "Back to sign in",
+      "envoyeTitre": "Check your inbox",
+      "envoye": "If an account matches this address, a reset link has just been sent."
+    },
+    "reinit": {
+      "titre": "New password",
+      "aide": "Choose a new password.",
+      "lienManquant": "The reset link is invalid or incomplete."
+    },
+    "mdp": {
+      "titre": "Change my password",
+      "actuel": "Current password",
+      "nouveau": "New password",
+      "confirmer": "Confirm new password",
+      "differents": "The two passwords do not match.",
+      "afficher": "Show password",
+      "masquer": "Hide password"
+    },
+    "deconnexion": {
+      "bouton": "Log out",
+      "titre": "Log out?",
+      "message": "Your session will be closed."
+    }
+  },
+  "erreur": {
+    "generique": "An error occurred.",
+    "RESEAU": "Unable to reach the server.",
+    "ERREUR_INCONNUE": "An error occurred.",
+    "NON_AUTHENTIFIE": "You are not signed in.",
+    "ACCES_REFUSE": "You do not have sufficient rights for this action.",
+    "AUTH_IDENTIFIANTS_INVALIDES": "Incorrect username or password.",
+    "AUTH_COMPTE_DESACTIVE": "This account is disabled.",
+    "AUTH_MOT_DE_PASSE_ACTUEL_INCORRECT": "The current password is incorrect.",
+    "AUTH_JETON_INVALIDE": "The reset link is invalid or has expired.",
+    "VALIDATION": "Required fields are missing or invalid."
   }
 }

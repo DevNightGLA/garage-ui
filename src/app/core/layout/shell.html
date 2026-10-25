@@ -1,0 +1,51 @@
+<div class="shell">
+  <app-sidebar
+    [collapsed]="collapsed()"
+    [user]="auth.user()"
+    (changePassword)="passwordOpen.set(true)"
+    (logout)="logoutAsked.set(true)"
+  />
+
+  <main class="shell__main">
+    <header class="shell__head">
+      <div class="shell__heading">
+        <button
+          type="button"
+          class="shell__burger"
+          [attr.aria-expanded]="!collapsed()"
+          [appTooltip]="'nav.afficherMasquerMenu' | translate"
+          (click)="toggleMenu()"
+        >
+          <span></span><span></span><span></span>
+        </button>
+        <div>
+          @if (titleKey(); as key) {
+            <div class="shell__crumb">{{ 'nav.pages' | translate }} {{ key | translate }}</div>
+            <h1 class="shell__title">{{ key | translate }}</h1>
+          }
+        </div>
+      </div>
+      <div class="shell__tools">
+        <app-language-switch />
+        @if (auth.user(); as user) {
+          <span class="shell__role"><i class="fa-solid fa-user" aria-hidden="true"></i> {{ 'role.' + user.role | translate }}</span>
+        }
+      </div>
+    </header>
+
+    <router-outlet />
+  </main>
+</div>
+
+@if (passwordOpen()) {
+  <app-change-password (closed)="passwordOpen.set(false)" />
+}
+
+@if (logoutAsked()) {
+  <app-confirm
+    [title]="'auth.deconnexion.titre' | translate"
+    [message]="'auth.deconnexion.message' | translate"
+    (confirmed)="logout()"
+    (cancelled)="logoutAsked.set(false)"
+  />
+}
