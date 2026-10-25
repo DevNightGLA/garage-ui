@@ -129,6 +129,9 @@
 }
 
 .link-muted {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
   padding: 0;
   border: 0;
   background: none;

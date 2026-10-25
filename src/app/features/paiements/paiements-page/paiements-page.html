@@ -85,6 +85,7 @@
       @if (paiement.dernierVersement; as versement) {
         <i
           class="fa-solid mode"
+          role="img"
           [class.fa-credit-card]="versement.modePaiement === 'VIREMENT'"
           [class.fa-coins]="versement.modePaiement === 'ESPECES'"
           [appTooltip]="'paiements.mode.' + versement.modePaiement | translate"

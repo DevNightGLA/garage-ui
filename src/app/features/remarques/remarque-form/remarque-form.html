@@ -14,7 +14,11 @@
     </app-form-field>
 
     <app-form-field [label]="'remarques.form.texte' | translate" [error]="fieldErrors()['texte']">
-      <app-rich-text formControlName="texte" [placeholder]="'remarques.form.placeholder' | translate" />
+      <app-rich-text
+        formControlName="texte"
+        [placeholder]="'remarques.form.placeholder' | translate"
+        [ariaLabel]="'remarques.form.texte' | translate"
+      />
     </app-form-field>
 
     <div class="message-info">

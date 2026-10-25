@@ -61,8 +61,9 @@ textarea:disabled {
   -webkit-text-fill-color: var(--text-muted);
 }
 
-// Focus visible (accessibilité)
+// Focus visible (accessibilité). `!important` : sans lui, l'ombre propre à chaque composant
+// (boutons de filtre, pagination, pastille de remarques, menu...) masque l'anneau.
 :focus-visible {
   outline: none;
-  box-shadow: var(--shadow-focus-primary);
+  box-shadow: var(--shadow-focus-primary) !important;
 }

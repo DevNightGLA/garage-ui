@@ -9,7 +9,15 @@
     "non": "No",
     "fermer": "Close",
     "reessayer": "Retry",
-    "chargement": "Loading…"
+    "chargement": "Loading…",
+    "editeur": {
+      "gras": "Bold",
+      "italique": "Italic",
+      "souligne": "Underline",
+      "listeNumerotee": "Numbered list",
+      "listePuces": "Bulleted list",
+      "lien": "Link"
+    }
   },
   "nav": {
     "pages": "Pages /",
@@ -19,8 +27,7 @@
     "locations": "Leases",
     "paiements": "Payments",
     "afficherMasquerMenu": "Show / hide menu",
-    "principale": "Main navigation",
-    "enConstruction": "This screen will be available soon."
+    "principale": "Main navigation"
   },
   "role": {
     "ADMIN": "Admin",
