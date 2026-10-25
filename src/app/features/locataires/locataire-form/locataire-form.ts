@@ -124,7 +124,7 @@ export class LocataireForm implements OnInit {
           this.duplicate.set(this.errors.text(apiError));
           return;
         }
-        this.fieldErrors.set(apiError.fieldErrors);
+        this.fieldErrors.set(this.errors.fields(apiError));
         this.error.set(Object.keys(apiError.fieldErrors).length > 0 ? null : this.errors.text(apiError));
       },
     });

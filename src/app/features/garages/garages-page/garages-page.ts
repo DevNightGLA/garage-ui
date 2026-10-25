@@ -248,9 +248,10 @@ export class GaragesPage {
       error: (err: unknown) => {
         const apiError = toApiError(err);
         const message = this.errors.text(apiError);
+        const details = this.errors.details(apiError);
         this.deletion.set(
           apiError.code === 'GAR_SUPPRESSION_REFUSEE'
-            ? { ...current, refusal: { message, reasons: apiError.details.length > 0 ? apiError.details : [message] }, error: null }
+            ? { ...current, refusal: { message, reasons: details.length > 0 ? details : [message] }, error: null }
             : { ...current, error: message },
         );
       },
