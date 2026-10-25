@@ -1,8 +1,11 @@
 <div class="dt-toolbar">
   <div class="dt-toolbar__start">
     <ng-content select="[dtToolbarStart]" />
+    <button type="button" class="btn btn--secondary dt-sort-btn" aria-haspopup="true" (click)="openSortMenu($event)">
+      <i class="fa-solid fa-sort" aria-hidden="true"></i> {{ 'liste.trier' | translate }}
+    </button>
     @if (sort().length > 0) {
-      <button type="button" class="btn btn--secondary" (click)="clearSort()">
+      <button type="button" class="btn btn--secondary dt-clear" (click)="clearSort()">
         <i class="fa-solid fa-xmark"></i>
         {{ 'liste.annulerTris' | translate: { n: sort().length } }}
       </button>
@@ -64,7 +67,7 @@
           @for (row of rows(); track rowKey()(row, $index)) {
             <tr [class]="rowClass()?.(row)" [class.is-clickable]="clickable()" (click)="onRowClick(row)">
               @for (col of columns(); track col.key) {
-                <td [style.text-align]="col.align ?? 'left'">
+                <td [style.text-align]="col.align ?? 'left'" [attr.data-label]="col.label ? (col.label | translate) : null">
                   @if (cellTemplates().get(col.key); as template) {
                     <ng-container *ngTemplateOutlet="template; context: { $implicit: row, index: $index }" />
                   } @else {
@@ -86,3 +89,13 @@
     (pageChange)="page.set($event)"
   />
 </div>
+
+@if (sortMenu(); as menu) {
+  <app-popover-menu
+    [items]="sortMenuItems()"
+    [label]="'liste.trier' | translate"
+    [x]="menu.x"
+    [y]="menu.y"
+    (closed)="sortMenu.set(null)"
+  />
+}

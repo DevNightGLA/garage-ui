@@ -1,0 +1,25 @@
+<app-modal
+  [title]="titleKey() | translate: { numero: garageNumero() }"
+  [error]="error()"
+  (closed)="closed.emit()"
+>
+  <form id="loyer-form" class="modal-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <app-form-field [label]="'loyers.form.montant' | translate" [error]="fieldErrors()['montant']">
+      <input class="input" type="number" [attr.min]="0" step="0.01" formControlName="montant" />
+    </app-form-field>
+    <app-form-field [label]="'loyers.form.dateDebut' | translate" [error]="fieldErrors()['dateDebut']">
+      <app-date-input formControlName="dateDebut" />
+    </app-form-field>
+  </form>
+
+  <div modalFooter>
+    <button type="button" class="btn btn--secondary" (click)="closed.emit()">
+      {{ 'commun.annuler' | translate }}
+    </button>
+    @if (!readOnly()) {
+      <button type="submit" form="loyer-form" class="btn btn--primary" [disabled]="pending()">
+        {{ 'commun.enregistrer' | translate }}
+      </button>
+    }
+  </div>
+</app-modal>

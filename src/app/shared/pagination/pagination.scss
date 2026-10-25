@@ -13,6 +13,13 @@
   font-size: 13px;
 }
 
+@media (max-width: 575.98px) {
+  .pg {
+    justify-content: center;
+    padding-inline: var(--space-4);
+  }
+}
+
 .pg__nav {
   display: flex;
   align-items: center;

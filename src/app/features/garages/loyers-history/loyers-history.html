@@ -1,0 +1,122 @@
+<app-modal
+  [title]="'loyers.titre' | translate: { numero: garage().numero }"
+  [width]="720"
+  (closed)="closed.emit()"
+>
+  @if (roles.canWrite()) {
+    <div class="lh__toolbar">
+      <button type="button" class="btn btn--primary" (click)="openNew()">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'loyers.nouveau' | translate }}
+      </button>
+    </div>
+  }
+
+  <div class="lh__scroll">
+    <table class="lh">
+      <thead>
+        <tr>
+          <th scope="col">{{ 'loyers.col.montant' | translate }}</th>
+          <th scope="col">{{ 'loyers.col.debut' | translate }}</th>
+          <th scope="col">{{ 'loyers.col.fin' | translate }}</th>
+          <th scope="col">{{ 'loyers.col.etat' | translate }}</th>
+          <th scope="col" class="lh__end">{{ 'loyers.col.actions' | translate }}</th>
+        </tr>
+      </thead>
+      <tbody>
+        @if (loadError(); as message) {
+          <tr>
+            <td class="lh__state lh__state--error" colspan="5">
+              {{ message }}
+              <button type="button" class="link-muted" (click)="list.reload()">{{ 'commun.reessayer' | translate }}</button>
+            </td>
+          </tr>
+        } @else if (list.isLoading() && rows().length === 0) {
+          <tr><td class="lh__state" colspan="5">{{ 'commun.chargement' | translate }}</td></tr>
+        } @else if (rows().length === 0) {
+          <tr><td class="lh__state" colspan="5">{{ 'loyers.vide' | translate }}</td></tr>
+        } @else {
+          @for (loyer of rows(); track loyer.id; let index = $index) {
+            <tr>
+              <td class="lh__montant" [attr.data-label]="'loyers.col.montant' | translate">{{ loyer.montant | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</td>
+              <td [attr.data-label]="'loyers.col.debut' | translate">{{ date(loyer.dateDebut) }}</td>
+              <td [attr.data-label]="'loyers.col.fin' | translate">{{ date(loyer.dateFin) }}</td>
+              <td [attr.data-label]="'loyers.col.etat' | translate">
+                <app-status-badge [tone]="tone(loyer.etat)" [block]="true" [width]="120">{{
+                  'loyers.etat.' + loyer.etat | translate
+                }}</app-status-badge>
+              </td>
+              <td
+                class="lh__end"
+                [class.is-empty]="!hasActions(index)"
+                [attr.data-label]="'loyers.col.actions' | translate"
+              >
+                <div class="lh__actions">
+                  @if (hasActions(index)) {
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      [attr.aria-disabled]="!roles.isReadOnly() && !loyer.modifiable"
+                      [appTooltip]="editTooltip(loyer)"
+                      (click)="openEdit(loyer)"
+                    >
+                      <i class="fa-solid" [class.fa-eye]="roles.isReadOnly()" [class.fa-pen]="!roles.isReadOnly()"></i>
+                    </button>
+                  }
+                  @if (canDelete(loyer, index)) {
+                    <button
+                      type="button"
+                      class="icon-btn"
+                      [attr.aria-disabled]="!loyer.supprimable"
+                      [appTooltip]="deleteTooltip(loyer)"
+                      (click)="remove(loyer)"
+                    >
+                      <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                  }
+                </div>
+              </td>
+            </tr>
+          }
+        }
+      </tbody>
+    </table>
+  </div>
+
+  <app-pagination
+    class="lh__pager"
+    [page]="page()"
+    [size]="pageSize"
+    [total]="total()"
+    [noun]="'loyers.nom' | translate"
+    (pageChange)="page.set($event)"
+  />
+
+  @if (deleteError(); as message) {
+    <div class="message-warning" role="alert"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> {{ message }}</div>
+  }
+
+  <div class="message-info">
+    <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+    <span class="lh__aide">
+      <span>{{ 'loyers.aide.dernier' | translate }}</span>
+      <span>{{ 'loyers.aide.suppression' | translate }}</span>
+      <span>{{ 'loyers.aide.paiement' | translate }}</span>
+      <span>{{ 'loyers.aide.cloture' | translate }}</span>
+    </span>
+  </div>
+
+  <div modalFooter>
+    <button type="button" class="btn btn--primary" (click)="closed.emit()">{{ 'commun.fermer' | translate }}</button>
+  </div>
+</app-modal>
+
+@if (form(); as current) {
+  <app-loyer-form
+    [garageId]="garage().id"
+    [garageNumero]="garage().numero"
+    [loyer]="current.loyer"
+    [readOnly]="roles.isReadOnly()"
+    (saved)="formSaved()"
+    (closed)="form.set(null)"
+  />
+}

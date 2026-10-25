@@ -14,10 +14,13 @@ export type BadgeTone = 'primary' | 'info' | 'success' | 'warning' | 'danger' | 
   host: {
     '[class]': '"tone-" + tone()',
     '[class.is-block]': 'block()',
+    '[style.width.px]': 'block() ? width() : null',
   },
 })
 export class StatusBadge {
   readonly tone = input<BadgeTone>('primary');
-  /** Largeur fixe (106 px) et texte centré, comme dans les listes de la maquette. */
+  /** Largeur fixe et texte centré, comme dans les listes de la maquette. */
   readonly block = input(false);
+  /** Largeur en pixels quand `block` est actif (106 pour un statut, 120 pour l'état d'un loyer). */
+  readonly width = input(106);
 }

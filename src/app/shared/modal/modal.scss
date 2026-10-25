@@ -57,6 +57,7 @@
 
 .modal__foot {
   display: flex;
+  flex-wrap: wrap;
   justify-content: flex-end;
   gap: var(--space-2);
   padding: var(--space-4) var(--space-6);
@@ -64,5 +65,32 @@
 
   &:empty {
     display: none;
+  }
+}
+
+// Smartphone : fenêtre presque plein écran, marges réduites, boutons en pleine largeur
+@media (max-width: 575.98px) {
+  .modal-backdrop {
+    padding: var(--space-2);
+  }
+
+  .modal {
+    max-height: calc(100dvh - 2 * var(--space-2));
+  }
+
+  .modal__head {
+    padding: var(--space-4);
+  }
+
+  .modal__body {
+    padding: var(--space-4);
+  }
+
+  .modal__foot {
+    padding: var(--space-3) var(--space-4);
+
+    > * {
+      flex: 1 1 120px;
+    }
   }
 }

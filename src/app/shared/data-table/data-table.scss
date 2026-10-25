@@ -6,6 +6,7 @@
 
 .dt-toolbar {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: var(--space-3);
@@ -15,9 +16,15 @@
 .dt-toolbar__start {
   display: flex;
   flex: 1;
+  flex-wrap: wrap;
   align-items: center;
   gap: var(--space-3);
   min-width: 0;
+}
+
+// Le menu de tri n'existe que quand les en-têtes cliquables ont disparu (smartphone)
+.dt-sort-btn {
+  display: none;
 }
 
 .dt-card {
@@ -111,5 +118,119 @@
 
   &--error {
     color: var(--color-danger);
+  }
+}
+
+// Petit ordinateur : le menu occupe encore 272 px, on resserre les cellules pour garder toutes les colonnes
+@media (min-width: 992px) and (max-width: 1279.98px) {
+  .dt {
+    th,
+    td {
+      padding-right: 4px;
+      padding-left: 4px;
+    }
+
+    th:first-child,
+    td:first-child {
+      padding-left: var(--space-3);
+    }
+
+    th:last-child,
+    td:last-child {
+      padding-right: var(--space-3);
+    }
+  }
+}
+
+// Tablette et smartphone : chaque ligne devient une carte « libellé : valeur »,
+// le tri passe par le bouton Trier (les en-têtes cliquables disparaissent)
+@media (max-width: 991.98px) {
+  .dt-sort-btn {
+    display: inline-flex;
+  }
+
+  .dt {
+    thead {
+      display: none;
+    }
+
+    tbody,
+    tr {
+      display: block;
+    }
+
+    tr {
+      padding: var(--space-3) var(--space-4);
+      border-top: 1px solid var(--surface-border);
+    }
+
+    tr:first-child {
+      border-top: 0;
+    }
+
+    td {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      min-height: 32px;
+      padding: 6px 0 !important;
+      border-top: 0;
+      text-align: right !important;
+      // les badges de statut s'alignent à droite, pas au centre de la ligne
+      --badge-margin: 0;
+    }
+
+    td::before {
+      content: attr(data-label);
+      flex: none;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: left;
+      text-transform: uppercase;
+      color: var(--text-body);
+    }
+
+    td.dt__state {
+      display: block;
+      padding: var(--space-6) var(--space-4) !important;
+      text-align: center !important;
+    }
+
+    td.dt__state::before {
+      content: none;
+    }
+  }
+}
+
+// Tablette : les cartes se rangent sur deux colonnes
+@media (min-width: 576px) and (max-width: 991.98px) {
+  .dt tbody {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: var(--space-3);
+    padding: var(--space-3);
+  }
+
+  .dt tr {
+    border: 1px solid var(--surface-border);
+    border-radius: var(--radius-lg);
+  }
+
+  .dt tr:first-child {
+    border-top: 1px solid var(--surface-border);
+  }
+
+  // chargement, liste vide et erreur occupent toute la largeur, sans cadre
+  .dt tr:has(.dt__state) {
+    grid-column: 1 / -1;
+    border: 0;
+  }
+}
+
+// Smartphone : la barre d'outils passe sur toute la largeur
+@media (max-width: 767.98px) {
+  .dt-toolbar__start {
+    flex-basis: 100%;
   }
 }

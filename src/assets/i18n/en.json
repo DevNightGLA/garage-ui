@@ -33,6 +33,7 @@
   },
   "liste": {
     "compteur": "{{from}}–{{to}} of {{total}} {{libelle}}",
+    "trier": "Sort",
     "annulerTris": "Clear sorts ({{n}})",
     "vide": "No results.",
     "pagination": "Pagination",
@@ -86,6 +87,89 @@
       "bouton": "Log out",
       "titre": "Log out?",
       "message": "Your session will be closed."
+    }
+  },
+  "garages": {
+    "nom": "garages",
+    "nouveau": "New garage",
+    "recherche": "Filter by number, tenant or status",
+    "tous": "All",
+    "statut": {
+      "LOUE": "Rented",
+      "LIBRE": "Available",
+      "INDISPONIBLE": "Unavailable"
+    },
+    "col": {
+      "garage": "Garage",
+      "cles": "Keys",
+      "reserve": "Reserve",
+      "loyer": "Rent",
+      "loyerTitre": "Monthly rent",
+      "remarques": "Remarks",
+      "locataire": "Tenant",
+      "statut": "Status",
+      "historique": "History",
+      "actions": "Actions"
+    },
+    "remarques": "Remarks ({{n}})",
+    "modifier": "Edit garage",
+    "visualiser": "View garage",
+    "supprimer": "Delete garage",
+    "historiqueMenu": "Rent and lease history",
+    "menu": {
+      "loyers": "Rent history"
+    },
+    "form": {
+      "titreNouveau": "New garage",
+      "titreModifier": "Edit garage · {{numero}}",
+      "titreVisualiser": "View garage · {{numero}}",
+      "numero": "Number",
+      "cles": "Keys",
+      "reserve": "Reserve",
+      "statut": "Status",
+      "loyer": "Monthly rent (€)",
+      "debutLoyer": "Rent start",
+      "aideCreation": "The rent entered creates the first record of the garage's rent history.",
+      "aideModification": "The rent amount is managed in the garage's rent history."
+    },
+    "suppression": {
+      "titre": "Delete garage {{numero}}?",
+      "refusTitre": "Deletion not possible",
+      "message": "This action is final: the garage, its rents and its remarks will be deleted."
+    }
+  },
+  "loyers": {
+    "titre": "Rent price history · {{numero}}",
+    "nom": "rents",
+    "nouveau": "New rent",
+    "vide": "No rent.",
+    "modifier": "Edit rent",
+    "visualiser": "View rent",
+    "supprimer": "Delete rent",
+    "col": {
+      "montant": "Amount",
+      "debut": "Start date",
+      "fin": "End date",
+      "etat": "Status",
+      "actions": "Actions"
+    },
+    "etat": {
+      "A_VENIR": "Upcoming",
+      "EN_VIGUEUR": "In effect",
+      "CLOTURE": "Closed"
+    },
+    "form": {
+      "titreNouveau": "New rent · {{numero}}",
+      "titreModifier": "Edit rent · {{numero}}",
+      "titreVisualiser": "View rent · {{numero}}",
+      "montant": "Amount (€)",
+      "dateDebut": "Start date"
+    },
+    "aide": {
+      "dernier": "Only the latest rent can be edited.",
+      "suppression": "A rent can only be deleted if its start date is in a future month.",
+      "paiement": "Editing and deletion are blocked if a payment has already been made for the period.",
+      "cloture": "A new rent automatically closes the previous one (end = day before start)."
     }
   },
   "erreur": {

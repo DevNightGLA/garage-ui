@@ -14,6 +14,11 @@ export const CODE_INCONNU = 'ERREUR_INCONNUE';
 
 export function toApiError(err: unknown): ApiError {
   if (!(err instanceof HttpErrorResponse)) {
+    // Une `resource` enveloppe l'erreur HTTP d'origine dans `cause`.
+    const cause = (err as { cause?: unknown } | null)?.cause;
+    if (cause instanceof HttpErrorResponse) {
+      return toApiError(cause);
+    }
     return { status: 0, code: CODE_INCONNU, message: '', fieldErrors: {}, details: [] };
   }
   const body: Record<string, unknown> =

@@ -1,6 +1,9 @@
 import { inject, provideAppInitializer } from '@angular/core';
 import { TranslateService, provideTranslateService } from '@ngx-translate/core';
 import fr from '../assets/i18n/fr.json';
+import { registerFrenchLocale } from '../app/core/locale';
+
+registerFrenchLocale();
 
 /** Traductions françaises réelles, sans appel HTTP, pour les tests de composants. */
 export function provideTestTranslations() {

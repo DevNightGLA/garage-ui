@@ -33,6 +33,7 @@
   },
   "liste": {
     "compteur": "{{from}}–{{to}} sur {{total}} {{libelle}}",
+    "trier": "Trier",
     "annulerTris": "Annuler les tris ({{n}})",
     "vide": "Aucun résultat.",
     "pagination": "Pagination",
@@ -86,6 +87,89 @@
       "bouton": "Se déconnecter",
       "titre": "Se déconnecter ?",
       "message": "Votre session sera fermée."
+    }
+  },
+  "garages": {
+    "nom": "garages",
+    "nouveau": "Nouveau garage",
+    "recherche": "Filtrer par numéro, locataire ou statut",
+    "tous": "Tous",
+    "statut": {
+      "LOUE": "Loué",
+      "LIBRE": "Libre",
+      "INDISPONIBLE": "Indisponible"
+    },
+    "col": {
+      "garage": "Garage",
+      "cles": "Clés",
+      "reserve": "Réserve",
+      "loyer": "Loyer",
+      "loyerTitre": "Loyer mensuel",
+      "remarques": "Remarques",
+      "locataire": "Locataire",
+      "statut": "Statut",
+      "historique": "Historique",
+      "actions": "Actions"
+    },
+    "remarques": "Remarques ({{n}})",
+    "modifier": "Modifier le garage",
+    "visualiser": "Visualiser le garage",
+    "supprimer": "Supprimer le garage",
+    "historiqueMenu": "Historique des loyers et des locations",
+    "menu": {
+      "loyers": "Historique des loyers"
+    },
+    "form": {
+      "titreNouveau": "Nouveau garage",
+      "titreModifier": "Modifier le garage · {{numero}}",
+      "titreVisualiser": "Visualiser le garage · {{numero}}",
+      "numero": "Numéro",
+      "cles": "Clés",
+      "reserve": "Réserve",
+      "statut": "Statut",
+      "loyer": "Loyer mensuel (€)",
+      "debutLoyer": "Début du loyer",
+      "aideCreation": "Le loyer saisi crée le premier enregistrement de l'historique des loyers du garage.",
+      "aideModification": "Le montant du loyer se gère dans l’historique des loyers du garage."
+    },
+    "suppression": {
+      "titre": "Supprimer le garage {{numero}} ?",
+      "refusTitre": "Suppression impossible",
+      "message": "Cette action est définitive : le garage, ses loyers et ses remarques seront supprimés."
+    }
+  },
+  "loyers": {
+    "titre": "Historique des prix de loyers · {{numero}}",
+    "nom": "loyers",
+    "nouveau": "Nouveau loyer",
+    "vide": "Aucun loyer.",
+    "modifier": "Modifier le loyer",
+    "visualiser": "Visualiser le loyer",
+    "supprimer": "Supprimer le loyer",
+    "col": {
+      "montant": "Montant",
+      "debut": "Date de début",
+      "fin": "Date de fin",
+      "etat": "État",
+      "actions": "Actions"
+    },
+    "etat": {
+      "A_VENIR": "À venir",
+      "EN_VIGUEUR": "En vigueur",
+      "CLOTURE": "Clôturé"
+    },
+    "form": {
+      "titreNouveau": "Nouveau loyer · {{numero}}",
+      "titreModifier": "Modifier le loyer · {{numero}}",
+      "titreVisualiser": "Visualiser le loyer · {{numero}}",
+      "montant": "Montant (€)",
+      "dateDebut": "Date de début"
+    },
+    "aide": {
+      "dernier": "Seul le dernier loyer est modifiable.",
+      "suppression": "Un loyer ne peut être supprimé que si sa date de début est dans un mois futur.",
+      "paiement": "Modification et suppression sont bloquées si un paiement est déjà effectué sur la période.",
+      "cloture": "Un nouveau loyer clôture automatiquement le précédent (fin = veille du début)."
     }
   },
   "erreur": {

@@ -1,10 +1,15 @@
 <div class="shell">
   <app-sidebar
-    [collapsed]="collapsed()"
+    [collapsed]="rail()"
+    [open]="drawerOpen()"
     [user]="auth.user()"
-    (changePassword)="passwordOpen.set(true)"
-    (logout)="logoutAsked.set(true)"
+    (changePassword)="closeDrawer(); passwordOpen.set(true)"
+    (logout)="closeDrawer(); logoutAsked.set(true)"
   />
+
+  @if (drawerOpen()) {
+    <div class="shell__backdrop" (click)="closeDrawer()"></div>
+  }
 
   <main class="shell__main">
     <header class="shell__head">
@@ -12,7 +17,7 @@
         <button
           type="button"
           class="shell__burger"
-          [attr.aria-expanded]="!collapsed()"
+          [attr.aria-expanded]="menuExpanded()"
           [appTooltip]="'nav.afficherMasquerMenu' | translate"
           (click)="toggleMenu()"
         >

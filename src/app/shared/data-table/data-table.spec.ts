@@ -82,6 +82,56 @@ describe('DataTable', () => {
     expect(headerButtons()).toHaveLength(3);
   });
 
+  describe('smartphone (cartes et tri par menu)', () => {
+    const sortButton = () => root.querySelector<HTMLButtonElement>('.dt-sort-btn')!;
+    const menuItems = () => Array.from(root.querySelectorAll<HTMLButtonElement>('.pm__item'));
+
+    it('étiquette chaque cellule du libellé de sa colonne, pour la présentation en cartes', () => {
+      const cells = Array.from(root.querySelectorAll('tbody tr:first-child td'));
+      expect(cells.map((td) => td.getAttribute('data-label'))).toEqual(['Garages', 'Locataires', 'Locations', null]);
+    });
+
+    it('propose un bouton Trier qui liste les seules colonnes triables', async () => {
+      expect(sortButton().textContent!.trim()).toBe('Trier');
+      await click(sortButton());
+      expect(menuItems().map((item) => item.querySelector('.pm__label')!.textContent)).toEqual([
+        'Garages',
+        'Locataires',
+        'Locations',
+      ]);
+    });
+
+    it('trie une colonne depuis le menu, avec l\'icône du sens, puis cumule une seconde colonne avec son rang', async () => {
+      await click(sortButton());
+      await click(menuItems()[0]);
+      expect(host.sort()).toEqual([{ key: 'numero', dir: 'asc' }]);
+      expect(root.querySelector('.pm')).toBeNull();
+
+      await click(sortButton());
+      expect(menuItems()[0].querySelector('i')!.classList.contains('fa-arrow-up')).toBe(true);
+      expect(menuItems()[0].querySelector('.pm__count')).toBeNull();
+      await click(menuItems()[1]);
+      expect(host.sort()).toEqual([
+        { key: 'numero', dir: 'asc' },
+        { key: 'cles', dir: 'asc' },
+      ]);
+
+      await click(sortButton());
+      expect(menuItems().map((item) => item.querySelector('.pm__count')?.textContent ?? null)).toEqual(['1', '2', null]);
+      await click(menuItems()[0]);
+      expect(host.sort()[0]).toEqual({ key: 'numero', dir: 'desc' });
+      expect(menuItems()).toHaveLength(0);
+    });
+
+    it('revient à la page 1 quand le tri change depuis le menu', async () => {
+      host.page.set(2);
+      await fixture.whenStable();
+      await click(sortButton());
+      await click(menuItems()[2]);
+      expect(host.page()).toBe(0);
+    });
+  });
+
   it('trie une colonne : ▲, ▼, puis retire le tri', async () => {
     const [numero] = headerButtons();
     expect(indicators()).toEqual(['↕', '↕', '↕']);
@@ -114,11 +164,11 @@ describe('DataTable', () => {
   });
 
   it('propose « Annuler les tris (n) » et efface tous les tris', async () => {
-    expect(root.querySelector('.dt-toolbar .btn')).toBeNull();
+    expect(root.querySelector('.dt-clear')).toBeNull();
     const [numero, cles] = headerButtons();
     await click(numero);
     await click(cles);
-    const clear = root.querySelector('.dt-toolbar .btn')!;
+    const clear = root.querySelector('.dt-clear')!;
     expect(clear.textContent).toContain('Annuler les tris (2)');
 
     host.page.set(2);
@@ -126,7 +176,7 @@ describe('DataTable', () => {
     await click(clear);
     expect(host.sort()).toEqual([]);
     expect(host.page()).toBe(0);
-    expect(root.querySelector('.dt-toolbar .btn')).toBeNull();
+    expect(root.querySelector('.dt-clear')).toBeNull();
   });
 
   it('revient à la page 1 à chaque changement de tri', async () => {
