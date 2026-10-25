@@ -11,6 +11,7 @@ const SCREENS: Record<string, () => Promise<Type<unknown>>> = {
   locataires: () =>
     import('./features/locataires/locataires-page/locataires-page').then((m) => m.LocatairesPage),
   locations: () => import('./features/locations/locations-page/locations-page').then((m) => m.LocationsPage),
+  paiements: () => import('./features/paiements/paiements-page/paiements-page').then((m) => m.PaiementsPage),
 };
 
 export const routes: Routes = [

@@ -10,7 +10,12 @@
     (keydown)="trapFocus($event)"
   >
     <div class="modal__head">
-      <div class="modal__title" [id]="titleId">{{ title() }}</div>
+      <div class="modal__titles">
+        <div class="modal__title" [id]="titleId">{{ title() }}</div>
+        @if (subtitle()) {
+          <div class="modal__subtitle">{{ subtitle() }}</div>
+        }
+      </div>
       <button type="button" class="modal__close" [appTooltip]="'commun.fermer' | translate" (click)="closed.emit()">
         <i class="fa-solid fa-xmark"></i>
       </button>

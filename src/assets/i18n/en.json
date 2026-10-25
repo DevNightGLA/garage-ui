@@ -46,7 +46,10 @@
     "titre": "Calendar",
     "aujourdhui": "Today",
     "moisPrecedent": "Previous month",
-    "moisSuivant": "Next month"
+    "moisSuivant": "Next month",
+    "choisirMois": "Pick a month",
+    "anneePrecedente": "Previous year",
+    "anneeSuivante": "Next year"
   },
   "auth": {
     "connexion": {
@@ -294,6 +297,63 @@
       "vide": "This garage has never been rented."
     }
   },
+  "paiements": {
+    "nom": "payments",
+    "recherche": "Filter by tenant or garage",
+    "filtre": {
+      "A_PAYER": "To pay",
+      "PARTIEL": "Partial",
+      "PAYE": "Paid",
+      "TOUS": "All"
+    },
+    "statut": {
+      "A_PAYER": "To pay",
+      "PARTIEL": "Partial",
+      "PAYE": "Paid"
+    },
+    "mode": {
+      "VIREMENT": "Transfer",
+      "ESPECES": "Cash"
+    },
+    "kpi": {
+      "attendu": "Expected",
+      "encaisse": "Collected",
+      "enRetard": "Overdue"
+    },
+    "col": {
+      "locataire": "Tenant",
+      "garage": "Garage",
+      "montant": "Amount",
+      "payeLe": "Paid on",
+      "mode": "Mode",
+      "statut": "Status",
+      "actions": "Actions"
+    },
+    "reste": "Remaining {{montant}}",
+    "payerTotal": "Pay in full",
+    "payerPartiel": "Partial payment",
+    "detailVersements": "Payment details",
+    "form": {
+      "titreTotal": "Pay in full",
+      "titrePartiel": "Partial payment",
+      "montant": "Amount: {{montant}}",
+      "resteDu": "Remaining due: {{montant}}",
+      "montantRecu": "Amount received (€)",
+      "mode": "Payment method",
+      "payeLe": "Paid on"
+    },
+    "detail": {
+      "titre": "Payment details",
+      "montantDu": "Amount due",
+      "recu": "Received",
+      "resteDu": "Remaining due",
+      "date": "Date",
+      "mode": "Mode",
+      "montant": "Amount",
+      "annuler": "Cancel this payment",
+      "vide": "No payments."
+    }
+  },
   "erreur": {
     "generique": "An error occurred.",
     "RESEAU": "Unable to reach the server.",
@@ -316,6 +376,10 @@
     "LOC_FIN_AVANT_DEBUT": "The end date must be on or after the start date.",
     "LOC_FIN_INTERDITE": "An end date is only possible for an active lease.",
     "LOC_TERMINEE_NON_MODIFIABLE": "An ended lease can no longer be edited.",
-    "LOC_TERMINEE_NON_SUPPRIMABLE": "An ended lease is part of the garage's history and cannot be deleted."
+    "LOC_TERMINEE_NON_SUPPRIMABLE": "An ended lease is part of the garage's history and cannot be deleted.",
+    "PAI_DEJA_SOLDE": "This payment is already settled.",
+    "PAI_LOCATION_NON_COUVERTE": "No lease covers this month.",
+    "PAI_LOYER_ABSENT": "No rent is defined for this garage on this date.",
+    "PAI_VERSEMENT_INTROUVABLE": "Payment not found."
   }
 }

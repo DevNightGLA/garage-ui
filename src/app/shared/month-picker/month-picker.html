@@ -1,0 +1,47 @@
+<button
+  type="button"
+  class="mp__btn"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="open()"
+  [attr.aria-label]="('calendrier.choisirMois' | translate) + ' : ' + label()"
+  (click)="toggle()"
+>
+  <i class="fa-regular fa-calendar" aria-hidden="true"></i>
+  <span>{{ label() }}</span>
+  <i class="fa-solid fa-chevron-down mp__chevron" aria-hidden="true"></i>
+</button>
+
+@if (open()) {
+  <div class="mp__backdrop" (click)="open.set(false)"></div>
+  <div
+    #panel
+    class="mp__panel"
+    role="dialog"
+    tabindex="-1"
+    [attr.aria-label]="'calendrier.choisirMois' | translate"
+  >
+    <div class="mp__head">
+      <button type="button" class="mp__nav" [attr.aria-label]="'calendrier.anneePrecedente' | translate" (click)="shift(-1)">
+        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+      </button>
+      <b class="mp__year" aria-live="polite">{{ year() }}</b>
+      <button type="button" class="mp__nav" [attr.aria-label]="'calendrier.anneeSuivante' | translate" (click)="shift(1)">
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="mp__grid">
+      @for (month of months(); track month.value) {
+        <button
+          type="button"
+          class="mp__month"
+          [class.is-selected]="month.selected"
+          [class.is-current]="month.current && !month.selected"
+          [attr.aria-pressed]="month.selected"
+          (click)="pick(month.value)"
+        >
+          {{ month.label }}
+        </button>
+      }
+    </div>
+  </div>
+}

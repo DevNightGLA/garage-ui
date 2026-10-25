@@ -1,0 +1,147 @@
+<div class="mois">
+  <app-month-picker [value]="month()" (valueChange)="setMonth($event)" />
+</div>
+
+@let s = indicators();
+<div class="kpis">
+  <div class="kpi card">
+    <div class="kpi__label">{{ 'paiements.kpi.attendu' | translate }}</div>
+    <div class="kpi__ligne">
+      <div class="kpi__valeur">{{ s ? (s.attendu | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr') : '—' }}</div>
+    </div>
+  </div>
+  <div class="kpi card">
+    <div class="kpi__label">{{ 'paiements.kpi.encaisse' | translate }}</div>
+    <div class="kpi__ligne">
+      <div class="kpi__valeur">{{ s ? (s.encaisse.total | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr') : '—' }}</div>
+      @if (s) {
+        <div class="kpi__detail">
+          <span class="kpi__mode" [appTooltip]="'paiements.mode.VIREMENT' | translate" tabindex="0">
+            <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
+            <b>{{ s.encaisse.virement | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</b>
+          </span>
+          <span class="kpi__mode" [appTooltip]="'paiements.mode.ESPECES' | translate" tabindex="0">
+            <i class="fa-solid fa-coins" aria-hidden="true"></i>
+            <b>{{ s.encaisse.especes | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</b>
+          </span>
+        </div>
+      }
+    </div>
+  </div>
+  <div class="kpi card">
+    <div class="kpi__label">{{ 'paiements.kpi.enRetard' | translate }}</div>
+    <div class="kpi__ligne">
+      <div class="kpi__valeur">{{ s ? (s.enRetard | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr') : '—' }}</div>
+    </div>
+  </div>
+</div>
+
+<app-filter-buttons [options]="filterOptions()" [value]="filter()" (valueChange)="setFilter($event)" />
+
+<app-data-table
+  [columns]="columns()"
+  [rows]="rows()"
+  [total]="total()"
+  [size]="pageSize"
+  [noun]="'paiements.nom' | translate"
+  [(page)]="page"
+  [(sort)]="sort"
+  [loading]="list.isLoading()"
+  [error]="loadError()"
+  [rowKey]="rowKey"
+  (retry)="refresh()"
+>
+  <app-search-input
+    dtToolbarStart
+    [value]="search()"
+    [placeholder]="'paiements.recherche' | translate"
+    (valueChange)="setSearch($event)"
+  />
+
+  <ng-template appCell="locataire" let-paiement>
+    <span class="locataire">
+      <span class="avatar" aria-hidden="true">{{ initials(paiement) }}</span>
+      <b>{{ paiement.locataire.prenom }} {{ paiement.locataire.nom }}</b>
+    </span>
+  </ng-template>
+  <ng-template appCell="garage" let-paiement>
+    <b class="garage">{{ paiement.garage.numero }}</b>
+  </ng-template>
+  <ng-template appCell="montantDu" let-paiement>
+    <span class="montant">
+      <span class="montant__valeur">{{ paiement.montantDu | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</span>
+      @if (paiement.statut === 'PARTIEL') {
+        <span class="montant__reste" [class.is-late]="paiement.enRetard">{{
+          'paiements.reste' | translate: { montant: (paiement.resteDu | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr') }
+        }}</span>
+      }
+    </span>
+  </ng-template>
+  <ng-template appCell="dernierVersement" let-paiement>
+    <span class="nowrap dash-if-empty">{{ date(paiement.dernierVersement?.date) }}</span>
+  </ng-template>
+  <ng-template appCell="modePaiement" let-paiement>
+    <span class="dash-if-empty">
+      @if (paiement.dernierVersement; as versement) {
+        <i
+          class="fa-solid mode"
+          [class.fa-credit-card]="versement.modePaiement === 'VIREMENT'"
+          [class.fa-coins]="versement.modePaiement === 'ESPECES'"
+          [appTooltip]="'paiements.mode.' + versement.modePaiement | translate"
+          tabindex="0"
+        ></i>
+      }
+    </span>
+  </ng-template>
+  <ng-template appCell="statut" let-paiement>
+    <app-status-badge [tone]="tone(paiement)" [block]="true" [width]="120">{{
+      'paiements.statut.' + paiement.statut | translate
+    }}</app-status-badge>
+  </ng-template>
+  <ng-template appCell="actions" let-paiement>
+    <span class="actions" [class.cell-empty]="!canPay(paiement) && paiement.nbVersements === 0">
+      @if (canPay(paiement)) {
+        <button
+          type="button"
+          class="icon-btn icon-btn--round"
+          [appTooltip]="'paiements.payerTotal' | translate"
+          (click)="openPayment(paiement, 'TOTAL')"
+        >
+          <i class="fa-solid fa-euro-sign" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="icon-btn icon-btn--round"
+          [appTooltip]="'paiements.payerPartiel' | translate"
+          (click)="openPayment(paiement, 'PARTIEL')"
+        >
+          <i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i>
+        </button>
+      }
+      @if (paiement.nbVersements > 0) {
+        <button
+          type="button"
+          class="icon-btn icon-btn--round"
+          [appTooltip]="'paiements.detailVersements' | translate"
+          (click)="detail.set(paiement)"
+        >
+          <i class="fa-solid fa-list" aria-hidden="true"></i>
+        </button>
+      }
+    </span>
+  </ng-template>
+</app-data-table>
+
+@if (payment(); as current) {
+  <app-paiement-form
+    [paiement]="current.paiement"
+    [mois]="month()"
+    [type]="current.type"
+    (saved)="paymentSaved()"
+    (closed)="payment.set(null)"
+  />
+}
+
+@if (detail(); as current) {
+  <app-versements-detail [paiement]="current" [mois]="month()" (changed)="refresh()" (closed)="detail.set(null)" />
+}

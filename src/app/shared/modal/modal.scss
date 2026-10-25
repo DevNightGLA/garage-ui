@@ -35,6 +35,14 @@
   color: var(--text-heading);
 }
 
+.modal__titles {
+  min-width: 0;
+}
+
+.modal__subtitle {
+  font-size: 13px;
+}
+
 .modal__close {
   width: 32px;
   height: 32px;

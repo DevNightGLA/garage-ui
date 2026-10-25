@@ -36,6 +36,8 @@ export class Modal {
 
   /** Titre déjà traduit. */
   readonly title = input.required<string>();
+  /** Ligne sous le titre (« Marie Dupont · G01 · Octobre 2026 »), déjà traduite. */
+  readonly subtitle = input('');
   /** Largeur maximale en pixels. */
   readonly width = input(440);
   readonly error = input<string | null>(null);

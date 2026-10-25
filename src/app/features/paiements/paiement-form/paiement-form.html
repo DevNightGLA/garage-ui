@@ -1,0 +1,42 @@
+<app-modal
+  [title]="(isPartial() ? 'paiements.form.titrePartiel' : 'paiements.form.titreTotal') | translate"
+  [subtitle]="who()"
+  [width]="420"
+  [error]="error()"
+  (closed)="closed.emit()"
+>
+  <form id="paiement-form" class="modal-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="pf-info" [class.is-partial]="isPartial()">
+      {{
+        (isPartial() ? 'paiements.form.resteDu' : 'paiements.form.montant')
+          | translate: { montant: (paiement().resteDu | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr') }
+      }}
+    </div>
+
+    @if (isPartial()) {
+      <app-form-field [label]="'paiements.form.montantRecu' | translate" [error]="fieldErrors()['montant']">
+        <input class="input" type="number" [attr.min]="0" step="0.01" inputmode="decimal" formControlName="montant" />
+      </app-form-field>
+    }
+
+    <app-form-field [label]="'paiements.form.mode' | translate" [error]="fieldErrors()['modePaiement']">
+      <select class="input" formControlName="modePaiement">
+        <option value="VIREMENT">{{ 'paiements.mode.VIREMENT' | translate }}</option>
+        <option value="ESPECES">{{ 'paiements.mode.ESPECES' | translate }}</option>
+      </select>
+    </app-form-field>
+
+    <app-form-field [label]="'paiements.form.payeLe' | translate" [error]="fieldErrors()['datePaiement']">
+      <app-date-input formControlName="datePaiement" />
+    </app-form-field>
+  </form>
+
+  <div modalFooter>
+    <button type="button" class="btn btn--secondary" (click)="closed.emit()">
+      {{ 'commun.annuler' | translate }}
+    </button>
+    <button type="submit" form="paiement-form" class="btn btn--primary" [disabled]="pending()">
+      {{ 'commun.enregistrer' | translate }}
+    </button>
+  </div>
+</app-modal>

@@ -342,17 +342,21 @@ Règles apportées par ce module (décidées avec l'utilisateur le 25/10/2026) :
 - **Mois payés** (RG-LOC-28) : le début d'une location ne peut pas suivre son premier mois ayant un versement, et sa fin ne peut pas précéder son dernier mois ayant un versement. Une échéance sans versement ne compte pas.
 - **Suppression** : même une location à venir est refusée dès qu'un versement existe (la clé étrangère interdit de supprimer une location qui porte des échéances). Il faut d'abord annuler les versements (Admin, RG-PAI-25).
 
-Une date de fin passée ou du jour termine la location et libère le garage (RG-LOC-25) : aucun appel supplémentaire.
+Une date de fin passée ou du jour termine la location et libère le garage (RG-LOC-25) : aucun appel supplémentaire. La création ou la modification d'une location crée aussi son échéance du mois courant, s'il en manque une (section 7).
 
 ---
 
-## 7. Paiements (proposé, étape 3.4, RG chapitre 9)
+## 7. Paiements (implémenté, étape 3.4, RG chapitre 9)
 
-Selon les décisions ouvertes par défaut du README : une ligne par location couvrant le mois affiché ; l'échéance est créée au premier versement avec `montantDu` = loyer en vigueur à la période, figé.
+Comme pour les autres listes, les paramètres de recherche (`mois`, `statut`, `q`) sont reçus côté serveur dans un objet `PaiementCriteria` ; l'API HTTP reste de simples paramètres de requête. Un `statut`, un `mois` (format `yyyy-MM`) ou un tri invalide renvoie 400 `REQUETE_INVALIDE`.
 
-**Énumérations** : `statut` `A_PAYER | PARTIEL | PAYE` ; `modePaiement` `VIREMENT | ESPECES`.
+**Énumérations** : `statut` `A_PAYER | PARTIEL | PAYE` (calculé, RG-PAI-11) ; `modePaiement` `VIREMENT | ESPECES` ; `type` d'un paiement saisi `TOTAL | PARTIEL`.
 
-`PaiementDTO` (une ligne de l'écran) :
+**Les lignes d'un mois.** Il y a une ligne par **location dont la période touche le mois** : une location qui commence en cours de mois a sa ligne (loyer entier, sans prorata), une location terminée garde les lignes de ses mois passés, une location à venir a des lignes pour ses mois futurs (paiements anticipés). Le montant dû est le loyer en vigueur au 1er du mois (ou à la date de début si elle est plus tardive), **figé** dans l'échéance dès qu'elle existe.
+
+**Les échéances** (décision du 25/10/2026) : l'API crée l'échéance du mois courant de chaque location qui le couvre, **chaque jour** (tâche planifiée, `app.echeances.cron`, 1 h par défaut) et **à la création ou à la modification d'une location** ; elle crée aussi l'échéance d'un autre mois **au premier versement** (mois futur, ou mois passé non suivi). Les mois passés ne sont jamais rattrapés : une ligne de mois passé sans échéance enregistrée est « à payer » mais **jamais en retard**.
+
+`PaiementDTO` (une ligne ; en entrée, tout sauf `locationId`, `mois`, `type`, `montant`, `modePaiement` et `datePaiement` est ignoré, et ces cinq derniers champs sont en écriture seule ou ne servent qu'à la saisie) :
 ```json
 {
   "locationId": 3, "echeanceId": 12, "periode": "2026-10-01",
@@ -363,22 +367,28 @@ Selon les décisions ouvertes par défaut du README : une ligne par location cou
   "dernierVersement": { "date": "2026-10-06", "modePaiement": "VIREMENT" }, "nbVersements": 1
 }
 ```
-`echeanceId` vaut `null` tant qu'aucun versement n'existe. `enRetard` (RG-PAI-12) : ligne non soldée dont le mois est passé.
+`echeanceId` vaut `null` tant qu'aucune échéance n'est enregistrée pour ce mois. `enRetard` (RG-PAI-12 et 31) : échéance **enregistrée**, non soldée, dont le mois est **strictement avant le mois courant** ; le mois courant et les mois futurs ne sont jamais en retard. Les montants ont toujours 2 décimales. Le dernier versement est celui dont la date de paiement est la plus récente (à date égale, le dernier enregistré).
 
 | Méthode et chemin | Détail | Droit |
 | --- | --- | --- |
-| `GET /api/paiements?mois=2026-10` | `statut=A_PAYER|PARTIEL|PAYE` (absent = tous), `q` (locataire, garage, statut), tri sur `locataire`, `garage`, `montantDu`, `dernierVersement`, `modePaiement`, `statut` ; `mois` par défaut : mois courant | lecture |
-| `GET /api/paiements/synthese?mois=2026-10` | compteurs par statut et indicateurs (RG-PAI-40) : `{ compteurs:{TOUS,A_PAYER,PARTIEL,PAYE}, attendu, encaisse:{total,virement,especes}, enRetard }` | lecture |
-| `GET /api/paiements/versements?locationId=3&mois=2026-10` | détail (RG-PAI-24) : `{ montantDu, montantRecu, resteDu, versements:[{id, montant, modePaiement, datePaiement}] }` | lecture |
-| `POST /api/paiements` | `{ locationId, mois, type: TOTAL|PARTIEL, montant? (PARTIEL), modePaiement, datePaiement }` : crée un versement (et l'échéance si besoin). `TOTAL` verse le reste dû. | écriture |
-| `DELETE /api/paiements/versements/{id}` | annulation d'un versement ; reste dû et statut recalculés (RG-PAI-25) | admin |
+| `GET /api/paiements` | `mois=2026-10` (défaut : mois courant), filtre `statut=A_PAYER|PARTIEL|PAYE` (absent = tous), `q` (locataire dans les deux ordres, numéro du garage, libellé français du statut : « à payer », « partiel », « payé » ; sans casse ni accents), tri sur `locataire`, `garage` (ordre naturel), `montantDu`, `dernierVersement` (les lignes sans versement en dernier), `modePaiement`, `statut` (à payer, partiel, payé) ; **défaut : locataire puis garage** | lecture |
+| `GET /api/paiements/synthese?mois=2026-10&q=` | `{ "compteurs": { "A_PAYER": 2, "PARTIEL": 1, "PAYE": 4, "TOUS": 7 }, "attendu": 600.00, "encaisse": { "total": 370.00, "virement": 285.00, "especes": 85.00 }, "enRetard": 0.00 }` ; les compteurs tiennent compte de `q` mais pas du statut (RG-LST-03) ; l'attendu, l'encaissé (versements des échéances du mois) et le retard (somme des restes dus des échéances en retard) portent sur tout le mois (RG-PAI-40) | lecture |
+| `GET /api/paiements/versements?locationId=3&mois=2026-10` | détail (RG-PAI-24) : `{ montantDu, montantRecu, resteDu, versements: [{ id, montant, modePaiement, datePaiement }] }`, du plus ancien au plus récent ; liste vide sans échéance | lecture |
+| `POST /api/paiements` | `{ locationId, mois, type, montant?, modePaiement, datePaiement }` : crée un versement (et l'échéance si besoin). `TOTAL` verse le reste dû et ignore `montant`. Réponse 201 + `Location` (le détail) et le `PaiementDTO` de la ligne mise à jour. | écriture |
+| `DELETE /api/paiements/versements/{id}` | annule un versement ; le reste dû et le statut se recalculent (RG-PAI-25). L'échéance d'un mois futur qui n'a plus de versement est supprimée ; celle d'un mois courant ou passé reste (à payer). Réponse 204. | admin |
 
-| HTTP | Code | Message |
-| --- | --- | --- |
-| 409 | `PAI_MONTANT_PARTIEL` | Le montant doit être inférieur au reste dû (x €). Utilisez « Payer en totalité ». |
-| 409 | `PAI_DEJA_SOLDE` | Cette échéance est déjà soldée. *(proposé)* |
-| 409 | `PAI_LOCATION_NON_COUVERTE` | Aucune location ne couvre ce mois. *(proposé)* |
-| 422 | `VALIDATION` | mode de paiement et date obligatoires ; montant obligatoire et > 0 pour un paiement partiel |
+| HTTP | Code | Message | Règle |
+| --- | --- | --- | --- |
+| 409 | `PAI_MONTANT_PARTIEL` | Le montant doit être inférieur au reste dû (1 500,25 €). Utilisez « Payer en totalité ». (montant au moins égal au reste dû ; reste dû au format français) | RG-PAI-22 |
+| 409 | `PAI_DEJA_SOLDE` | Cette échéance est déjà soldée. *(proposé)* | RG-PAI-20 |
+| 409 | `PAI_LOCATION_NON_COUVERTE` | Aucune location ne couvre ce mois. *(proposé ; aussi pour le détail des versements)* | RG-PAI-01 |
+| 409 | `PAI_LOYER_ABSENT` | Aucun loyer n'est défini pour ce garage à cette date. *(proposé ; cas rare, un loyer existe toujours à la date de début d'une location)* | RG-PAI-03 |
+| 404 | `LOC_INTROUVABLE` · `PAI_VERSEMENT_INTROUVABLE` | Location introuvable. · Versement introuvable. *(proposé)* | |
+| 422 | `VALIDATION` | `fieldErrors` (tous d'un coup) : `locationId` La location est obligatoire. · `mois` Le mois est obligatoire. · `type` Le type de paiement est obligatoire. · `modePaiement` Le mode de paiement est obligatoire. · `datePaiement` La date de paiement est obligatoire. · `montant` (paiement partiel seulement) Le montant est obligatoire pour un paiement partiel. / Le montant doit être supérieur à 0. / Le montant doit avoir au plus 2 décimales. | RG-PAI-21, 22 |
+
+Un mode, un type ou un mois inconnu, ou une date illisible, renvoie 400 `REQUETE_INVALIDE`. Tout mois couvert par la location peut être payé, même passé, même pour une location terminée (arriérés) ; la date de paiement est libre. Deux versements simultanés ne peuvent pas dépasser le montant dû (la location est verrouillée pendant le paiement).
+
+Le solde d'un locataire (section 5) et, plus tard, les impayés du tableau de bord se lisent sur ces échéances enregistrées.
 
 ---
 

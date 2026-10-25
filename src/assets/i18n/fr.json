@@ -46,7 +46,10 @@
     "titre": "Calendrier",
     "aujourdhui": "Aujourd'hui",
     "moisPrecedent": "Mois précédent",
-    "moisSuivant": "Mois suivant"
+    "moisSuivant": "Mois suivant",
+    "choisirMois": "Choisir un mois",
+    "anneePrecedente": "Année précédente",
+    "anneeSuivante": "Année suivante"
   },
   "auth": {
     "connexion": {
@@ -292,6 +295,63 @@
     "historique": {
       "titre": "Historique des locations · {{numero}}",
       "vide": "Ce garage n'a jamais été loué."
+    }
+  },
+  "paiements": {
+    "nom": "paiements",
+    "recherche": "Filtrer par locataire ou garage",
+    "filtre": {
+      "A_PAYER": "À payer",
+      "PARTIEL": "Partiel",
+      "PAYE": "Payé",
+      "TOUS": "Tous"
+    },
+    "statut": {
+      "A_PAYER": "À payer",
+      "PARTIEL": "Partiel",
+      "PAYE": "Payé"
+    },
+    "mode": {
+      "VIREMENT": "Virement",
+      "ESPECES": "Espèces"
+    },
+    "kpi": {
+      "attendu": "Attendu",
+      "encaisse": "Encaissé",
+      "enRetard": "En retard"
+    },
+    "col": {
+      "locataire": "Locataire",
+      "garage": "Garage",
+      "montant": "Montant",
+      "payeLe": "Payé le",
+      "mode": "Mode",
+      "statut": "Statut",
+      "actions": "Actions"
+    },
+    "reste": "Reste {{montant}}",
+    "payerTotal": "Payer en totalité",
+    "payerPartiel": "Paiement partiel",
+    "detailVersements": "Détail des versements",
+    "form": {
+      "titreTotal": "Payer en totalité",
+      "titrePartiel": "Paiement partiel",
+      "montant": "Montant : {{montant}}",
+      "resteDu": "Reste dû : {{montant}}",
+      "montantRecu": "Montant reçu (€)",
+      "mode": "Mode de paiement",
+      "payeLe": "Payé le"
+    },
+    "detail": {
+      "titre": "Détail des versements",
+      "montantDu": "Montant dû",
+      "recu": "Reçu",
+      "resteDu": "Reste dû",
+      "date": "Date",
+      "mode": "Mode",
+      "montant": "Montant",
+      "annuler": "Annuler ce versement",
+      "vide": "Aucun versement."
     }
   },
   "erreur": {
