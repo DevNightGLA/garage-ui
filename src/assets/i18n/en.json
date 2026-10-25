@@ -398,6 +398,48 @@
       "date": "Resolution date"
     }
   },
+  "tableauDeBord": {
+    "kpi": {
+      "occupation": {
+        "titre": "Occupancy rate",
+        "note": "{{loues}} garages rented of {{total}}"
+      },
+      "loyers": {
+        "titre": "Monthly rents",
+        "note": "Active leases"
+      },
+      "impayes": {
+        "titre": "Unpaid",
+        "note": "{{totaux}} total unpaid · {{partiels}} partial"
+      },
+      "libres": {
+        "titre": "Available garages",
+        "note": "{{n}} unavailable"
+      }
+    },
+    "graphique": {
+      "loyers": {
+        "titre": "Rents collected",
+        "legende": "Last 12 months, in euros"
+      },
+      "occupation": {
+        "titre": "Occupancy rate",
+        "legende": "Rented garages, last 12 months, in %"
+      },
+      "precedent": "Previous chart",
+      "suivant": "Next chart"
+    },
+    "impayes": {
+      "titre": "Unpaid to follow up ({{n}})",
+      "vide": "No unpaid payments to follow up.",
+      "type": {
+        "TOTAL": "Total",
+        "PARTIEL": "Partial"
+      },
+      "recu": "Received {{recu}} of {{du}}",
+      "compteur": "{{from}}–{{to}} of {{total}}"
+    }
+  },
   "erreur": {
     "generique": "An error occurred.",
     "RESEAU": "Unable to reach the server.",

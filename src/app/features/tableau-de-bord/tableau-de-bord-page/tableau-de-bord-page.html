@@ -1,0 +1,126 @@
+@if (dashboardError(); as message) {
+  <div class="card td__erreur" role="alert">
+    {{ message }}
+    <button type="button" class="link-muted" (click)="reload()">{{ 'commun.reessayer' | translate }}</button>
+  </div>
+}
+
+<div class="kpis">
+  @for (kpi of kpis(); track kpi.key) {
+    <div class="kpi card">
+      <div>
+        <div class="kpi__label">{{ 'tableauDeBord.kpi.' + kpi.key + '.titre' | translate }}</div>
+        <div class="kpi__valeur">{{ kpi.value }}</div>
+        <div class="kpi__note">
+          @if (kpi.noteParams) {
+            {{ kpi.noteKey | translate: kpi.noteParams }}
+          }
+        </div>
+      </div>
+      <span class="kpi__icone kpi__icone--{{ kpi.key }}" aria-hidden="true"><i [class]="kpi.icon"></i></span>
+    </div>
+  }
+</div>
+
+<div class="bas">
+  <section class="card graphique" [attr.aria-label]="'tableauDeBord.graphique.' + chart() + '.titre' | translate">
+    <div class="graphique__tete">
+      <div class="graphique__textes">
+        <h2 class="graphique__titre">{{ 'tableauDeBord.graphique.' + chart() + '.titre' | translate }}</h2>
+        <div class="graphique__legende">
+          <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+          {{ 'tableauDeBord.graphique.' + chart() + '.legende' | translate }}
+        </div>
+      </div>
+      <div class="graphique__nav">
+        <span class="graphique__numero">{{ chartNumber() }}/{{ chartCount }}</span>
+        <button
+          type="button"
+          class="graphique__fleche"
+          [appTooltip]="'tableauDeBord.graphique.precedent' | translate"
+          (click)="shiftChart(-1)"
+        >
+          <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+        </button>
+        <button
+          type="button"
+          class="graphique__fleche"
+          [appTooltip]="'tableauDeBord.graphique.suivant' | translate"
+          (click)="shiftChart(1)"
+        >
+          <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+        </button>
+      </div>
+    </div>
+    @if (chartView(); as view) {
+      <app-bar-chart
+        [labels]="view.labels"
+        [values]="view.values"
+        [format]="view.format"
+        [caption]="'tableauDeBord.graphique.' + chart() + '.legende' | translate"
+      />
+    } @else {
+      <div class="td__etat">{{ 'commun.chargement' | translate }}</div>
+    }
+  </section>
+
+  <section class="card impayes" [attr.aria-label]="'tableauDeBord.impayes.titre' | translate: { n: unpaidTotal() }">
+    <h2 class="impayes__titre">{{ 'tableauDeBord.impayes.titre' | translate: { n: unpaidTotal() } }}</h2>
+
+    @if (unpaidError(); as message) {
+      <div class="td__etat td__etat--erreur">
+        {{ message }}
+        <button type="button" class="link-muted" (click)="unpaid.reload()">{{ 'commun.reessayer' | translate }}</button>
+      </div>
+    } @else if (unpaid.isLoading() && unpaidRows().length === 0) {
+      <div class="td__etat">{{ 'commun.chargement' | translate }}</div>
+    } @else if (unpaidRows().length === 0) {
+      <div class="td__etat">{{ 'tableauDeBord.impayes.vide' | translate }}</div>
+    } @else {
+      <ul class="impayes__liste">
+        @for (unpaid of unpaidRows(); track unpaid.garage.id + '|' + unpaid.periode) {
+          <li class="impaye">
+            <div class="impaye__haut">
+              <span class="impaye__locataire">{{ tenant(unpaid) }}</span>
+              <span class="impaye__montant">{{ unpaid.resteDu | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</span>
+            </div>
+            <div class="impaye__bas">
+              <span class="impaye__periode">{{ period(unpaid) }}</span>
+              <span class="impaye__badge" [appTooltip]="received(unpaid)" [attr.tabindex]="received(unpaid) ? 0 : null">
+                <app-status-badge [tone]="tone(unpaid)" [block]="true" [width]="84">{{
+                  'tableauDeBord.impayes.type.' + unpaid.type | translate
+                }}</app-status-badge>
+              </span>
+            </div>
+          </li>
+        }
+      </ul>
+    }
+
+    @if (unpaidTotal() > pageSize) {
+      <div class="impayes__pied">
+        <span>{{ 'tableauDeBord.impayes.compteur' | translate: { from: unpaidFrom(), to: unpaidTo(), total: unpaidTotal() } }}</span>
+        <div class="impayes__pages">
+          <button
+            type="button"
+            class="impayes__page"
+            [disabled]="!hasPrevious()"
+            [attr.aria-label]="'liste.precedent' | translate"
+            (click)="shiftLate(-1)"
+          >
+            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+          </button>
+          <button
+            type="button"
+            class="impayes__page"
+            [disabled]="!hasNext()"
+            [attr.aria-label]="'liste.suivant' | translate"
+            (click)="shiftLate(1)"
+          >
+            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+    }
+  </section>
+</div>
