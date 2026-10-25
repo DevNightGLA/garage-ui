@@ -165,7 +165,7 @@ Requête : `{ "jeton": "<jeton du lien>", "nouveauMotDePasse": "..." }`. Répons
 | 409 | `UTIL_DERNIER_ADMIN` | Il doit toujours rester au moins un administrateur actif. (désactivation, rétrogradation ou suppression du dernier admin actif) |
 | 422 | `VALIDATION` | login obligatoire (50 caractères au plus), e-mail obligatoire et valide, mot de passe de 8 à 72 caractères, rôle obligatoire ; `fieldErrors.prenom` : Le prénom ne peut pas dépasser 100 caractères. ; `fieldErrors.nom` : Le nom ne peut pas dépasser 100 caractères. |
 
-Premier administrateur (hors profil `dev`) : au démarrage, si aucun compte n'existe, l'API crée un `ADMIN` actif à partir des variables d'environnement `ADMIN_LOGIN`, `ADMIN_EMAIL` et `ADMIN_PASSWORD` (définies toutes les trois, mot de passe de 8 à 72 caractères). Les comptes suivants se créent ensuite par `POST /api/utilisateurs`.
+Premier administrateur (hors profil `dev`) : au démarrage, si aucun compte n'existe, l'API crée un `ADMIN` actif à partir des variables d'environnement `ADMIN_LOGIN`, `ADMIN_EMAIL` et `ADMIN_PASSWORD` (définies toutes les trois, mot de passe de 8 à 72 caractères). Les variables facultatives `ADMIN_PRENOM` et `ADMIN_NOM` donnent son prénom et son nom (RG-ROL-04 : 100 caractères au plus, espaces retirés, vide = absent, `null` dans l'API) ; elles ne servent qu'à cette création et sont ignorées si des comptes existent déjà (le premier admin existant se corrige par `PUT /api/utilisateurs/{id}`). Les comptes suivants se créent ensuite par `POST /api/utilisateurs`.
 
 Comptes de démonstration (profil `dev` uniquement), mot de passe `Garages2026!` : `admin`, `gestionnaire`, `lecture`.
 
