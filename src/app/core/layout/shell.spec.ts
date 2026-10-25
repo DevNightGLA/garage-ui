@@ -79,9 +79,9 @@ describe('Shell', () => {
     expect(root.querySelector('#page')).not.toBeNull();
   });
 
-  it('affiche le rôle en en-tête, l\'utilisateur et son rôle en pied de menu', async () => {
+  it('affiche l\'utilisateur et son rôle en pied de menu, pas dans l\'en-tête', async () => {
     await open('/garages', 'LECTURE_SEULE');
-    expect(root.querySelector('.shell__role')!.textContent).toContain('Lecture seule');
+    expect(root.querySelector('.shell__head')!.textContent).not.toContain('Lecture seule');
     expect(root.querySelector('.sb__avatar')!.textContent).toBe('MD');
     expect(root.querySelector('.sb__who')!.textContent).toContain('marie.dupont');
     expect(root.querySelector('.sb__who')!.textContent).toContain('Lecture seule');

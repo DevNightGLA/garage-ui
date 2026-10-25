@@ -32,9 +32,6 @@
       </div>
       <div class="shell__tools">
         <app-language-switch />
-        @if (auth.user(); as user) {
-          <span class="shell__role"><i class="fa-solid fa-user" aria-hidden="true"></i> {{ 'role.' + user.role | translate }}</span>
-        }
       </div>
     </header>
 
