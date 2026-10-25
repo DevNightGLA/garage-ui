@@ -202,9 +202,10 @@ export class LocationsPage {
       error: (err: unknown) => {
         const apiError = toApiError(err);
         const message = this.errors.text(apiError);
+        const details = this.errors.details(apiError);
         this.deletion.set(
           apiError.code === 'LOC_SUPPRESSION_REFUSEE' || apiError.code === 'LOC_TERMINEE_NON_SUPPRIMABLE'
-            ? { ...current, refusal: apiError.details.length > 0 ? apiError.details : [message], error: null }
+            ? { ...current, refusal: details.length > 0 ? details : [message], error: null }
             : { ...current, error: message },
         );
       },

@@ -56,7 +56,7 @@ export class ResolutionForm implements OnInit {
         next: (saved) => this.saved.emit(saved),
         error: (err: unknown) => {
           const apiError = toApiError(err);
-          this.fieldErrors.set(apiError.fieldErrors);
+          this.fieldErrors.set(this.errors.fields(apiError));
           this.error.set(Object.keys(apiError.fieldErrors).length > 0 ? null : this.errors.text(apiError));
         },
       });
