@@ -172,6 +172,63 @@
       "cloture": "A new rent automatically closes the previous one (end = day before start)."
     }
   },
+  "locataires": {
+    "nom": "tenants",
+    "nouveau": "New tenant",
+    "recherche": "Filter by tenant, e-mail, address or garage",
+    "filtre": {
+      "ACTUEL": "Current",
+      "A_VENIR": "Upcoming",
+      "ANCIEN": "Former",
+      "SANS_LOCATION": "No lease",
+      "TOUS": "All"
+    },
+    "statut": {
+      "A_JOUR": "Up to date",
+      "EN_RETARD": "Overdue",
+      "ACTUEL": "Current",
+      "A_VENIR": "Upcoming",
+      "ANCIEN": "Former",
+      "SANS_LOCATION": "No lease"
+    },
+    "col": {
+      "locataire": "Tenant",
+      "remarques": "Remarks",
+      "garages": "Garage",
+      "statut": "Status",
+      "actions": "Actions"
+    },
+    "remarques": "Remarks ({{n}})",
+    "modifier": "Edit tenant",
+    "visualiser": "View tenant",
+    "supprimer": "Delete tenant",
+    "civilite": {
+      "M": "Mr",
+      "MME": "Mrs"
+    },
+    "form": {
+      "titreNouveau": "New tenant",
+      "titreModifier": "Edit tenant",
+      "titreVisualiser": "View tenant",
+      "civilite": "Title",
+      "choisir": "Choose",
+      "nom": "Last name",
+      "prenom": "First name",
+      "rue": "Street",
+      "numero": "No.",
+      "codePostal": "Postal code",
+      "localite": "City",
+      "tel1": "Phone 1",
+      "tel2": "Phone 2",
+      "email": "E-mail",
+      "enregistrerQuandMeme": "Save anyway"
+    },
+    "suppression": {
+      "titre": "Delete {{nom}}?",
+      "refusTitre": "Deletion not possible",
+      "message": "This action is final: the tenant and their remarks will be deleted."
+    }
+  },
   "erreur": {
     "generique": "An error occurred.",
     "RESEAU": "Unable to reach the server.",
@@ -182,6 +239,9 @@
     "AUTH_COMPTE_DESACTIVE": "This account is disabled.",
     "AUTH_MOT_DE_PASSE_ACTUEL_INCORRECT": "The current password is incorrect.",
     "AUTH_JETON_INVALIDE": "The reset link is invalid or has expired.",
-    "VALIDATION": "Required fields are missing or invalid."
+    "VALIDATION": "Required fields are missing or invalid.",
+    "LOCT_DOUBLON": "A tenant with the same name and first name already exists. You can still save.",
+    "LOCT_SUPPRESSION_REFUSEE": "This tenant cannot be deleted.",
+    "LOCT_INTROUVABLE": "Tenant not found."
   }
 }

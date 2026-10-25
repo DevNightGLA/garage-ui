@@ -1,0 +1,18 @@
+// Largeurs fixes de la maquette (civilité, numéro, code postal) ; sur smartphone les champs s'empilent (.form-row).
+@media (min-width: 576px) {
+  .lf-identite > app-form-field:first-child {
+    flex: 0 0 110px;
+  }
+
+  .lf-rue > app-form-field:first-child {
+    flex: 3;
+  }
+
+  .lf-rue > app-form-field:last-child {
+    flex: 0 0 80px;
+  }
+
+  .lf-ville > app-form-field:first-child {
+    flex: 0 0 130px;
+  }
+}

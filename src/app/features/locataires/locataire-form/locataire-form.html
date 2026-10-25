@@ -1,0 +1,65 @@
+<app-modal [title]="titleKey() | translate" [width]="560" [error]="error()" (closed)="closed.emit()">
+  <form id="locataire-form" class="modal-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="form-row lf-identite">
+      <app-form-field [label]="'locataires.form.civilite' | translate" [error]="fieldErrors()['civilite']">
+        <select class="input" formControlName="civilite">
+          <option value="">{{ 'locataires.form.choisir' | translate }}</option>
+          <option value="M">{{ 'locataires.civilite.M' | translate }}</option>
+          <option value="MME">{{ 'locataires.civilite.MME' | translate }}</option>
+        </select>
+      </app-form-field>
+      <app-form-field [label]="'locataires.form.nom' | translate" [error]="fieldErrors()['nom']">
+        <input class="input" formControlName="nom" autocomplete="off" [attr.maxlength]="100" />
+      </app-form-field>
+      <app-form-field [label]="'locataires.form.prenom' | translate" [error]="fieldErrors()['prenom']">
+        <input class="input" formControlName="prenom" autocomplete="off" [attr.maxlength]="100" />
+      </app-form-field>
+    </div>
+
+    <div class="form-row lf-rue">
+      <app-form-field [label]="'locataires.form.rue' | translate" [error]="fieldErrors()['rue']">
+        <input class="input" formControlName="rue" autocomplete="off" [attr.maxlength]="150" />
+      </app-form-field>
+      <app-form-field [label]="'locataires.form.numero' | translate" [error]="fieldErrors()['numeroRue']">
+        <input class="input" formControlName="numeroRue" autocomplete="off" [attr.maxlength]="10" />
+      </app-form-field>
+    </div>
+
+    <div class="form-row lf-ville">
+      <app-form-field [label]="'locataires.form.codePostal' | translate" [error]="fieldErrors()['codePostal']">
+        <input class="input" formControlName="codePostal" autocomplete="off" inputmode="numeric" [attr.maxlength]="10" />
+      </app-form-field>
+      <app-form-field [label]="'locataires.form.localite' | translate" [error]="fieldErrors()['localite']">
+        <input class="input" formControlName="localite" autocomplete="off" [attr.maxlength]="100" />
+      </app-form-field>
+    </div>
+
+    <div class="form-row">
+      <app-form-field [label]="'locataires.form.tel1' | translate" [error]="fieldErrors()['tel1']">
+        <input class="input" type="tel" formControlName="tel1" autocomplete="off" [attr.maxlength]="30" />
+      </app-form-field>
+      <app-form-field [label]="'locataires.form.tel2' | translate" [error]="fieldErrors()['tel2']">
+        <input class="input" type="tel" formControlName="tel2" autocomplete="off" [attr.maxlength]="30" />
+      </app-form-field>
+    </div>
+
+    <app-form-field [label]="'locataires.form.email' | translate" [error]="fieldErrors()['email']">
+      <input class="input" type="email" formControlName="email" autocomplete="off" [attr.maxlength]="255" />
+    </app-form-field>
+
+    @if (duplicate(); as warning) {
+      <div #alert class="message-warning" role="alert">{{ warning }}</div>
+    }
+  </form>
+
+  <div modalFooter>
+    <button type="button" class="btn btn--secondary" (click)="closed.emit()">
+      {{ 'commun.annuler' | translate }}
+    </button>
+    @if (!readOnly()) {
+      <button type="submit" form="locataire-form" class="btn btn--primary" [disabled]="pending()">
+        {{ (duplicate() ? 'locataires.form.enregistrerQuandMeme' : 'commun.enregistrer') | translate }}
+      </button>
+    }
+  </div>
+</app-modal>

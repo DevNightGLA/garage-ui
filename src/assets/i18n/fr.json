@@ -172,6 +172,63 @@
       "cloture": "Un nouveau loyer clôture automatiquement le précédent (fin = veille du début)."
     }
   },
+  "locataires": {
+    "nom": "locataires",
+    "nouveau": "Nouveau locataire",
+    "recherche": "Filtrer par locataire, e-mail, adresse ou garage",
+    "filtre": {
+      "ACTUEL": "Actuels",
+      "A_VENIR": "À venir",
+      "ANCIEN": "Anciens",
+      "SANS_LOCATION": "Sans location",
+      "TOUS": "Tous"
+    },
+    "statut": {
+      "A_JOUR": "À jour",
+      "EN_RETARD": "En retard",
+      "ACTUEL": "Actuel",
+      "A_VENIR": "À venir",
+      "ANCIEN": "Ancien",
+      "SANS_LOCATION": "Sans location"
+    },
+    "col": {
+      "locataire": "Locataire",
+      "remarques": "Remarques",
+      "garages": "Garage",
+      "statut": "Statut",
+      "actions": "Actions"
+    },
+    "remarques": "Remarques ({{n}})",
+    "modifier": "Modifier le locataire",
+    "visualiser": "Visualiser le locataire",
+    "supprimer": "Supprimer le locataire",
+    "civilite": {
+      "M": "M.",
+      "MME": "Mme"
+    },
+    "form": {
+      "titreNouveau": "Nouveau locataire",
+      "titreModifier": "Modifier le locataire",
+      "titreVisualiser": "Visualiser le locataire",
+      "civilite": "Civilité",
+      "choisir": "Choisir",
+      "nom": "Nom",
+      "prenom": "Prénom",
+      "rue": "Rue",
+      "numero": "N°",
+      "codePostal": "Code postal",
+      "localite": "Localité",
+      "tel1": "Téléphone 1",
+      "tel2": "Téléphone 2",
+      "email": "E-mail",
+      "enregistrerQuandMeme": "Enregistrer quand même"
+    },
+    "suppression": {
+      "titre": "Supprimer {{nom}} ?",
+      "refusTitre": "Suppression impossible",
+      "message": "Cette action est définitive : le locataire et ses remarques seront supprimés."
+    }
+  },
   "erreur": {
     "generique": "Une erreur est survenue.",
     "RESEAU": "Impossible de joindre le serveur.",

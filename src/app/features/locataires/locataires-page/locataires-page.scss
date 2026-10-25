@@ -1,0 +1,124 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.identite {
+  display: flex;
+  align-items: center;
+  gap: var(--space-3);
+  min-width: 0;
+  text-align: left;
+
+  b {
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--text-heading);
+  }
+}
+
+.identite__texte {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+// Téléphone et adresse sous le nom, côte à côte tant que la place le permet
+.identite__details {
+  display: flex;
+  flex-wrap: wrap;
+  column-gap: var(--space-6);
+  row-gap: 2px;
+  font-size: 12px;
+  line-height: 1.4;
+}
+
+.detail {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  min-width: 0;
+
+  i {
+    flex: none;
+    width: 12px;
+    font-size: 11px;
+    text-align: center;
+  }
+
+  span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+}
+
+.avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.avatar--ancien {
+  background: var(--gradient-ancien);
+}
+
+.avatar--sans-location {
+  background: var(--gradient-warning);
+}
+
+.garages {
+  font-weight: 600;
+  color: var(--text-heading);
+}
+
+// Carte (tablette, smartphone) : un tiret plutôt qu'une valeur vide pour un locataire sans garage actuel
+@media (max-width: 991.98px) {
+  .garages:empty::before {
+    content: '—';
+  }
+}
+
+// Pastille « remarques » : une icône bordée, avec le nombre en badge
+.remarques {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--color-primary);
+  font-size: 13px;
+}
+
+.remarques__n {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 9px;
+  line-height: 16px;
+  text-align: center;
+  color: var(--white);
+}
+
+.actions {
+  display: inline-flex;
+  gap: var(--space-2);
+  white-space: nowrap;
+}

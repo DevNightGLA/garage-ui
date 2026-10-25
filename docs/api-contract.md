@@ -246,11 +246,16 @@ Erreurs :
 
 ---
 
-## 5. Locataires (proposé, étape 3.2, RG chapitre 7)
+## 5. Locataires (implémenté, étape 3.2, RG chapitre 7)
 
-**Énumérations** : `statut` `ACTUEL | ANCIEN | SANS_LOCATION` ; `solde` `A_JOUR | EN_RETARD` (uniquement pour un locataire `ACTUEL`, sinon `null`) ; `civilite` `M | MME | null`.
+Comme pour les garages, les paramètres de recherche (`statut` et `q`) sont reçus côté serveur dans un objet `LocataireCriteria` ; l'API HTTP reste de simples paramètres de requête. Un `statut` inconnu ou un tri non prévu renvoie 400 `REQUETE_INVALIDE`.
 
-`LocataireDTO` :
+**Énumérations** :
+- `statut` `ACTUEL | A_VENIR | ANCIEN | SANS_LOCATION`, calculé à la date du jour, dans cet ordre de priorité (RG-LOCT-10) : `ACTUEL` = au moins une location active ; `A_VENIR` = aucune location active, au moins une à venir (même après des locations terminées) ; `ANCIEN` = a eu des locations, aucune active ni à venir ; `SANS_LOCATION` = aucune location. Une location se termine à sa date de fin : un locataire dont la fin tombe aujourd'hui n'est plus `ACTUEL`.
+- `solde` `A_JOUR | EN_RETARD`, **uniquement pour un locataire `ACTUEL`**, sinon `null`. `EN_RETARD` = au moins une échéance non soldée (versements inférieurs au montant dû, partiel compris) dont le mois est **avant le mois courant**, sur n'importe laquelle de ses locations, y compris terminées (RG-PAI-30 et 31). Le mois courant n'est jamais en retard.
+- `civilite` `M | MME | null`.
+
+`LocataireDTO` (en entrée, les champs calculés `id`, `statut`, `solde`, `garages` et `nbRemarques` sont ignorés) :
 ```json
 {
   "id": 1, "civilite": "MME", "nom": "Dupont", "prenom": "Marie",
@@ -259,22 +264,28 @@ Erreurs :
   "statut": "ACTUEL", "solde": "EN_RETARD", "garages": ["G01", "G12"], "nbRemarques": 2
 }
 ```
+`garages` : numéros des garages **actuellement** loués, dans l'ordre naturel (`G2` avant `G10`) ; vide pour un locataire non actuel. Les mêmes champs sont obligatoires à la création et à la modification.
 
 | Méthode et chemin | Détail | Droit |
 | --- | --- | --- |
-| `GET /api/locataires` | `statut=ACTUEL|ANCIEN|SANS_LOCATION|TOUS` (le front envoie `ACTUEL` par défaut), `q` (nom, e-mail, adresse, garages), tri sur toutes les colonnes sauf les actions, défaut nom puis prénom. Sert aussi au choix du locataire d'une location (`statut=TOUS`, 5 par page, RG-LOC-11). | lecture |
-| `GET /api/locataires/compteurs?q=` | `{ "ACTUEL": 8, "ANCIEN": 2, "SANS_LOCATION": 1, "TOUS": 11 }` | lecture |
-| `GET /api/locataires/{id}` | | lecture |
-| `POST /api/locataires[?force=true]` | `{ civilite?, nom, prenom, rue, numeroRue, codePostal, localite, tel1, tel2?, email? }` | écriture |
+| `GET /api/locataires` | filtre `statut=ACTUEL|A_VENIR|ANCIEN|SANS_LOCATION` (**absent = tous** : le front envoie `ACTUEL` par défaut et n'envoie rien pour le bouton « Tous », comme pour les garages ; `TOUS` n'est pas une valeur de `statut`), `q` (nom et prénom dans les deux ordres, e-mail, adresse affichée `rue n°, code postal localité`, numéros des garages actuellement loués ; sans casse ni accents), tri sur `locataire` (nom puis prénom, **défaut**), `nbRemarques`, `garages` (plus petit numéro de garage loué, ordre naturel, les locataires sans garage actuel en dernier), `statut` (actuels à jour, actuels en retard, à venir, anciens, sans location). Sert aussi au choix du locataire d'une location (sans `statut`, `size=5`, RG-LOC-11). | lecture |
+| `GET /api/locataires/compteurs?q=` | `{ "ACTUEL": 6, "A_VENIR": 1, "ANCIEN": 2, "SANS_LOCATION": 1, "TOUS": 10 }`, qui tient compte de `q` mais couvre tous les statuts (RG-LST-03) | lecture |
+| `GET /api/locataires/{id}` | 404 `LOCT_INTROUVABLE` si inconnu | lecture |
+| `POST /api/locataires[?force=true]` | `{ civilite?, nom, prenom, rue, numeroRue, codePostal, localite, tel1, tel2?, email? }`. Les espaces autour des valeurs sont retirés ; `tel2` et `email` vides sont enregistrés comme absents. Réponse 201 + `Location`. | écriture |
 | `PUT /api/locataires/{id}[?force=true]` | mêmes champs ; le doublon exclut le locataire modifié | écriture |
-| `DELETE /api/locataires/{id}` | supprime aussi ses remarques | admin |
+| `DELETE /api/locataires/{id}` | supprime aussi ses remarques (RG-LOCT-21). Réponse 204. | admin |
+
+Doublon (RG-LOCT-04) : même nom **et** même prénom qu'un autre locataire, sans tenir compte de la casse (les accents comptent). Le premier envoi renvoie 409 `LOCT_DOUBLON` sans rien enregistrer ; le front affiche l'alerte et le bouton « Enregistrer quand même », qui renvoie la **même requête avec `?force=true`**. Toute modification d'un champ réarme l'alerte côté front.
 
 | HTTP | Code | Message | Règle |
 | --- | --- | --- | --- |
 | 409 | `LOCT_DOUBLON` | Un locataire avec le même nom et prénom existe déjà. Vous pouvez enregistrer quand même. | RG-LOCT-04 |
-| 409 | `LOCT_SUPPRESSION_REFUSEE` | Ce locataire ne peut pas être supprimé. *(proposé)* ; `details` : locations et garages concernés, paiements effectués | RG-LOCT-20 |
-| 404 | `LOCT_INTROUVABLE` | Locataire introuvable. *(proposé)* | |
-| 422 | `VALIDATION` | nom, prénom, rue, n°, code postal, localité, téléphone 1 obligatoires ; `fieldErrors.email` : Format d'e-mail invalide. | RG-LOCT-02, 03 |
+| 409 | `LOCT_SUPPRESSION_REFUSEE` | Ce locataire ne peut pas être supprimé. ; `details` : « Le locataire a été assigné à un garage (n location(s) : G2, G10). » (toutes ses locations, garages distincts) et/ou « Des paiements ont été effectués pour ce locataire (n versement(s)). » | RG-LOCT-20, RG-TRA-02 |
+| 404 | `LOCT_INTROUVABLE` | Locataire introuvable. | |
+| 422 | `VALIDATION` | `fieldErrors` (tous d'un coup) : `nom` Le nom est obligatoire. · `prenom` Le prénom est obligatoire. · `rue` La rue est obligatoire. · `numeroRue` Le numéro est obligatoire. · `codePostal` Le code postal est obligatoire. · `localite` La localité est obligatoire. · `tel1` Le téléphone 1 est obligatoire. · `email` Format d'e-mail invalide. (forme `xxx@yyy.zz` : un seul `@`, un domaine avec au moins un point et 2 lettres au moins après le dernier point) · longueurs maximales (nom, prénom, localité 100 ; rue 150 ; numéro et code postal 10 ; téléphones 30 ; e-mail 255) | RG-LOCT-02, 03 |
+| 400 | `REQUETE_INVALIDE` | civilité autre que `M` ou `MME`, `statut` ou tri inconnu | |
+
+Une suppression est refusée dès qu'un locataire a une location, même à venir : un locataire sans location est donc le seul supprimable. Le motif des paiements est ajouté quand des versements existent (il accompagne toujours celui des locations, car un versement dépend d'une location).
 
 ---
 
