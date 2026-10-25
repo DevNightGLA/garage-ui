@@ -84,6 +84,20 @@
     color: var(--text-muted);
     cursor: not-allowed;
   }
+
+  // Action bloquée mais dont l'info-bulle doit rester lisible : `disabled` supprimerait les survols.
+  &[aria-disabled='true'] {
+    opacity: 0.35;
+    cursor: not-allowed;
+
+    &:hover,
+    &:focus-visible {
+      background: var(--white);
+      border-color: var(--color-primary);
+      color: var(--color-primary);
+      box-shadow: none;
+    }
+  }
 }
 
 .link-muted {
@@ -106,6 +120,15 @@
 .message-error {
   font-size: 13px;
   color: var(--color-danger);
+}
+
+.message-warning {
+  padding: 10px 14px;
+  border-radius: var(--radius-md);
+  background: #fff4e5;
+  font-size: 13px;
+  font-weight: 600;
+  color: #b45309;
 }
 
 .message-info {

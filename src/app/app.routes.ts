@@ -1,9 +1,14 @@
-import { inject } from '@angular/core';
+import { Type, inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './core/auth/auth-guard';
 import { NAV_ITEMS } from './core/layout/nav-items';
 import { NavigationMemory } from './core/layout/navigation-memory';
 import { Shell } from './core/layout/shell';
+
+/** Écrans construits ; les autres entrées du menu restent sur le gabarit provisoire. */
+const SCREENS: Record<string, () => Promise<Type<unknown>>> = {
+  garages: () => import('./features/garages/garages-page/garages-page').then((m) => m.GaragesPage),
+};
 
 export const routes: Routes = [
   {
@@ -32,7 +37,8 @@ export const routes: Routes = [
       ...NAV_ITEMS.map((item) => ({
         path: item.path,
         data: { titleKey: item.labelKey },
-        loadComponent: () => import('./features/placeholder/placeholder').then((m) => m.Placeholder),
+        loadComponent:
+          SCREENS[item.path] ?? (() => import('./features/placeholder/placeholder').then((m) => m.Placeholder)),
       })),
     ],
   },

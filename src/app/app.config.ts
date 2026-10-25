@@ -1,6 +1,4 @@
 import { provideHttpClient, withFetch, withInterceptors } from '@angular/common/http';
-import { registerLocaleData } from '@angular/common';
-import localeFr from '@angular/common/locales/fr';
 import {
   ApplicationConfig,
   inject,
@@ -15,9 +13,9 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/auth/auth-interceptor';
 import { AuthService } from './core/auth/auth-service';
 import { LanguageService } from './core/language-service';
+import { registerFrenchLocale } from './core/locale';
 
-// Montants : `currency:'EUR':'symbol':'1.2-2':'fr'`
-registerLocaleData(localeFr);
+registerFrenchLocale();
 
 export const appConfig: ApplicationConfig = {
   providers: [

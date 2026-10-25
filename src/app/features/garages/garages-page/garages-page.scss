@@ -1,0 +1,84 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+}
+
+.garage-numero {
+  color: var(--text-heading);
+}
+
+.nowrap {
+  white-space: nowrap;
+}
+
+.key {
+  font-size: 11px;
+  opacity: 0.6;
+}
+
+.loyer {
+  font-variant-numeric: tabular-nums;
+}
+
+// Pastille « remarques » : une icône bordée, avec le nombre en badge
+.remarques {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border: 1px solid var(--color-primary);
+  border-radius: var(--radius-md);
+  background: var(--white);
+  color: var(--color-primary);
+  font-size: 13px;
+}
+
+.remarques__n {
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 9px;
+  line-height: 16px;
+  text-align: center;
+  color: var(--white);
+}
+
+.locataire {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+
+  b {
+    font-size: 13px;
+    line-height: 1.2;
+    color: var(--text-heading);
+  }
+}
+
+.avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--gradient-brand);
+  font-size: 10px;
+  font-weight: 700;
+  color: var(--white);
+}
+
+.actions {
+  display: inline-flex;
+  gap: var(--space-2);
+  white-space: nowrap;
+}

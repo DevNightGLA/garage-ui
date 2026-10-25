@@ -1,0 +1,132 @@
+<app-filter-buttons [options]="filterOptions()" [value]="filter()" (valueChange)="setFilter($event)" />
+
+<app-data-table
+  [columns]="columns()"
+  [rows]="rows()"
+  [total]="total()"
+  [size]="pageSize"
+  [noun]="'garages.nom' | translate"
+  [(page)]="page"
+  [(sort)]="sort"
+  [loading]="list.isLoading()"
+  [error]="loadError()"
+  [rowKey]="rowKey"
+  [rowClass]="rowClass"
+  [clickable]="true"
+  (rowClick)="history.set($event)"
+  (retry)="refresh()"
+>
+  <app-search-input
+    dtToolbarStart
+    [value]="search()"
+    [placeholder]="'garages.recherche' | translate"
+    (valueChange)="setSearch($event)"
+  />
+  @if (roles.canWrite()) {
+    <button dtToolbarEnd type="button" class="btn btn--primary" (click)="openForm(null)">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'garages.nouveau' | translate }}
+    </button>
+  }
+
+  <ng-template appCell="numero" let-garage>
+    <b class="garage-numero">{{ garage.numero }}</b>
+  </ng-template>
+  <ng-template appCell="nbClesTotal" let-garage>
+    <span class="nowrap">{{ garage.nbClesTotal }} <i class="fa-solid fa-key key" aria-hidden="true"></i></span>
+  </ng-template>
+  <ng-template appCell="nbClesReserve" let-garage>
+    <span class="nowrap">{{ garage.nbClesReserve }} <i class="fa-solid fa-key key" aria-hidden="true"></i></span>
+  </ng-template>
+  <ng-template appCell="loyerCourant" let-garage>
+    @if (garage.loyerCourant !== null) {
+      <span class="loyer">{{ garage.loyerCourant | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</span>
+    }
+  </ng-template>
+  <ng-template appCell="nbRemarques" let-garage>
+    <span
+      class="remarques"
+      [appTooltip]="'garages.remarques' | translate: { n: garage.nbRemarques }"
+      [attr.aria-label]="'garages.remarques' | translate: { n: garage.nbRemarques }"
+    >
+      <i class="fa-regular fa-comment" aria-hidden="true"></i>
+      @if (garage.nbRemarques > 0) {
+        <b class="remarques__n">{{ garage.nbRemarques }}</b>
+      }
+    </span>
+  </ng-template>
+  <ng-template appCell="locataire" let-garage>
+    @if (garage.locataire) {
+      <span class="locataire">
+        <span class="avatar" aria-hidden="true">{{ initials(garage) }}</span>
+        <b>{{ garage.locataire.prenom }} {{ garage.locataire.nom }}</b>
+      </span>
+    }
+  </ng-template>
+  <ng-template appCell="statut" let-garage>
+    <app-status-badge [tone]="tone(garage.statut)" [block]="true">{{
+      'garages.statut.' + garage.statut | translate
+    }}</app-status-badge>
+  </ng-template>
+  <ng-template appCell="historique" let-garage>
+    <button
+      type="button"
+      class="icon-btn"
+      aria-haspopup="true"
+      [appTooltip]="'garages.historiqueMenu' | translate"
+      (click)="$event.stopPropagation(); openMenu(garage, $event)"
+    >
+      <i class="fa-solid fa-ellipsis" aria-hidden="true"></i>
+    </button>
+  </ng-template>
+  <ng-template appCell="actions" let-garage>
+    <span class="actions" (click)="$event.stopPropagation()">
+      <button
+        type="button"
+        class="icon-btn"
+        [appTooltip]="(roles.isReadOnly() ? 'garages.visualiser' : 'garages.modifier') | translate"
+        (click)="openForm(garage)"
+      >
+        <i class="fa-solid" [class.fa-eye]="roles.isReadOnly()" [class.fa-pen]="!roles.isReadOnly()" aria-hidden="true"></i>
+      </button>
+      @if (roles.canDelete()) {
+        <button type="button" class="icon-btn" [appTooltip]="'garages.supprimer' | translate" (click)="askDelete(garage)">
+          <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+        </button>
+      }
+    </span>
+  </ng-template>
+</app-data-table>
+
+@if (form(); as current) {
+  <app-garage-form
+    [garage]="current.garage"
+    [readOnly]="roles.isReadOnly()"
+    (saved)="formSaved()"
+    (closed)="form.set(null)"
+  />
+}
+
+@if (history(); as garage) {
+  <app-loyers-history [garage]="garage" (changed)="refresh()" (closed)="history.set(null)" />
+}
+
+@if (menu(); as current) {
+  <app-popover-menu
+    [items]="menuItems()"
+    [label]="'garages.historiqueMenu' | translate"
+    [x]="current.x"
+    [y]="current.y"
+    (closed)="menu.set(null)"
+  />
+}
+
+@if (deletion(); as current) {
+  <app-confirm
+    [title]="(current.refusal ? 'garages.suppression.refusTitre' : 'garages.suppression.titre') | translate: { numero: current.garage.numero }"
+    [message]="current.refusal ? current.refusal.message : ('garages.suppression.message' | translate)"
+    [reasons]="current.refusal?.reasons ?? []"
+    [error]="current.error"
+    (confirmed)="confirmDelete()"
+    (cancelled)="deletion.set(null)"
+  />
+}

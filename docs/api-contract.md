@@ -172,7 +172,9 @@ Comptes de démonstration (profil `dev` uniquement), mot de passe `Garages2026!`
 
 ---
 
-## 4. Garages et loyers (proposé, étape 3.1, RG chapitres 5 et 6)
+## 4. Garages et loyers (implémenté, étape 3.1, RG chapitres 5 et 6)
+
+Les paramètres de recherche d'une liste (ici `statut` et `q`) sont reçus côté serveur dans un objet `GarageCriteria` : l'API HTTP reste de simples paramètres de requête. Un `statut` inconnu ou un tri non prévu renvoie 400 `REQUETE_INVALIDE`.
 
 **Énumérations** : statut affiché `LIBRE | LOUE | INDISPONIBLE` (`LOUE` est calculé, RG-GAR-02) ; statut modifiable `LIBRE | INDISPONIBLE` ; état d'un loyer `A_VENIR | EN_VIGUEUR | CLOTURE`.
 
@@ -192,13 +194,14 @@ Comptes de démonstration (profil `dev` uniquement), mot de passe `Garages2026!`
 | Méthode et chemin | Détail | Droit |
 | --- | --- | --- |
 | `GET /api/garages` | filtre `statut=LOUE|LIBRE|INDISPONIBLE` (absent = tous), `q` (numéro, locataire, adresse), tri sur `numero`, `nbClesTotal`, `nbClesReserve`, `loyerCourant`, `nbRemarques`, `locataire`, `statut` (défaut `numero`, ordre naturel) | lecture |
-| `GET /api/garages/compteurs?q=` | `{ "LOUE": 4, "LIBRE": 6, "INDISPONIBLE": 1, "TOUS": 11 }`, qui tient compte de `q` (RG-LST-03) | lecture |
-| `GET /api/garages/{id}` | | lecture |
-| `GET /api/garages/prochain-numero` | `{ "numero": "G13" }` (RG-GAR-11) | lecture |
-| `POST /api/garages` | `GarageDTO` : `{ numero, adresse?, nbClesTotal, nbClesReserve, statut (défaut LIBRE), loyerMontant, loyerDateDebut }` : crée le garage et son premier loyer (RG-GAR-13). Le numéro est mis en majuscules et nettoyé des espaces. | écriture |
-| `PUT /api/garages/{id}` | `GarageDTO` : `{ adresse?, nbClesTotal, nbClesReserve, statut }` (numéro et loyer non modifiables, RG-GAR-20). Le `statut` est ignoré tant que le garage est `LOUE`. | écriture |
-| `DELETE /api/garages/{id}` | supprime aussi ses loyers et remarques (RG-GAR-31) | admin |
-| `GET /api/garages/{id}/locations` | historique des locations, plus récentes d'abord, 5 par page : `{ id, locataire{id,nom,prenom}, dateDebut, dateFin, nbClesRemises, loyer, statut: A_VENIR|ACTIVE|TERMINEE }` (RG-GAR-43, décision ouverte 5 : une location à venir porte `A_VENIR`) | lecture |
+| `GET /api/garages/compteurs?q=` | `{ "LOUE": 4, "LIBRE": 6, "INDISPONIBLE": 1, "TOUS": 11 }`, qui tient compte de `q` mais couvre tous les statuts (RG-LST-03) | lecture |
+| `GET /api/garages/{id}` | 404 `GAR_INTROUVABLE` si inconnu | lecture |
+| `GET /api/garages/prochain-numero` | `{ "numero": "G13" }` : « G » + plus grand numéro de la forme `G<n>` + 1, sur 2 chiffres au moins (RG-GAR-11) | lecture |
+| `POST /api/garages` | `GarageDTO` : `{ numero, adresse?, nbClesTotal, nbClesReserve, statutModifiable? (défaut LIBRE), loyerMontant, loyerDateDebut }` : crée le garage et son premier loyer (RG-GAR-13). Le numéro est mis en majuscules et nettoyé des espaces. Réponse 201 + `Location`. | écriture |
+| `PUT /api/garages/{id}` | `GarageDTO` : `{ adresse?, nbClesTotal, nbClesReserve, statutModifiable? }` (numéro et loyer non modifiables, RG-GAR-20). `statutModifiable` est ignoré tant que le garage est `LOUE` (RG-GAR-03) et inchangé s'il est absent. | écriture |
+| `DELETE /api/garages/{id}` | supprime aussi ses loyers et remarques (RG-GAR-31). Réponse 204. | admin |
+
+L'historique des locations d'un garage (`GET /api/garages/{id}/locations`, RG-GAR-43) arrive avec le module des locations (étape 3.3), car il dépend du statut calculé d'une location.
 
 Erreurs :
 
@@ -206,10 +209,11 @@ Erreurs :
 | --- | --- | --- | --- |
 | 409 | `GAR_NUM_EXISTE` | Ce numéro de garage existe déjà. | RG-GAR-11 |
 | 409 | `GAR_RESERVE_INVALIDE` | La réserve doit être comprise entre 0 et le nombre de clés. | RG-GAR-12, 21 |
-| 409 | `GAR_CLES_LOCATION` | La location active a n clé(s) remise(s) : clés moins réserve doit rester supérieur ou égal. | RG-GAR-22 |
+| 409 | `GAR_CLES_LOCATION` | La location active a n clé(s) remise(s) : clés moins réserve doit rester supérieur ou égal. (n : le plus grand nombre de clés remises parmi les locations **non terminées**, actives ou à venir, d'après RG-TRA-04) | RG-GAR-22 |
 | 409 | `GAR_MAX_ATTEINT` | Le nombre maximum de 20 garages est atteint. *(proposé)* | décision ouverte 2 |
 | 409 | `GAR_SUPPRESSION_REFUSEE` | Ce garage ne peut pas être supprimé. *(proposé)* ; `details` : « Le garage est actuellement loué (nom du locataire). » et/ou « Le garage a un historique de n location(s). » | RG-GAR-30 |
 | 404 | `GAR_INTROUVABLE` | Garage introuvable. *(proposé)* | |
+| 422 | `VALIDATION` | numéro, clés, réserve, loyer mensuel (> 0, 2 décimales au plus) et début du loyer obligatoires à la création ; clés et réserve à la modification ; nombre de clés positif ou nul | RG-GAR-10, 12 |
 
 ### Loyers d'un garage
 
@@ -217,25 +221,28 @@ Erreurs :
 ```json
 { "id": 7, "montant": 90.00, "dateDebut": "2026-01-01", "dateFin": null, "etat": "EN_VIGUEUR",
   "modifiable": false, "supprimable": false,
-  "motifBlocage": "Une location a débuté depuis la date de début de ce loyer" }
+  "motifModification": "Une location a débuté depuis la date de début de ce loyer",
+  "motifSuppression": "Seul le dernier loyer, s'il est à venir, peut être supprimé." }
 ```
-`modifiable`, `supprimable` et `motifBlocage` (info-bulle, RG-VAL-06) sont calculés par l'API : le front n'applique pas RG-LOY-07 à 09.
+`modifiable`, `supprimable` et leurs motifs (info-bulles, RG-VAL-06) sont calculés par l'API : le front n'applique pas RG-LOY-06 à 09. Un motif vaut `null` quand l'action est permise.
 
 | Méthode et chemin | Détail | Droit |
 | --- | --- | --- |
-| `GET /api/garages/{id}/loyers` | du plus récent au plus ancien, pagination (5 par page) | lecture |
-| `POST /api/garages/{id}/loyers` | `{ montant, dateDebut }` : clôture automatiquement le loyer précédent à la veille de `dateDebut` (RG-LOY-05) | écriture |
-| `PUT /api/loyers/{id}` | `{ montant, dateDebut }`, dernier loyer seulement ; la fin du précédent est recalculée (RG-LOY-06) | écriture |
-| `DELETE /api/loyers/{id}` | dernier loyer et seulement s'il est `A_VENIR` (RG-LOY-07) | écriture |
+| `GET /api/garages/{id}/loyers` | du plus récent au plus ancien par défaut (tri possible sur `dateDebut`, `dateFin`, `montant`), pagination (l'écran demande `size=5`) | lecture |
+| `POST /api/garages/{id}/loyers` | `LoyerDTO` : `{ montant, dateDebut }` ; clôture automatiquement le loyer précédent à la veille de `dateDebut` (RG-LOY-05) ; une date passée est acceptée. Réponse 201 + `Location`. | écriture |
+| `PUT /api/loyers/{id}` | `LoyerDTO` : `{ montant, dateDebut }`, dernier loyer seulement ; la fin du précédent est recalculée (RG-LOY-06) | écriture |
+| `DELETE /api/loyers/{id}` | dernier loyer et seulement s'il est `A_VENIR` ; le précédent redevient la période courante (RG-LOY-07). Réponse 204. | écriture |
 
 | HTTP | Code | Message | Règle |
 | --- | --- | --- | --- |
-| 409 | `LOY_DEBUT_ANTERIEUR` | La date de début doit être postérieure au début du loyer précédent (jj/mm/aaaa) : pas de chevauchement. | RG-LOY-04 |
-| 409 | `LOY_PAIEMENT_ANTICIPE` | Modification et suppression impossibles : un paiement anticipé est déjà enregistré pour … Annulez d'abord ce paiement dans l'écran Paiements. | RG-LOY-08 |
+| 409 | `LOY_DEBUT_ANTERIEUR` | La date de début doit être postérieure au début du loyer précédent (jj/mm/aaaa) : pas de chevauchement. (la date est celle du loyer précédent, ex. 01/01/2026) | RG-LOY-04 |
+| 409 | `LOY_PAIEMENT_ANTICIPE` | Modification et suppression impossibles : un paiement anticipé est déjà enregistré pour novembre 2026. Annulez d'abord ce paiement dans l'écran Paiements. (le mois est le premier mois payé, à partir du mois de début du loyer) | RG-LOY-08 |
 | 409 | `LOY_LOCATION_DEMARREE` | Une location a débuté depuis la date de début de ce loyer | RG-LOY-09 |
 | 409 | `LOY_NON_DERNIER` | Seul le dernier loyer peut être modifié ou supprimé. *(proposé)* | RG-LOY-06, 07 |
 | 409 | `LOY_SUPPRESSION_REFUSEE` | Seul le dernier loyer, s'il est à venir, peut être supprimé. *(proposé)* | RG-LOY-07 |
-| 422 | `VALIDATION` | montant > 0 et date de début obligatoires | RG-LOY-04 |
+| 409 | `LOY_UNIQUE` | Le premier loyer d'un garage ne peut pas être supprimé. *(proposé : un garage garde au moins un loyer, cardinalité 1..N du modèle)* | |
+| 404 | `LOY_INTROUVABLE` | Loyer introuvable. *(proposé)* | |
+| 422 | `VALIDATION` | `fieldErrors.montant` : Le montant est obligatoire. / Le montant doit être supérieur à 0. ; `fieldErrors.dateDebut` : La date de début est obligatoire. | RG-LOY-04 |
 
 ---
 

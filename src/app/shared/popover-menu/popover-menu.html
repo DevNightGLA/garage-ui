@@ -1,0 +1,19 @@
+<div class="pm-backdrop" (click)="closed.emit()"></div>
+<div
+  class="pm"
+  role="menu"
+  [attr.aria-label]="label()"
+  [style.left.px]="left()"
+  [style.top.px]="y()"
+  [style.width.px]="width"
+>
+  @for (item of items(); track item.label) {
+    <button type="button" class="pm__item" role="menuitem" (click)="choose(item)">
+      <i [class]="item.icon" aria-hidden="true"></i>
+      <span class="pm__label">{{ item.label }}</span>
+      @if (item.count) {
+        <b class="pm__count">{{ item.count }}</b>
+      }
+    </button>
+  }
+</div>

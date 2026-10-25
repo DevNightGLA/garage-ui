@@ -5,13 +5,17 @@ import {
   computed,
   contentChildren,
   effect,
+  inject,
   input,
   model,
   output,
+  signal,
 } from '@angular/core';
-import { TranslatePipe } from '@ngx-translate/core';
+import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { SortSpec } from '../../core/api/list-params';
+import { LanguageService } from '../../core/language-service';
 import { Pagination } from '../pagination/pagination';
+import { PopoverMenu, PopoverMenuItem } from '../popover-menu/popover-menu';
 import { DataTableCell } from './data-table-cell';
 import { nextSort } from './sort';
 
@@ -36,7 +40,7 @@ export interface DataTableColumn {
  */
 @Component({
   selector: 'app-data-table',
-  imports: [NgTemplateOutlet, TranslatePipe, Pagination],
+  imports: [NgTemplateOutlet, TranslatePipe, Pagination, PopoverMenu],
   templateUrl: './data-table.html',
   styleUrl: './data-table.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -64,9 +68,30 @@ export class DataTable<T> {
   readonly retry = output<void>();
 
   private readonly cells = contentChildren(DataTableCell);
+  private readonly translate = inject(TranslateService);
+  private readonly language = inject(LanguageService);
   protected readonly cellTemplates = computed(
     () => new Map(this.cells().map((cell) => [cell.key(), cell.template])),
   );
+
+  /** Smartphone : les en-têtes disparaissent, le tri passe par ce menu (une colonne à la fois, cumulatif). */
+  protected readonly sortMenu = signal<{ x: number; y: number } | null>(null);
+  protected readonly sortMenuItems = computed<PopoverMenuItem[]>(() => {
+    this.language.lang();
+    const sort = this.sort();
+    return this.columns()
+      .filter((col) => this.isSortable(col))
+      .map((col) => {
+        const rank = sort.findIndex((s) => s.key === this.sortKeyOf(col));
+        const dir = rank >= 0 ? sort[rank].dir : null;
+        return {
+          icon: dir === 'asc' ? 'fa-solid fa-arrow-up' : dir === 'desc' ? 'fa-solid fa-arrow-down' : 'fa-solid fa-sort',
+          label: this.translate.instant(col.label),
+          count: sort.length > 1 && rank >= 0 ? rank + 1 : null,
+          action: () => this.toggleSort(col),
+        };
+      });
+  });
 
   constructor() {
     // RG-LST-02 : une page au-delà de la dernière est ramenée à la dernière.
@@ -115,6 +140,11 @@ export class DataTable<T> {
   protected toggleSort(col: DataTableColumn): void {
     this.sort.set(nextSort(this.sort(), this.sortKeyOf(col)));
     this.page.set(0);
+  }
+
+  protected openSortMenu(event: MouseEvent): void {
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    this.sortMenu.set({ x: rect.left, y: rect.bottom + 6 });
   }
 
   protected clearSort(): void {

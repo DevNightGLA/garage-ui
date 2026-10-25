@@ -1,0 +1,127 @@
+.lh__toolbar {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.lh__scroll {
+  overflow: auto;
+  min-height: 0;
+}
+
+.lh {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 14px;
+
+  th {
+    padding: 10px 0;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: left;
+    text-transform: uppercase;
+  }
+
+  td {
+    padding: 12px 0;
+    border-top: 1px solid var(--surface-border);
+  }
+}
+
+.lh__montant {
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.lh__end {
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+.lh__actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--space-2);
+  min-height: 32px;
+}
+
+.lh__state {
+  text-align: center;
+  color: var(--text-muted);
+
+  &--error {
+    color: var(--color-danger);
+  }
+}
+
+.lh__pager ::ng-deep .pg {
+  padding: 0;
+  border-top: 0;
+}
+
+.lh__aide {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+}
+
+// Smartphone : chaque loyer devient une carte « libellé : valeur », la fenêtre défile d'un bloc
+@media (max-width: 575.98px) {
+  .lh__scroll {
+    flex-shrink: 0;
+    min-height: auto;
+    overflow: visible;
+  }
+
+  .lh {
+    thead {
+      display: none;
+    }
+
+    tbody,
+    tr {
+      display: block;
+    }
+
+    tr {
+      padding: var(--space-2) 0;
+      border-top: 1px solid var(--surface-border);
+    }
+
+    td {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: var(--space-3);
+      min-height: 32px;
+      padding: 4px 0;
+      border-top: 0;
+      text-align: right !important;
+      --badge-margin: 0;
+    }
+
+    td::before {
+      content: attr(data-label);
+      flex: none;
+      font-size: 11px;
+      font-weight: 700;
+      text-align: left;
+      text-transform: uppercase;
+      color: var(--text-body);
+    }
+
+    // une ligne sans action n'affiche pas un libellé « Actions » vide
+    td.is-empty {
+      display: none;
+    }
+
+    td.lh__state {
+      display: block;
+      text-align: center !important;
+    }
+
+    td.lh__state::before {
+      content: none;
+    }
+  }
+}

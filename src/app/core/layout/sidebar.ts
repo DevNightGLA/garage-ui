@@ -19,10 +19,13 @@ export function initials(login: string): string {
   templateUrl: './sidebar.html',
   styleUrl: './sidebar.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
-  host: { '[class.is-collapsed]': 'collapsed()' },
+  host: { '[class.is-collapsed]': 'collapsed()', '[class.is-open]': 'open()' },
 })
 export class Sidebar {
+  /** Ordinateur : colonne d'icônes. */
   readonly collapsed = input(false);
+  /** Tablette et smartphone : tiroir ouvert. Sans effet sur ordinateur, où le menu est toujours visible. */
+  readonly open = input(false);
   readonly user = input<Utilisateur | null>(null);
   readonly changePassword = output<void>();
   readonly logout = output<void>();

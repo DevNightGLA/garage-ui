@@ -66,6 +66,22 @@ import { LanguageSwitch } from '../../../core/layout/language-switch';
       margin: 0;
       font-size: 14px;
     }
+
+    @media (max-width: 479.98px) {
+      .auth {
+        align-items: flex-start;
+        padding: var(--space-16) var(--space-4) var(--space-4);
+      }
+
+      .auth__lang {
+        top: var(--space-4);
+        right: var(--space-4);
+      }
+
+      .auth__card {
+        padding: var(--space-6);
+      }
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
