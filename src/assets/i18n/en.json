@@ -565,7 +565,8 @@
     "locationDemarreeLoyer": "Cannot modify: a rental took place after the start date of this rent",
     "evtLocationDebut": "Garage {{garage}}, {{n}} key(s) handed over.",
     "evtLocationFin": "Garage {{garage}}.",
-    "evtPaiement": "Rent for {{mois}}, garage {{garage}}."
+    "evtPaiement": "Rent for {{mois}}, garage {{garage}}.",
+    "dureeMinimale": "The minimum duration of a rental is {{n}} month(s)."
   },
   "erreur": {
     "generique": "An error occurred.",
@@ -616,7 +617,8 @@
     "MAINTENANCE": "The site is under maintenance.",
     "MOT_DE_PASSE_TEMPORAIRE": "You must choose a new password before continuing.",
     "GAR_MAX_ATTEINT": "The maximum number of 20 garages has been reached.",
-    "LOY_LOCATION_EN_COURS": "Cannot modify: a rental has been ongoing since the start date of this rent"
+    "LOY_LOCATION_EN_COURS": "Cannot modify: a rental has been ongoing since the start date of this rent",
+    "LOC_CHEVAUCHEMENT": "This rental overlaps another rental of the garage."
   },
   "maintenance": {
     "site": {

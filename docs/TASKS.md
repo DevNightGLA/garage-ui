@@ -22,7 +22,7 @@ La v1 (étapes 0 à 6 du premier plan) est livrée : socle, composants partagés
 ## Étape 3 : écrans v2
 1. [x] Garages : réalignement v2, pages Historique des loyers et Historique des locations.
 2. [x] Locataires : réalignement v2, Chronologie.
-3. [ ] Locations (durée minimale, nouveaux codes) et Paiements.
+3. [x] Locations (durée minimale, nouveaux codes) et Paiements.
 4. [ ] Tableau de bord v2 (cartes Avis de loyer et Remarques à traiter, `graphMois`) et Statistiques (4 pages).
 5. [ ] Envoi de messages : avis de loyer, relances d'impayés, message libre.
 6. [ ] Paramètres et modèles de messages.

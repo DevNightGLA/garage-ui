@@ -18,6 +18,7 @@ export const PARAMETERIZED_MESSAGES: readonly { pattern: RegExp; key: string }[]
   { pattern: /^La date de début doit être postérieure à la fin de la dernière location \((?<date>[\d\/]+)\)\.$/, key: 'loyerDebutAvantLocation' },
   { pattern: /^Le locataire a été assigné à un garage \((?<n>\d+) location\(s\) : (?<garages>.+)\)\.$/, key: 'locataireAssigne' },
   { pattern: /^Des paiements ont été effectués pour ce locataire \((?<n>\d+) versement\(s\)\)\.$/, key: 'locatairePaiements' },
+  { pattern: /^La durée minimale d[’'] ?une location est de (?<n>\d+) mois\.$/, key: 'dureeMinimale' },
   { pattern: /^Maximum (?<n>\d+) clés remises \(hors réserve\)\.$/, key: 'clesMax' },
   { pattern: /^Cette location chevauche une autre location du garage \(du (?<du>[\d\/]+) au (?<au>[\d\/]+)\)\.$/, key: 'chevauchement' },
   { pattern: /^Cette location chevauche une autre location du garage \(à partir du (?<du>[\d\/]+)\)\.$/, key: 'chevauchementSansFin' },
