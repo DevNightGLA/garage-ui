@@ -5,6 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { filter, map, startWith } from 'rxjs';
 import { ChangePassword } from '../features/auth/change-password/change-password';
 import { Confirm } from '../shared/confirm/confirm';
+import { Toast } from '../shared/toast/toast';
 import { Tooltip } from '../shared/tooltip/tooltip';
 import { AuthService } from '../core/auth/auth-service';
 import { STORAGE_KEYS, StorageService } from '../core/storage';
@@ -18,7 +19,7 @@ import { Sidebar } from './sidebar';
 /** Cadre de l'application : menu latéral repliable, en-tête (titre, langue, rôle) et page courante. */
 @Component({
   selector: 'app-shell',
-  imports: [RouterOutlet, TranslatePipe, Sidebar, LanguageSwitch, Tooltip, Confirm, ChangePassword],
+  imports: [RouterOutlet, TranslatePipe, Sidebar, LanguageSwitch, Tooltip, Confirm, ChangePassword, Toast],
   templateUrl: './shell.html',
   styleUrl: './shell.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -71,7 +71,8 @@ export class LocatairesPage {
   /** Lignes par page : paramètre `lignes_liste` (RG-PAR-09). */
   protected readonly pageSize = inject(SettingsService).lignesListe;
   protected readonly filter = signal<LocataireFilter>('ACTUEL');
-  protected readonly search = signal('');
+  /** `?q=` (Avis de loyer, Relances : « Renseigner l'e-mail du locataire ») préremplit la recherche. */
+  protected readonly search = signal(inject(ActivatedRoute).snapshot.queryParamMap.get('q') ?? '');
   protected readonly page = signal(0);
   protected readonly sort = signal<SortSpec[]>([]);
 

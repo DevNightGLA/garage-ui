@@ -1,0 +1,200 @@
+<p class="page-note" role="note">
+  <i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>{{ 'messages.' + view + '.intro' | translate }}</span>
+</p>
+
+<app-filter-buttons [options]="tabOptions()" [value]="tab()" (valueChange)="setTab($event)" />
+
+<app-data-table
+  [columns]="columns"
+  [rows]="rows()"
+  [total]="total()"
+  [size]="pageSize()"
+  [noun]="'messages.' + view + '.nom' | translate"
+  [(page)]="page"
+  [(sort)]="sort"
+  [loading]="list.isLoading()"
+  [error]="loadError()"
+  [emptyMessage]="'messages.' + view + '.vide.' + tab()"
+  [rowKey]="rowKey"
+  (retry)="refresh()"
+>
+  <app-search-input
+    dtToolbarStart
+    [value]="search()"
+    [placeholder]="'messages.recherche' | translate"
+    (valueChange)="setSearch($event)"
+  />
+  @if (selecting()) {
+    <button
+      dtToolbarEnd
+      type="button"
+      class="btn btn--primary"
+      [class.is-disabled]="selectedCount() === 0"
+      [attr.aria-disabled]="selectedCount() === 0"
+      [appTooltip]="selectedCount() === 0 ? ('messages.envoi.cocher' | translate) : null"
+      (click)="askSend()"
+    >
+      <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+      {{ 'messages.envoi.bouton' | translate: { n: selectedCount() } }}
+    </button>
+  }
+
+  <ng-template appHeader="choix">
+    @if (selecting()) {
+      <label class="all">
+        <input
+          type="checkbox"
+          class="check"
+          [checked]="allChecked()"
+          [indeterminate]="someChecked()"
+          [disabled]="noneEligible()"
+          (change)="toggleAll($any($event.target).checked)"
+        />
+        <span class="visually-hidden">{{ 'messages.toutSelectionner' | translate }}</span>
+      </label>
+    }
+  </ng-template>
+
+  <ng-template appCell="choix" let-row>
+    @if (row.sent) {
+      <i class="fa-solid fa-circle-check state is-done" [appTooltip]="sentLabel(row)" aria-hidden="true"></i>
+    } @else if (selecting()) {
+      <input
+        type="checkbox"
+        class="check"
+        [checked]="selectedKeys().has(row.key)"
+        [disabled]="!row.email"
+        [attr.aria-label]="'messages.selectionner' | translate: { nom: row.name }"
+        [appTooltip]="row.email ? null : ('messages.sansEmailCase' | translate)"
+        (change)="toggle(row, $any($event.target).checked)"
+      />
+    } @else {
+      <i class="fa-regular fa-envelope state" aria-hidden="true"></i>
+    }
+  </ng-template>
+
+  <ng-template appCell="locataire" let-row>
+    <span class="who">
+      <span class="who__avatar" aria-hidden="true">{{ row.initials }}</span>
+      <span class="who__text">
+        <b>{{ row.name }}</b>
+        <span class="who__mail" [class.is-missing]="!row.email">{{ contactLine(row) }}</span>
+        @if (row.sent && row.change) {
+          <span class="who__sent">{{ sentLabel(row) }}</span>
+        }
+      </span>
+    </span>
+  </ng-template>
+
+  <ng-template appCell="garage" let-row><b class="garage">{{ row.garage }}</b></ng-template>
+
+  <ng-template appCell="montant" let-row>
+    @if (row.change; as change) {
+      <span class="change">
+        <s>{{ eur(change.old) }}</s>
+        <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        <b>{{ eur(change.new) }}</b>
+        <span class="change__delta" [class.is-up]="delta(row).up">{{ delta(row).text }}</span>
+      </span>
+    }
+    @if (row.due; as due) {
+      <span class="due">
+        <span class="due__pill">
+          <span class="due__type" [class.is-total]="due.cas === 'TOTAL'">{{ 'tableauDeBord.impayes.type.' + due.cas | translate }}</span>
+          <span class="due__value" [class.is-total]="due.cas === 'TOTAL'">{{ eur(due.reste) }}</span>
+        </span>
+        <span class="due__detail" [class.is-done]="row.sent">{{ dueDetail(row) }}</span>
+      </span>
+    }
+  </ng-template>
+
+  <ng-template appCell="date" let-row><span class="date">{{ row.date }}</span></ng-template>
+
+  <ng-template appCell="actions" let-row>
+    <span class="actions">
+      @if (canPreview(row)) {
+        <button
+          type="button"
+          class="icon-btn"
+          [appTooltip]="'messages.apercu.titre' | translate"
+          [attr.aria-label]="'messages.apercu.titre' | translate"
+          (click)="openPreview(row)"
+        >
+          <i class="fa-regular fa-eye" aria-hidden="true"></i>
+        </button>
+      }
+      @if (canContact(row)) {
+        <button
+          type="button"
+          class="icon-btn"
+          [appTooltip]="'messages.' + view + '.contactTitre' | translate"
+          [attr.aria-label]="'messages.' + view + '.contactTitre' | translate"
+          (click)="contact.set(row)"
+        >
+          <i class="fa-solid fa-comments" aria-hidden="true"></i>
+        </button>
+      }
+      @if (canFixEmail(row)) {
+        <button
+          type="button"
+          class="icon-btn"
+          [appTooltip]="'messages.renseignerEmail' | translate"
+          [attr.aria-label]="'messages.renseignerEmail' | translate"
+          (click)="fixEmail(row)"
+        >
+          <i class="fa-solid fa-user-pen" aria-hidden="true"></i>
+        </button>
+      }
+    </span>
+  </ng-template>
+</app-data-table>
+
+@if (confirming()) {
+  <app-modal
+    [title]="'messages.' + view + '.confirmer.' + (selectedCount() > 1 ? 'n' : 'un') | translate: { n: selectedCount() }"
+    [width]="480"
+    [error]="sendError()"
+    (closed)="confirming.set(false)"
+  >
+    <p class="explain">{{ 'messages.envoi.explication' | translate }}</p>
+    <ul class="recipients">
+      @for (row of confirmList(); track row.key) {
+        <li><b>{{ row.name }}</b><span>{{ row.email }}</span></li>
+      }
+    </ul>
+    @if (confirmMore() > 0) {
+      <p class="recipients__more">{{ 'messages.' + view + '.autres' | translate: { n: confirmMore() } }}</p>
+    }
+    <div modalFooter>
+      <button type="button" class="btn btn--secondary" [disabled]="sending()" (click)="confirming.set(false)">
+        {{ 'commun.annuler' | translate }}
+      </button>
+      <button type="button" class="btn btn--primary" [disabled]="sending()" [attr.aria-busy]="sending()" (click)="confirmSend()">
+        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        {{ (sending() ? 'messages.envoi.enCours' : 'messages.envoi.envoyer') | translate }}
+      </button>
+    </div>
+  </app-modal>
+}
+
+@if (preview(); as current) {
+  <app-email-preview
+    [title]="'messages.apercu.titre' | translate"
+    [subtitle]="current.row.name"
+    [preview]="current.data"
+    [error]="current.error"
+    [note]="current.row.sent ? sentLabel(current.row) : null"
+    (closed)="preview.set(null)"
+  />
+}
+
+@if (contact(); as row) {
+  <app-contact-dialog
+    [kind]="view === 'avis' ? 'informe' : 'relance'"
+    [name]="row.name"
+    [contact]="row.telephone"
+    [save]="saveContact"
+    (saved)="contactSaved()"
+    (closed)="contact.set(null)"
+  />
+}

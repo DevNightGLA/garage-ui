@@ -16,7 +16,7 @@ import { SortSpec } from '../../core/api/list-params';
 import { LanguageService } from '../../core/language-service';
 import { Pagination } from '../pagination/pagination';
 import { PopoverMenu, PopoverMenuItem } from '../popover-menu/popover-menu';
-import { DataTableCell } from './data-table-cell';
+import { DataTableCell, DataTableHeader } from './data-table-cell';
 import { nextSort } from './sort';
 
 export interface DataTableColumn {
@@ -68,6 +68,10 @@ export class DataTable<T> {
   readonly retry = output<void>();
 
   private readonly cells = contentChildren(DataTableCell);
+  private readonly headers = contentChildren(DataTableHeader);
+  protected readonly headerTemplates = computed(
+    () => new Map(this.headers().map((header) => [header.key(), header.template])),
+  );
   private readonly translate = inject(TranslateService);
   private readonly language = inject(LanguageService);
   protected readonly cellTemplates = computed(

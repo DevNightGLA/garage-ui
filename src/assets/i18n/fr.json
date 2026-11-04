@@ -582,6 +582,90 @@
       "TELEPHONE": "Téléphone",
       "COURRIER": "Courrier postal",
       "ORAL": "Oralement"
+    },
+    "col": {
+      "locataire": "Locataire",
+      "garage": "Garage",
+      "loyer": "Loyer",
+      "resteDu": "Reste dû",
+      "aPartirDu": "À partir du",
+      "periode": "Période",
+      "action": "Action"
+    },
+    "recherche": "Rechercher un locataire…",
+    "toutSelectionner": "Tout sélectionner",
+    "selectionner": "Sélectionner {{nom}}",
+    "sansEmail": "Aucun e-mail",
+    "sansEmailCase": "Aucun e-mail : envoi impossible",
+    "renseignerEmail": "Renseigner l’e-mail du locataire",
+    "fait": "{{moyen}} · le {{date}}",
+    "moyenPar": {
+      "EMAIL": "par e-mail",
+      "TELEPHONE": "par téléphone",
+      "COURRIER": "par courrier",
+      "ORAL": "oralement"
+    },
+    "envoi": {
+      "cocher": "Cochez au moins un locataire",
+      "bouton": "Envoyer ({{n}})",
+      "explication": "Un e-mail sera envoyé à chaque locataire sélectionné. Une remarque « Information » reprenant son contenu sera ajoutée à la fiche du locataire.",
+      "envoyer": "Envoyer",
+      "enCours": "Envoi…"
+    },
+    "apercu": {
+      "titre": "Aperçu de l’e-mail",
+      "de": "De",
+      "reponseA": "Répondre à",
+      "cci": "Cci",
+      "a": "À",
+      "objet": "Objet"
+    },
+    "avis": {
+      "intro": "Locataires actuels dont le loyer change à une date future. Chaque envoi ajoute une remarque « Information » à la fiche du locataire, avec le contenu de l’e-mail. Les locataires sans e-mail sont à informer par téléphone, par courrier ou oralement depuis le tableau de bord.",
+      "nom": "avis",
+      "onglet": {
+        "A_FAIRE": "À envoyer",
+        "FAITS": "Envoyés"
+      },
+      "vide": {
+        "A_FAIRE": "Aucun avis à envoyer.",
+        "FAITS": "Aucun avis envoyé."
+      },
+      "confirmer": {
+        "un": "Envoyer 1 avis de changement de loyer ?",
+        "n": "Envoyer {{n}} avis de changement de loyer ?"
+      },
+      "autres": "{{n}} autres avis",
+      "envoyes": {
+        "un": "1 avis envoyé avec succès",
+        "n": "{{n}} avis envoyés avec succès"
+      },
+      "contactTitre": "Marquer comme informé",
+      "contactEnregistre": "Contact enregistré avec succès"
+    },
+    "relances": {
+      "intro": "Loyers non soldés à relancer. Le message est adapté au cas : impayé total ou paiement partiel. Chaque relance ajoute une remarque « Information » à la fiche du locataire. Pour une relance par téléphone, par courrier postal ou oralement, utilisez l’icône de la ligne.",
+      "nom": "impayés",
+      "onglet": {
+        "A_FAIRE": "À relancer",
+        "FAITS": "Relancés"
+      },
+      "vide": {
+        "A_FAIRE": "Aucun impayé à relancer.",
+        "FAITS": "Aucune relance effectuée."
+      },
+      "confirmer": {
+        "un": "Envoyer 1 relance d’impayé ?",
+        "n": "Envoyer {{n}} relances d’impayé ?"
+      },
+      "autres": "{{n}} autres relances",
+      "envoyes": {
+        "un": "1 relance envoyée avec succès",
+        "n": "{{n}} relances envoyées avec succès"
+      },
+      "aucunVersement": "Aucun versement",
+      "contactTitre": "Marquer comme relancé (téléphone, courrier, oral)",
+      "contactEnregistre": "Relance enregistrée avec succès"
     }
   },
   "statistiques": {

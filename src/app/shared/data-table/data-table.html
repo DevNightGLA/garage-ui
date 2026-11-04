@@ -29,7 +29,9 @@
               [attr.aria-sort]="ariaSort(col)"
               [attr.title]="col.title ? (col.title | translate) : null"
             >
-              @if (isSortable(col)) {
+              @if (headerTemplates().get(col.key); as header) {
+                <ng-container [ngTemplateOutlet]="header" />
+              } @else if (isSortable(col)) {
                 <button type="button" class="dt__sort" (click)="toggleSort(col)">
                   {{ col.label | translate }}
                   <span class="dt__ind" [class.is-on]="direction(col)" aria-hidden="true">{{

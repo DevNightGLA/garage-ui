@@ -406,3 +406,25 @@
   color: var(--text-heading);
   overflow-wrap: anywhere;
 }
+
+// Note d'introduction d'une page (maquette : Avis de loyer, Relances, Message libre).
+.page-note {
+  display: flex;
+  gap: var(--space-3);
+  align-items: flex-start;
+  max-width: 780px;
+  box-sizing: border-box;
+  margin: 0;
+  padding: var(--space-3) var(--space-4);
+  border-radius: var(--radius-md);
+  background: #f8f9fa;
+  font-size: 13px;
+  font-style: italic;
+  line-height: 1.5;
+
+  > i {
+    flex: none;
+    margin-top: 1px;
+    font-size: 15px;
+  }
+}

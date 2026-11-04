@@ -13,6 +13,8 @@ import { Shell } from './layout/shell';
  */
 const statistiques = () =>
   import('./features/statistiques/statistiques-page/statistiques-page').then((m) => m.StatistiquesPage);
+const messageList = () =>
+  import('./features/messages/message-list-page/message-list-page').then((m) => m.MessageListPage);
 const garageHistory = () =>
   import('./features/garages/garage-history-page/garage-history-page').then((m) => m.GarageHistoryPage);
 
@@ -29,6 +31,8 @@ export const SCREENS: Partial<Record<string, () => Promise<Type<unknown>>>> = {
   'statistiques/taux-occupation': statistiques,
   'statistiques/repartition': statistiques,
   'statistiques/remarques': statistiques,
+  'avis-de-loyer': messageList,
+  relances: messageList,
   chronologie: () => import('./features/chronologie/chronologie-page/chronologie-page').then((m) => m.ChronologiePage),
 };
 
@@ -40,6 +44,8 @@ const SCREEN_DATA: Partial<Record<string, Record<string, unknown>>> = {
   'statistiques/taux-occupation': { vue: 'occupation' },
   'statistiques/repartition': { vue: 'repartition' },
   'statistiques/remarques': { vue: 'remarques' },
+  'avis-de-loyer': { vue: 'avis' },
+  relances: { vue: 'relances' },
 };
 
 const pending = () => import('./layout/info-pages').then((m) => m.ScreenPending);

@@ -709,6 +709,90 @@
       "TELEPHONE": "Phone",
       "COURRIER": "Post",
       "ORAL": "In person"
+    },
+    "col": {
+      "locataire": "Tenant",
+      "garage": "Garage",
+      "loyer": "Rent",
+      "resteDu": "Amount due",
+      "aPartirDu": "From",
+      "periode": "Period",
+      "action": "Action"
+    },
+    "recherche": "Search for a tenant…",
+    "toutSelectionner": "Select all",
+    "selectionner": "Select {{nom}}",
+    "sansEmail": "No e-mail",
+    "sansEmailCase": "No e-mail: cannot send",
+    "renseignerEmail": "Enter the tenant’s e-mail",
+    "fait": "{{moyen}} · on {{date}}",
+    "moyenPar": {
+      "EMAIL": "by e-mail",
+      "TELEPHONE": "by phone",
+      "COURRIER": "by mail",
+      "ORAL": "verbally"
+    },
+    "envoi": {
+      "cocher": "Tick at least one tenant",
+      "bouton": "Send ({{n}})",
+      "explication": "An e-mail will be sent to each selected tenant. An “Information” remark with its content will be added to the tenant record.",
+      "envoyer": "Send",
+      "enCours": "Sending…"
+    },
+    "apercu": {
+      "titre": "E-mail preview",
+      "de": "From",
+      "reponseA": "Reply to",
+      "cci": "Bcc",
+      "a": "To",
+      "objet": "Subject"
+    },
+    "avis": {
+      "intro": "Current tenants whose rent changes on a future date. Each send adds an “Information” remark to the tenant record, with the e-mail text. Tenants without e-mail are to be informed by phone, mail or verbally from the dashboard.",
+      "nom": "notices",
+      "onglet": {
+        "A_FAIRE": "To send",
+        "FAITS": "Sent"
+      },
+      "vide": {
+        "A_FAIRE": "No notices to send.",
+        "FAITS": "No notices sent."
+      },
+      "confirmer": {
+        "un": "Send 1 rent change notice?",
+        "n": "Send {{n}} rent change notices?"
+      },
+      "autres": "{{n}} more notices",
+      "envoyes": {
+        "un": "1 notice sent successfully",
+        "n": "{{n}} notices sent successfully"
+      },
+      "contactTitre": "Mark as informed",
+      "contactEnregistre": "Contact saved successfully"
+    },
+    "relances": {
+      "intro": "Unsettled rents to follow up. The message suits the case: full unpaid or partial payment. Each reminder adds an “Information” remark to the tenant record. For a reminder by phone, by post or verbally, use the row icon.",
+      "nom": "unpaid",
+      "onglet": {
+        "A_FAIRE": "To remind",
+        "FAITS": "Reminded"
+      },
+      "vide": {
+        "A_FAIRE": "No overdue payments to remind.",
+        "FAITS": "No reminders sent yet."
+      },
+      "confirmer": {
+        "un": "Send 1 overdue reminder?",
+        "n": "Send {{n}} overdue reminders?"
+      },
+      "autres": "{{n}} more reminders",
+      "envoyes": {
+        "un": "1 reminder sent successfully",
+        "n": "{{n}} reminders sent successfully"
+      },
+      "aucunVersement": "No payment received",
+      "contactTitre": "Mark as reminded (phone, mail, verbal)",
+      "contactEnregistre": "Reminder saved successfully"
     }
   },
   "statistiques": {
