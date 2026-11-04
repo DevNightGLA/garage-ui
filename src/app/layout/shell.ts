@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, computed, effect, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, effect, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -8,7 +8,9 @@ import { Confirm } from '../shared/confirm/confirm';
 import { Tooltip } from '../shared/tooltip/tooltip';
 import { AuthService } from '../core/auth/auth-service';
 import { STORAGE_KEYS, StorageService } from '../core/storage';
-import { Viewport } from '../core/viewport';
+import { DeviceService } from '../core/device-service';
+import { IdleService } from '../core/idle-service';
+import { SettingsService } from '../core/settings-service';
 import { LanguageSwitch } from './language-switch';
 import { NavigationMemory } from './navigation-memory';
 import { Sidebar } from './sidebar';
@@ -24,14 +26,15 @@ import { Sidebar } from './sidebar';
 })
 export class Shell {
   protected readonly auth = inject(AuthService);
-  protected readonly viewport = inject(Viewport);
+  protected readonly viewport = inject(DeviceService);
+  private readonly settings = inject(SettingsService);
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
   private readonly storage = inject(StorageService);
   private readonly memory = inject(NavigationMemory);
 
-  /** Ordinateur : menu replié en colonne d'icônes (état mémorisé). */
-  protected readonly collapsed = signal(this.storage.local.get(STORAGE_KEYS.menuReplie) === '1');
+  /** Ordinateur : menu replié en colonne d'icônes. État mémorisé, sinon le paramètre `menu_replie` (RG-NAV-02). */
+  protected readonly collapsed = signal(this.initialCollapsed());
   /** Tablette et smartphone : le menu est un tiroir qui recouvre la page. */
   protected readonly drawerOpen = signal(false);
   protected readonly passwordOpen = signal(false);
@@ -47,7 +50,7 @@ export class Shell {
    * l'activation d'une route enfant son `snapshot` n'existe pas encore : le titre
    * est relu à la fin de la navigation.
    */
-  protected readonly titleKey = toSignal(
+  private readonly heading = toSignal(
     this.router.events.pipe(
       filter((event) => event instanceof NavigationEnd),
       startWith(null),
@@ -56,13 +59,23 @@ export class Shell {
         while (current.firstChild) {
           current = current.firstChild;
         }
-        return (current.snapshot?.data['titleKey'] as string | undefined) ?? '';
+        const data = current.snapshot?.data ?? {};
+        return {
+          titleKey: (data['titleKey'] as string | undefined) ?? '',
+          groupKey: (data['groupKey'] as string | null | undefined) ?? null,
+        };
       }),
     ),
-    { initialValue: '' },
+    { initialValue: { titleKey: '', groupKey: null } },
   );
+  protected readonly titleKey = computed(() => this.heading().titleKey);
+  /** Groupe du menu de la page, pour le fil d'Ariane « Pages / Garages / Historique des loyers ». */
+  protected readonly groupKey = computed(() => this.heading().groupKey);
 
   constructor() {
+    const idle = inject(IdleService);
+    idle.start();
+    inject(DestroyRef).onDestroy(() => idle.stop());
     this.router.events
       .pipe(filter((event) => event instanceof NavigationEnd))
       .subscribe((event) => {
@@ -75,6 +88,11 @@ export class Shell {
         this.drawerOpen.set(false);
       }
     });
+  }
+
+  private initialCollapsed(): boolean {
+    const stored = this.storage.local.get(STORAGE_KEYS.menuReplie);
+    return stored === null ? this.settings.menuReplie() : stored === '1';
   }
 
   protected toggleMenu(): void {

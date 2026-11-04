@@ -3,18 +3,54 @@
 
 <nav class="sb__nav" [attr.aria-label]="'nav.principale' | translate">
   <ul>
-    @for (item of items; track item.path) {
-      <li>
-        <a
-          class="sb__link"
-          [routerLink]="['/', item.path]"
-          routerLinkActive="is-active"
-          [appTooltip]="collapsed() ? (item.labelKey | translate) : null"
-        >
-          <span class="sb__tile"><i class="fa-solid" [class]="item.icon"></i></span>
-          <span class="sb__label">{{ item.labelKey | translate }}</span>
-        </a>
-      </li>
+    @for (entry of entries(); track entry.kind === 'item' ? entry.item.path : entry.group.id) {
+      @if (entry.kind === 'item') {
+        <li>
+          <a
+            class="sb__link"
+            [routerLink]="['/', entry.item.path]"
+            routerLinkActive="is-active"
+            [appTooltip]="collapsed() ? (entry.item.labelKey | translate) : null"
+          >
+            <span class="sb__tile"><i class="fa-solid" [class]="entry.item.icon" aria-hidden="true"></i></span>
+            <span class="sb__label">{{ entry.item.labelKey | translate }}</span>
+          </a>
+        </li>
+      } @else {
+        <li class="sb__group" [class.is-open]="isOpen(entry.group)">
+          <button
+            type="button"
+            class="sb__link sb__toggle"
+            [class.is-active]="hasActive(entry.children) && (collapsed() ? !isOpen(entry.group) : isOpen(entry.group))"
+            [class.has-active]="hasActive(entry.children)"
+            [attr.aria-expanded]="isOpen(entry.group)"
+            [appTooltip]="collapsed() ? (entry.group.labelKey | translate) : null"
+            (click)="toggle(entry.group)"
+          >
+            <span class="sb__tile"><i class="fa-solid" [class]="entry.group.icon" aria-hidden="true"></i></span>
+            <span class="sb__label">{{ entry.group.labelKey | translate }}</span>
+            <i class="fa-solid fa-angle-down sb__chev" aria-hidden="true"></i>
+          </button>
+          <div class="sb__kids">
+            <ul>
+              @for (child of entry.children; track child.path) {
+                <li>
+                  <a
+                    class="sb__kid"
+                    [routerLink]="['/', child.path]"
+                    routerLinkActive="is-active"
+                    [attr.tabindex]="isOpen(entry.group) ? null : -1"
+                    [appTooltip]="collapsed() ? (child.labelKey | translate) : null"
+                  >
+                    <span class="sb__kid-icon"><i class="fa-solid" [class]="child.icon" aria-hidden="true"></i></span>
+                    <span class="sb__kid-label">{{ child.labelKey | translate }}</span>
+                  </a>
+                </li>
+              }
+            </ul>
+          </div>
+        </li>
+      }
     }
   </ul>
 </nav>
@@ -37,7 +73,7 @@
     [appTooltip]="collapsed() ? ('auth.mdp.titre' | translate) : null"
     (click)="changePassword.emit()"
   >
-    <span class="sb__action-icon"><i class="fa-solid fa-key"></i></span>
+    <span class="sb__action-icon"><i class="fa-solid fa-key" aria-hidden="true"></i></span>
     <span class="sb__label">{{ 'auth.mdp.titre' | translate }}</span>
   </button>
   <button
@@ -46,7 +82,7 @@
     [appTooltip]="collapsed() ? ('auth.deconnexion.bouton' | translate) : null"
     (click)="logout.emit()"
   >
-    <span class="sb__action-icon"><i class="fa-solid fa-right-from-bracket"></i></span>
+    <span class="sb__action-icon"><i class="fa-solid fa-right-from-bracket" aria-hidden="true"></i></span>
     <span class="sb__label">{{ 'auth.deconnexion.bouton' | translate }}</span>
   </button>
 </div>

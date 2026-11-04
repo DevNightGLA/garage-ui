@@ -6,7 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { SortSpec } from '../../../core/api/list-params';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { Confirm } from '../../../shared/confirm/confirm';
 import { DataTable, DataTableColumn } from '../../../shared/data-table/data-table';
 import { DataTableCell } from '../../../shared/data-table/data-table-cell';
@@ -60,7 +60,7 @@ interface Deletion {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationsPage {
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('LOC');
   private readonly api = inject(LocationApi);
   private readonly errors = inject(ErrorMessageService);
 

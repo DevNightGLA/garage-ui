@@ -1,7 +1,7 @@
 <div class="card rv">
   <div class="rv__head">
     <h2 class="rv__titre">{{ 'remarques.titre' | translate }}</h2>
-    @if (roles.canWrite()) {
+    @if (droits.canAdd()) {
       <button type="button" class="btn btn--primary" (click)="openForm(null)">
         <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'remarques.nouvelle' | translate }}
       </button>
@@ -40,7 +40,7 @@
           <div class="rem__texte rich-content" [innerHTML]="html(remarque)" (click)="openLink($event)"></div>
         </div>
         <div class="rem__actions">
-          @if (remarque.type === 'PROBLEME' && roles.canWrite()) {
+          @if (remarque.type === 'PROBLEME' && droits.canEdit()) {
             @if (remarque.resolu) {
               <button
                 type="button"
@@ -64,12 +64,12 @@
           <button
             type="button"
             class="icon-btn"
-            [appTooltip]="(roles.isReadOnly() ? 'remarques.visualiser' : 'remarques.modifier') | translate"
+            [appTooltip]="(droits.isReadOnly() ? 'remarques.visualiser' : 'remarques.modifier') | translate"
             (click)="openForm(remarque)"
           >
-            <i class="fa-solid" [class.fa-eye]="roles.isReadOnly()" [class.fa-pen]="!roles.isReadOnly()" aria-hidden="true"></i>
+            <i class="fa-solid" [class.fa-eye]="droits.isReadOnly()" [class.fa-pen]="!droits.isReadOnly()" aria-hidden="true"></i>
           </button>
-          @if (roles.canDelete()) {
+          @if (droits.canDelete()) {
             <button type="button" class="icon-btn" [appTooltip]="'remarques.supprimer' | translate" (click)="remove(remarque)">
               <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
             </button>
@@ -84,7 +84,7 @@
   <app-remarque-form
     [cible]="cible()"
     [remarque]="current.remarque"
-    [readOnly]="roles.isReadOnly()"
+    [readOnly]="droits.isReadOnly()"
     (saved)="saved()"
     (closed)="form.set(null)"
   />

@@ -35,7 +35,7 @@
     [placeholder]="'garages.recherche' | translate"
     (valueChange)="setSearch($event)"
   />
-  @if (roles.canWrite()) {
+  @if (droits.canAdd()) {
     <button dtToolbarEnd type="button" class="btn btn--primary" (click)="openForm(null)">
       <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'garages.nouveau' | translate }}
     </button>
@@ -91,12 +91,12 @@
       <button
         type="button"
         class="icon-btn"
-        [appTooltip]="(roles.isReadOnly() ? 'garages.visualiser' : 'garages.modifier') | translate"
+        [appTooltip]="(droits.isReadOnly() ? 'garages.visualiser' : 'garages.modifier') | translate"
         (click)="openForm(garage)"
       >
-        <i class="fa-solid" [class.fa-eye]="roles.isReadOnly()" [class.fa-pen]="!roles.isReadOnly()" aria-hidden="true"></i>
+        <i class="fa-solid" [class.fa-eye]="droits.isReadOnly()" [class.fa-pen]="!droits.isReadOnly()" aria-hidden="true"></i>
       </button>
-      @if (roles.canDelete()) {
+      @if (droits.canDelete()) {
         <button type="button" class="icon-btn" [appTooltip]="'garages.supprimer' | translate" (click)="askDelete(garage)">
           <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
         </button>
@@ -109,7 +109,7 @@
 @if (form(); as current) {
   <app-garage-form
     [garage]="current.garage"
-    [readOnly]="roles.isReadOnly()"
+    [readOnly]="droits.isReadOnly()"
     (saved)="formSaved()"
     (closed)="form.set(null)"
   />

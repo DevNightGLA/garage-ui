@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { LanguageService } from '../../../core/language-service';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { isoToDisplay } from '../../../shared/date-input/date-utils';
 import { Modal } from '../../../shared/modal/modal';
 import { monthLabel } from '../../../shared/month-picker/month-utils';
@@ -33,7 +33,7 @@ export class VersementsModal {
   /** Un versement a été annulé : la liste de l'écran et ses indicateurs doivent se recharger. */
   readonly changed = output<void>();
 
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('PAI');
   private readonly api = inject(PaiementApi);
   private readonly errors = inject(ErrorMessageService);
   private readonly language = inject(LanguageService);

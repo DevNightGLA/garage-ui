@@ -9,15 +9,15 @@ La v1 (étapes 0 à 6 du premier plan) est livrée : socle, composants partagés
 - [x] Structure v2 : `src/app/layout/` (shell, menu, en-tête) sorti de `core/`.
 
 ## Étape 2 : socle v2 (point de validation avec Gregory à la fin)
-- [ ] Profils v2 (`CONSULTANT`, `LOCATAIRE`), `UtilisateurDTO` v2.
-- [ ] `SettingsService` (`GET /api/contexte`) : date du jour, lignes par page, mois des graphiques, langue et menu par défaut, inactivité, longueur du mot de passe.
-- [ ] `RightsService` (`GET /api/droits/moi`) et `rightsGuard` ; `DeviceService` (ordinateur, tablette, smartphone) et écrans par appareil.
-- [ ] Intercepteur d'erreurs : 503 `MAINTENANCE`, 403 `MOT_DE_PASSE_TEMPORAIRE`, 403 `ACCES_REFUSE`.
-- [ ] Mot de passe temporaire : écran obligatoire après connexion. Longueur minimale `mdpMin`.
-- [ ] `IdleService` : déconnexion après `inactiviteMin`.
-- [ ] Page « Site en maintenance » (Réessayer, vérification toutes les `intervalleVerifSec`).
-- [ ] Menu en six sections filtré par droits et appareil, pages « non disponible sur cet appareil » et « droit insuffisant ».
-- [ ] Écrans existants branchés sur `RightsService` au lieu du rôle figé.
+- [x] Profils v2 (`CONSULTANT`, `LOCATAIRE`), `UtilisateurDTO` v2.
+- [x] `SettingsService` (`GET /api/contexte`) : date du jour, lignes par page, mois des graphiques, langue et menu par défaut, inactivité, longueur du mot de passe.
+- [x] `RightsService` (`GET /api/droits/moi`) et `rightsGuard` ; `DeviceService` (ordinateur, tablette, smartphone) et écrans par appareil.
+- [x] Intercepteur d'erreurs : 503 `MAINTENANCE`, 403 `MOT_DE_PASSE_TEMPORAIRE`, 403 `ACCES_REFUSE`.
+- [x] Mot de passe temporaire : écran obligatoire après connexion. Longueur minimale `mdpMin`.
+- [x] `IdleService` : déconnexion après `inactiviteMin`.
+- [x] Page « Site en maintenance » (Réessayer, vérification toutes les `intervalleVerifSec`).
+- [x] Menu en six sections filtré par droits et appareil, pages « non disponible sur cet appareil » et « droit insuffisant ».
+- [x] Écrans existants branchés sur `RightsService` au lieu du rôle figé.
 
 ## Étape 3 : écrans v2
 1. [ ] Garages : réalignement v2, pages Historique des loyers et Historique des locations.

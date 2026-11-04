@@ -220,12 +220,12 @@ describe('ForgotPassword', () => {
   const screen = new (class extends Screen<ForgotPassword> {})();
   afterEach(() => screen.http.verify());
 
-  it('demande l\'adresse e-mail et remercie sans révéler si le compte existe', async () => {
+  it('demande l\'identifiant et remercie sans révéler si le compte existe (RG-AUT-02)', async () => {
     await screen.setup(ForgotPassword);
-    await screen.type('input[type="email"]', 'marie@example.com');
+    await screen.type('input[autocomplete="username"]', ' marie ');
     await screen.submit();
     const request = screen.http.expectOne('/api/auth/mot-de-passe-oublie');
-    expect(request.request.body).toEqual({ email: 'marie@example.com' });
+    expect(request.request.body).toEqual({ identifiant: 'marie' });
     request.flush(null, { status: 202, statusText: 'Accepted' });
     await screen.fixture.whenStable();
     expect(screen.root.querySelector('.auth__title')!.textContent).toBe('Vérifiez votre messagerie');
@@ -239,16 +239,16 @@ describe('ForgotPassword', () => {
     screen.http.expectNone('/api/auth/mot-de-passe-oublie');
   });
 
-  it('affiche le format d\'e-mail invalide renvoyé par le back', async () => {
+  it('affiche l\'erreur de validation renvoyée par le back pour l\'identifiant', async () => {
     await screen.setup(ForgotPassword);
-    await screen.type('input[type="email"]', 'pas-un-email');
+    await screen.type('input[autocomplete="username"]', 'x');
     await screen.submit();
     screen.http.expectOne('/api/auth/mot-de-passe-oublie').flush(
-      { code: 'VALIDATION', message: 'Des champs obligatoires sont manquants ou invalides.', fieldErrors: { email: 'Format d\'e-mail invalide.' }, details: [] },
+      { code: 'VALIDATION', message: 'Des champs obligatoires sont manquants ou invalides.', fieldErrors: { identifiant: 'L\'identifiant est obligatoire.' }, details: [] },
       { status: 422, statusText: 'Unprocessable Entity' },
     );
     await screen.fixture.whenStable();
-    expect(screen.root.querySelector('.ff__error')!.textContent).toBe('Format d\'e-mail invalide.');
+    expect(screen.root.querySelector('.ff__error')!.textContent).toBe('L\'identifiant est obligatoire.');
   });
 });
 

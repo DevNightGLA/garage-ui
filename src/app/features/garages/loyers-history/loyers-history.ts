@@ -4,7 +4,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { isoToDisplay } from '../../../shared/date-input/date-utils';
 import { Modal } from '../../../shared/modal/modal';
 import { Pagination } from '../../../shared/pagination/pagination';
@@ -40,7 +40,7 @@ export class LoyersHistory {
   /** Un loyer a été créé, modifié ou supprimé : le loyer courant du garage a pu changer. */
   readonly changed = output<void>();
 
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('LOY');
   private readonly api = inject(GarageApi);
   private readonly errors = inject(ErrorMessageService);
   private readonly translate = inject(TranslateService);
@@ -75,11 +75,11 @@ export class LoyersHistory {
   }
 
   protected canDelete(loyer: LoyerDTO, index: number): boolean {
-    return this.roles.canWrite() && this.hasActions(index) && loyer.etat === 'A_VENIR';
+    return this.droits.canDelete() && this.hasActions(index) && loyer.etat === 'A_VENIR';
   }
 
   protected editTooltip(loyer: LoyerDTO): string {
-    if (this.roles.isReadOnly()) {
+    if (this.droits.isReadOnly()) {
       return this.translate.instant('loyers.visualiser');
     }
     return loyer.modifiable ? this.translate.instant('loyers.modifier') : (loyer.motifModification ?? '');
@@ -94,7 +94,7 @@ export class LoyersHistory {
   }
 
   protected openEdit(loyer: LoyerDTO): void {
-    if (this.roles.isReadOnly() || loyer.modifiable) {
+    if (this.droits.isReadOnly() || loyer.modifiable) {
       this.form.set({ loyer });
     }
   }

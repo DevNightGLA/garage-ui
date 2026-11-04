@@ -1,4 +1,5 @@
 import { HttpRequest, provideHttpClient } from '@angular/common/http';
+import { revokeRight, signInAs } from '../../../../testing/rights';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { pageOf } from '../../../../testing/garage-fixtures';
@@ -45,10 +46,13 @@ describe('LocatairesPage', () => {
     (element as HTMLElement).click();
     render();
   };
-  const signIn = (role: Role | null) =>
-    TestBed.inject(AuthService).user.set(
-      role ? { id: 1, login: 'u', email: 'u@example.com', role, actif: true } : null,
-    );
+  const signIn = (role: Role | null) => {
+    if (role) {
+      signInAs(role);
+    } else {
+      TestBed.inject(AuthService).user.set(null);
+    }
+  };
 
   /** Crée l'écran avec le rôle voulu et répond aux deux premières requêtes (liste et compteurs). */
   const open = async (
@@ -279,21 +283,29 @@ describe('LocatairesPage', () => {
       expect(actionTitles()).toEqual(['Modifier le locataire', 'Supprimer le locataire']);
     });
 
-    it('Gestionnaire : crée et modifie, ne supprime pas', async () => {
+    it('Gestionnaire : crée, modifie et supprime par défaut (RG-DRO-20, décision du 03/11/2026)', async () => {
       await open('GESTIONNAIRE');
       expect(root.querySelector('[dtToolbarEnd]')).not.toBeNull();
+      expect(actionTitles()).toEqual(['Modifier le locataire', 'Supprimer le locataire']);
+    });
+
+    it('les boutons suivent les droits réglés par l\'Admin, pas le profil (RG-DRO-10)', async () => {
+      await open('GESTIONNAIRE');
+      revokeRight('TEN', { peutAjouter: false, peutSupprimer: false });
+      render();
+      expect(root.querySelector('[dtToolbarEnd]')).toBeNull();
       expect(actionTitles()).toEqual(['Modifier le locataire']);
     });
 
     it('Lecture seule : ni création ni suppression, « Visualiser » à la place de « Modifier »', async () => {
-      await open('LECTURE_SEULE');
+      await open('CONSULTANT');
       expect(root.querySelector('[dtToolbarEnd]')).toBeNull();
       expect(actionTitles()).toEqual(['Visualiser le locataire']);
       expect(root.querySelector('tbody tr:first-child .actions .fa-eye')).not.toBeNull();
     });
 
     it('Lecture seule : la fiche s\'ouvre en consultation, champs désactivés et sans Enregistrer', async () => {
-      await open('LECTURE_SEULE');
+      await open('CONSULTANT');
       click(root.querySelector('tbody tr:first-child .actions .icon-btn'));
       expect(text(root.querySelector('.modal__title'))).toBe('Visualiser le locataire');
       const controls = Array.from(root.querySelectorAll<HTMLInputElement | HTMLSelectElement>('app-locataire-form input, app-locataire-form select'));

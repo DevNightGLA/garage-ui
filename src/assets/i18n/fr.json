@@ -17,22 +17,45 @@
       "listeNumerotee": "Liste numérotée",
       "listePuces": "Liste à puces",
       "lien": "Lien"
-    }
+    },
+    "enregistrement": "Enregistrement…"
   },
   "nav": {
     "pages": "Pages /",
     "tableauDeBord": "Tableau de bord",
     "garages": "Garages",
+    "listeGarages": "Liste des garages",
+    "historiqueLoyers": "Historique des loyers",
+    "historiqueLocations": "Historique des locations",
     "locataires": "Locataires",
+    "listeLocataires": "Liste des locataires",
+    "chronologie": "Chronologie",
     "locations": "Locations",
     "paiements": "Paiements",
+    "envoiMessages": "Envoi de messages",
+    "avisLoyer": "Avis de loyer",
+    "relances": "Relances d’impayés",
+    "messageLibre": "Message libre",
+    "statistiques": "Statistiques",
+    "statLoyers": "Loyers encaissés",
+    "statOccupation": "Taux d’occupation",
+    "statRepartition": "Répartition par statut",
+    "statRemarques": "Remarques par type",
+    "configuration": "Configuration",
+    "parametres": "Paramètres",
+    "modelesMessages": "Modèles de messages",
+    "utilisateurs": "Utilisateurs",
+    "droitsAcces": "Droits d’accès",
+    "journalAudit": "Journal d’audit",
+    "maintenance": "Maintenance",
     "afficherMasquerMenu": "Afficher / masquer le menu",
     "principale": "Navigation principale"
   },
   "role": {
     "ADMIN": "Admin",
     "GESTIONNAIRE": "Gestionnaire",
-    "LECTURE_SEULE": "Lecture seule"
+    "LOCATAIRE": "Locataire",
+    "CONSULTANT": "Consultant"
   },
   "langue": {
     "francais": "Français",
@@ -72,12 +95,12 @@
     },
     "oubli": {
       "titre": "Mot de passe oublié",
-      "aide": "Saisissez votre adresse e-mail pour recevoir un lien de réinitialisation.",
-      "email": "Adresse e-mail",
+      "aide": "Saisissez votre identifiant pour recevoir un lien de réinitialisation.",
       "envoyer": "Envoyer le lien",
       "retour": "Retour à la connexion",
       "envoyeTitre": "Vérifiez votre messagerie",
-      "envoye": "Si un compte correspond à cette adresse, un lien de réinitialisation vient d'être envoyé."
+      "envoye": "Si un compte correspond à cet identifiant, un lien de réinitialisation vient d'être envoyé.",
+      "identifiant": "Identifiant"
     },
     "reinit": {
       "titre": "Nouveau mot de passe",
@@ -91,12 +114,18 @@
       "confirmer": "Confirmer le nouveau mot de passe",
       "differents": "Les deux mots de passe ne sont pas identiques.",
       "afficher": "Afficher le mot de passe",
-      "masquer": "Masquer le mot de passe"
+      "masquer": "Masquer le mot de passe",
+      "minimum": "Minimum {{n}} caractères"
     },
     "deconnexion": {
       "bouton": "Se déconnecter",
       "titre": "Se déconnecter ?",
       "message": "Votre session sera fermée."
+    },
+    "temporaire": {
+      "titre": "Choisissez un nouveau mot de passe",
+      "aide": "Votre mot de passe est temporaire : choisissez-en un nouveau pour continuer.",
+      "actuel": "Mot de passe temporaire"
     }
   },
   "garages": {
@@ -451,5 +480,28 @@
     "generique": "Une erreur est survenue.",
     "RESEAU": "Impossible de joindre le serveur.",
     "ERREUR_INCONNUE": "Une erreur est survenue."
+  },
+  "maintenance": {
+    "site": {
+      "titre": "Site en maintenance",
+      "texte": "L’application est temporairement indisponible pendant une opération de maintenance. Vos données sont conservées et l’accès sera rétabli dès que possible.",
+      "toujours": "Le site est toujours en maintenance. Réessayez dans quelques instants.",
+      "reessayer": "Réessayer",
+      "verification": "Vérification…",
+      "accesAdmin": "Accès administrateur",
+      "quitterApercu": "Quitter l’aperçu"
+    }
+  },
+  "acces": {
+    "titre": "Accès refusé",
+    "titreAppareil": "Écran non disponible",
+    "refuse": "Le profil {{profil}} n'a pas accès à cet écran. Ce droit se règle dans « Droits d'accès ».",
+    "indisponible": "Cet écran n'est pas disponible sur {{appareil}}. Ce réglage se trouve dans « Droits d'accès », section « Accès selon l'appareil ».",
+    "appareil": {
+      "ORDINATEUR": "ordinateur",
+      "TABLETTE": "tablette",
+      "SMARTPHONE": "smartphone"
+    },
+    "enConstruction": "Écran en cours de construction"
   }
 }

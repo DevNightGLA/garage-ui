@@ -3,7 +3,7 @@ import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { isoToDisplay } from '../../../shared/date-input/date-utils';
 import { BadgeTone, StatusBadge } from '../../../shared/status-badge/status-badge';
 import { Tooltip } from '../../../shared/tooltip/tooltip';
@@ -38,7 +38,7 @@ export class RemarquesView {
   /** Une remarque a été créée, modifiée, résolue, rouverte ou supprimée : le nombre de l'écran a pu changer. */
   readonly changed = output<void>();
 
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('REM');
   private readonly api = inject(RemarqueApi);
   private readonly errors = inject(ErrorMessageService);
 

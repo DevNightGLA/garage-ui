@@ -1,4 +1,5 @@
 import { HttpRequest, provideHttpClient } from '@angular/common/http';
+import { signInAs } from '../../../../testing/rights';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { pageOf } from '../../../../testing/garage-fixtures';
@@ -30,7 +31,7 @@ describe('TableauDeBordPage', () => {
     render();
   };
   const signIn = (role: Role) =>
-    TestBed.inject(AuthService).user.set({ id: 1, login: 'u', email: 'u@example.com', role, actif: true });
+    signInAs(role);
   const stub = () => root.querySelector('.bar-chart-stub')!;
   const items = () => Array.from(root.querySelectorAll('.impaye'));
 
@@ -282,7 +283,7 @@ describe('TableauDeBordPage', () => {
   });
 
   describe('droits', () => {
-    for (const role of ['ADMIN', 'GESTIONNAIRE', 'LECTURE_SEULE'] as const) {
+    for (const role of ['ADMIN', 'GESTIONNAIRE', 'CONSULTANT'] as const) {
       it(`${role} : consulte indicateurs, graphiques et impayés, sans action de modification`, async () => {
         await open(role);
         expect(root.querySelectorAll('.kpi')).toHaveLength(4);

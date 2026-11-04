@@ -25,7 +25,7 @@
         </button>
         <div>
           @if (titleKey(); as key) {
-            <div class="shell__crumb">{{ 'nav.pages' | translate }} {{ key | translate }}</div>
+            <div class="shell__crumb">{{ 'nav.pages' | translate }} {{ groupKey() ? (groupKey()! | translate) + ' / ' : '' }}{{ key | translate }}</div>
             <h1 class="shell__title">{{ key | translate }}</h1>
           }
         </div>

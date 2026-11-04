@@ -41,6 +41,8 @@ export class FormField implements AfterContentInit {
   readonly error = input<string | null>(null);
   /** Astérisque rouge sur un champ obligatoire (désactivable, comme sur l'écran de connexion). */
   readonly requiredMark = input(true);
+  /** Aide affichée sous le champ, déjà traduite (« Minimum 8 caractères »). */
+  readonly hint = input<string | null>(null);
 
   private readonly ngControl = contentChild(NgControl);
   private readonly form = inject(FormGroupDirective, { optional: true });

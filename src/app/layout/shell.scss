@@ -77,14 +77,14 @@
   background: var(--overlay);
 }
 
-@media (min-width: 992px) {
+@media (min-width: 1025px) {
   .shell__backdrop {
     display: none;
   }
 }
 
-// Smartphone : marges plus serrées, page en pleine largeur
-@media (max-width: 767.98px) {
+// Smartphone (RG-APP-01) : marges plus serrées, page en pleine largeur
+@media (max-width: 640px) {
   .shell__main {
     gap: var(--space-4);
     padding: var(--space-4) var(--space-3);

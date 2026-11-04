@@ -3,7 +3,7 @@
   [width]="720"
   (closed)="closed.emit()"
 >
-  @if (roles.canWrite()) {
+  @if (droits.canAdd()) {
     <div class="lh__toolbar">
       <button type="button" class="btn btn--primary" (click)="openNew()">
         <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'loyers.nouveau' | translate }}
@@ -55,11 +55,11 @@
                     <button
                       type="button"
                       class="icon-btn"
-                      [attr.aria-disabled]="!roles.isReadOnly() && !loyer.modifiable"
+                      [attr.aria-disabled]="!droits.isReadOnly() && !loyer.modifiable"
                       [appTooltip]="editTooltip(loyer)"
                       (click)="openEdit(loyer)"
                     >
-                      <i class="fa-solid" [class.fa-eye]="roles.isReadOnly()" [class.fa-pen]="!roles.isReadOnly()"></i>
+                      <i class="fa-solid" [class.fa-eye]="droits.isReadOnly()" [class.fa-pen]="!droits.isReadOnly()"></i>
                     </button>
                   }
                   @if (canDelete(loyer, index)) {
@@ -115,7 +115,7 @@
     [garageId]="garage().id"
     [garageNumero]="garage().numero"
     [loyer]="current.loyer"
-    [readOnly]="roles.isReadOnly()"
+    [readOnly]="droits.isReadOnly()"
     (saved)="formSaved()"
     (closed)="form.set(null)"
   />

@@ -1,10 +1,11 @@
 import { provideHttpClient } from '@angular/common/http';
+import { signInAs } from '../../testing/rights';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { mockMatchMedia } from '../../testing/match-media';
+import { WIDTH, mockViewport } from '../../testing/match-media';
 import { provideTestTranslations } from '../../testing/translations';
 import { AuthService } from '../core/auth/auth-service';
 import { Shell } from './shell';
@@ -15,7 +16,7 @@ class Page {}
 describe('Shell : tablette et smartphone', () => {
   let harness: RouterTestingHarness;
   let root: HTMLElement;
-  let media: ReturnType<typeof mockMatchMedia>;
+  let media: ReturnType<typeof mockViewport>;
 
   const sidebar = () => root.querySelector('app-sidebar')!;
   const burger = () => root.querySelector<HTMLButtonElement>('.shell__burger')!;
@@ -30,7 +31,7 @@ describe('Shell : tablette et smartphone', () => {
     if (collapsedStored) {
       localStorage.setItem('gg-menu-replie', '1');
     }
-    media = mockMatchMedia(!smallScreen);
+    media = mockViewport(smallScreen ? WIDTH.smartphone : WIDTH.ordinateur);
     TestBed.configureTestingModule({
       providers: [
         provideRouter([
@@ -38,8 +39,8 @@ describe('Shell : tablette et smartphone', () => {
             path: '',
             component: Shell,
             children: [
-              { path: 'garages', component: Page, data: { titleKey: 'nav.garages' } },
-              { path: 'locataires', component: Page, data: { titleKey: 'nav.locataires' } },
+              { path: 'garages', component: Page, data: { titleKey: 'nav.garages', groupKey: null } },
+              { path: 'locataires', component: Page, data: { titleKey: 'nav.locataires', groupKey: null } },
             ],
           },
         ]),
@@ -48,7 +49,7 @@ describe('Shell : tablette et smartphone', () => {
         provideTestTranslations(),
       ],
     });
-    TestBed.inject(AuthService).user.set({ id: 1, login: 'marie', email: 'm@e.c', role: 'GESTIONNAIRE', actif: true });
+    signInAs('GESTIONNAIRE');
     harness = await RouterTestingHarness.create();
     await harness.navigateByUrl('/garages');
     root = (harness.fixture.nativeElement as HTMLElement).querySelector('app-shell')!;
@@ -92,8 +93,10 @@ describe('Shell : tablette et smartphone', () => {
   it('smartphone : choisir une page referme le tiroir', async () => {
     await open(true);
     await click(burger());
-    const links = Array.from(root.querySelectorAll<HTMLAnchorElement>('.sb__link'));
-    await click(links[2]);
+    const link = Array.from(root.querySelectorAll<HTMLAnchorElement>('.sb__kid')).find(
+      (a) => a.textContent!.trim() === 'Liste des locataires',
+    )!;
+    await click(link);
     await harness.fixture.whenStable();
     expect(TestBed.inject(Router).url).toBe('/locataires');
     expect(sidebar().classList.contains('is-open')).toBe(false);
@@ -129,7 +132,7 @@ describe('Shell : tablette et smartphone', () => {
     await click(burger());
     expect(sidebar().classList.contains('is-open')).toBe(true);
 
-    media.change(true);
+    media.resize(WIDTH.ordinateur);
     await settle();
     expect(sidebar().classList.contains('is-open')).toBe(false);
     expect(root.querySelector('.shell__backdrop')).toBeNull();
@@ -138,11 +141,31 @@ describe('Shell : tablette et smartphone', () => {
   it('repasser sur petit écran garde le menu replié mémorisé en colonne seulement sur ordinateur', async () => {
     await open(false, true);
     expect(sidebar().classList.contains('is-collapsed')).toBe(true);
-    media.change(false);
+    media.resize(WIDTH.smartphone);
     await settle();
     expect(sidebar().classList.contains('is-collapsed')).toBe(false);
-    media.change(true);
+    media.resize(WIDTH.ordinateur);
     await settle();
     expect(sidebar().classList.contains('is-collapsed')).toBe(true);
+  });
+
+  it('tablette (641 à 1024 px) : le menu est aussi un tiroir (RG-APP-01)', async () => {
+    await open(false);
+    media.resize(WIDTH.tablette);
+    await settle();
+    expect(burger().getAttribute('aria-expanded')).toBe('false');
+    await click(burger());
+    expect(sidebar().classList.contains('is-open')).toBe(true);
+  });
+
+  it('smartphone : les écrans de Configuration retirés pour l\'appareil disparaissent du menu, sauf Droits d\'accès (RG-APP-03)', async () => {
+    await open(true);
+    TestBed.inject(AuthService).user.set(null);
+    signInAs('ADMIN');
+    await settle();
+    const kids = Array.from(root.querySelectorAll('.sb__kid-label')).map((l) => l.textContent!.trim());
+    expect(kids).toContain('Droits d’accès');
+    expect(kids).not.toContain('Utilisateurs');
+    expect(kids).not.toContain('Paramètres');
   });
 });

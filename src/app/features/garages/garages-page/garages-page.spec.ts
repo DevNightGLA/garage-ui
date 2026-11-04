@@ -1,4 +1,5 @@
 import { HttpRequest, provideHttpClient } from '@angular/common/http';
+import { revokeRight, signInAs } from '../../../../testing/rights';
 import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { COMPTEURS, garage, libre, loyer, pageOf } from '../../../../testing/garage-fixtures';
@@ -34,9 +35,11 @@ describe('GaragesPage', () => {
 
   /** Crée l'écran avec le rôle voulu et répond aux deux premières requêtes (liste et compteurs). */
   const open = async (role: Role | null, rows: GarageDTO[] = [garage(), libre()], total = rows.length) => {
-    TestBed.inject(AuthService).user.set(
-      role ? { id: 1, login: 'u', email: 'u@example.com', role, actif: true } : null,
-    );
+    if (role) {
+      signInAs(role);
+    } else {
+      TestBed.inject(AuthService).user.set(null);
+    }
     fixture = TestBed.createComponent(GaragesPage);
     root = fixture.nativeElement;
     render();
@@ -65,7 +68,7 @@ describe('GaragesPage', () => {
 
   describe('états', () => {
     it('affiche le chargement tant que la liste n\'est pas arrivée', async () => {
-      TestBed.inject(AuthService).user.set({ id: 1, login: 'u', email: 'u@e.c', role: 'ADMIN', actif: true });
+      signInAs('ADMIN');
       fixture = TestBed.createComponent(GaragesPage);
       root = fixture.nativeElement;
       render();
@@ -81,7 +84,7 @@ describe('GaragesPage', () => {
     });
 
     it('affiche le message d\'erreur et recharge au clic sur Réessayer', async () => {
-      TestBed.inject(AuthService).user.set({ id: 1, login: 'u', email: 'u@e.c', role: 'ADMIN', actif: true });
+      signInAs('ADMIN');
       fixture = TestBed.createComponent(GaragesPage);
       root = fixture.nativeElement;
       render();
@@ -214,21 +217,29 @@ describe('GaragesPage', () => {
       expect(actionTitles()).toEqual(['Modifier le garage', 'Supprimer le garage']);
     });
 
-    it('Gestionnaire : crée et modifie, ne supprime pas', async () => {
+    it('Gestionnaire : crée, modifie et supprime par défaut (RG-DRO-20, décision du 03/11/2026)', async () => {
       await open('GESTIONNAIRE');
       expect(root.querySelector('[dtToolbarEnd]')).not.toBeNull();
+      expect(actionTitles()).toEqual(['Modifier le garage', 'Supprimer le garage']);
+    });
+
+    it('les boutons suivent les droits réglés par l\'Admin, pas le profil (RG-DRO-10)', async () => {
+      await open('GESTIONNAIRE');
+      revokeRight('GAR', { peutAjouter: false, peutSupprimer: false });
+      render();
+      expect(root.querySelector('[dtToolbarEnd]')).toBeNull();
       expect(actionTitles()).toEqual(['Modifier le garage']);
     });
 
     it('Lecture seule : ni création ni suppression, « Visualiser » à la place de « Modifier »', async () => {
-      await open('LECTURE_SEULE');
+      await open('CONSULTANT');
       expect(root.querySelector('[dtToolbarEnd]')).toBeNull();
       expect(actionTitles()).toEqual(['Visualiser le garage']);
       expect(root.querySelector('tbody tr:first-child .actions .fa-eye')).not.toBeNull();
     });
 
     it('Lecture seule : la fiche s\'ouvre en consultation, champs désactifs et sans Enregistrer', async () => {
-      await open('LECTURE_SEULE');
+      await open('CONSULTANT');
       await click(root.querySelector('tbody tr:first-child .actions .icon-btn'));
       expect(text(root.querySelector('.modal__title'))).toBe('Visualiser le garage · G01');
       expect(Array.from(root.querySelectorAll<HTMLInputElement>('app-garage-form input')).every((i) => i.disabled)).toBe(true);
@@ -549,7 +560,7 @@ describe('GaragesPage', () => {
     });
 
     it('Lecture seule : consulte les remarques sans pouvoir en ajouter', async () => {
-      await openRemarks('LECTURE_SEULE');
+      await openRemarks('CONSULTANT');
       expect(root.querySelector('app-remarques-view .rv__head .btn--primary')).toBeNull();
     });
   });

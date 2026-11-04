@@ -17,22 +17,45 @@
       "listeNumerotee": "Numbered list",
       "listePuces": "Bulleted list",
       "lien": "Link"
-    }
+    },
+    "enregistrement": "Saving…"
   },
   "nav": {
     "pages": "Pages /",
     "tableauDeBord": "Dashboard",
     "garages": "Garages",
+    "listeGarages": "Garage list",
+    "historiqueLoyers": "Rent history",
+    "historiqueLocations": "Rental history",
     "locataires": "Tenants",
-    "locations": "Leases",
+    "listeLocataires": "Tenant list",
+    "chronologie": "Timeline",
+    "locations": "Rentals",
     "paiements": "Payments",
+    "envoiMessages": "Messages",
+    "avisLoyer": "Rent notices",
+    "relances": "Payment reminders",
+    "messageLibre": "Free message",
+    "statistiques": "Statistics",
+    "statLoyers": "Rent collected",
+    "statOccupation": "Occupancy rate",
+    "statRepartition": "Breakdown by status",
+    "statRemarques": "Remarks by type",
+    "configuration": "Settings",
+    "parametres": "Parameters",
+    "modelesMessages": "Message templates",
+    "utilisateurs": "Users",
+    "droitsAcces": "Access rights",
+    "journalAudit": "Audit log",
+    "maintenance": "Maintenance",
     "afficherMasquerMenu": "Show / hide menu",
     "principale": "Main navigation"
   },
   "role": {
     "ADMIN": "Admin",
     "GESTIONNAIRE": "Manager",
-    "LECTURE_SEULE": "Read-only"
+    "LOCATAIRE": "Tenant",
+    "CONSULTANT": "Viewer"
   },
   "langue": {
     "francais": "Français",
@@ -72,12 +95,12 @@
     },
     "oubli": {
       "titre": "Forgot password",
-      "aide": "Enter your e-mail address to receive a reset link.",
-      "email": "E-mail address",
+      "aide": "Enter your username to receive a reset link.",
       "envoyer": "Send link",
       "retour": "Back to sign in",
       "envoyeTitre": "Check your inbox",
-      "envoye": "If an account matches this address, a reset link has just been sent."
+      "envoye": "If an account matches this username, a reset link has just been sent.",
+      "identifiant": "Username"
     },
     "reinit": {
       "titre": "New password",
@@ -91,12 +114,18 @@
       "confirmer": "Confirm new password",
       "differents": "The two passwords do not match.",
       "afficher": "Show password",
-      "masquer": "Hide password"
+      "masquer": "Hide password",
+      "minimum": "Minimum {{n}} characters"
     },
     "deconnexion": {
       "bouton": "Log out",
       "titre": "Log out?",
       "message": "Your session will be closed."
+    },
+    "temporaire": {
+      "titre": "Choose a new password",
+      "aide": "Your password is temporary: choose a new one to continue.",
+      "actuel": "Temporary password"
     }
   },
   "garages": {
@@ -565,6 +594,31 @@
     "UTIL_INTROUVABLE": "User not found.",
     "UTIL_LOGIN_EXISTE": "This username already exists.",
     "UTIL_EMAIL_EXISTE": "This e-mail already exists.",
-    "UTIL_DERNIER_ADMIN": "At least one active administrator must always remain."
+    "UTIL_DERNIER_ADMIN": "At least one active administrator must always remain.",
+    "MAINTENANCE": "The site is under maintenance.",
+    "MOT_DE_PASSE_TEMPORAIRE": "You must choose a new password before continuing."
+  },
+  "maintenance": {
+    "site": {
+      "titre": "Site under maintenance",
+      "texte": "The application is temporarily unavailable during a maintenance operation. Your data is kept and access will be restored as soon as possible.",
+      "toujours": "The site is still under maintenance. Please try again in a moment.",
+      "reessayer": "Try again",
+      "verification": "Checking…",
+      "accesAdmin": "Administrator access",
+      "quitterApercu": "Leave preview"
+    }
+  },
+  "acces": {
+    "titre": "Access denied",
+    "titreAppareil": "Screen not available",
+    "refuse": "The {{profil}} profile has no access to this screen. This right is set in “Access rights”.",
+    "indisponible": "This screen is not available on {{appareil}}. This setting is in “Access rights”, section “Access by device”.",
+    "appareil": {
+      "ORDINATEUR": "a computer",
+      "TABLETTE": "a tablet",
+      "SMARTPHONE": "a smartphone"
+    },
+    "enConstruction": "Screen under construction"
   }
 }

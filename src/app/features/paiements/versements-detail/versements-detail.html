@@ -54,7 +54,7 @@
               </td>
               <td class="vd__end vd__montant">{{ versement.montant | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</td>
               <td class="vd__end">
-                @if (roles.canDelete()) {
+                @if (droits.canDelete()) {
                   <button
                     type="button"
                     class="icon-btn icon-btn--round"

@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { SortSpec } from '../../../core/api/list-params';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { TODAY } from '../../../core/today';
 import { DataTable, DataTableColumn } from '../../../shared/data-table/data-table';
 import { DataTableCell } from '../../../shared/data-table/data-table-cell';
@@ -55,7 +55,7 @@ const COLUMNS: readonly DataTableColumn[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaiementsPage {
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('PAI');
   private readonly api = inject(PaiementApi);
   private readonly errors = inject(ErrorMessageService);
 
@@ -135,7 +135,7 @@ export class PaiementsPage {
 
   /** Les boutons de paiement n'apparaissent que sur une ligne non soldée, hors Lecture seule (RG-PAI-20). */
   protected canPay(paiement: PaiementDTO): boolean {
-    return this.roles.canWrite() && paiement.statut !== 'PAYE';
+    return this.droits.canAdd() && paiement.statut !== 'PAYE';
   }
 
   /** « Marie Dupont » → « MD ». */

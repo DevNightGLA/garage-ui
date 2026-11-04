@@ -4,7 +4,7 @@ import { TestBed } from '@angular/core/testing';
 import { AuthService } from './auth-service';
 import { Utilisateur } from './auth.models';
 
-const admin: Utilisateur = { id: 1, login: 'admin', email: 'admin@example.com', role: 'ADMIN', actif: true };
+const admin: Utilisateur = { id: 1, login: 'admin', prenom: 'Marie', nom: 'Dupont', email: 'admin@example.com', role: 'ADMIN', actif: true };
 
 describe('AuthService', () => {
   let auth: AuthService;
@@ -83,19 +83,32 @@ describe('AuthService', () => {
     expect(sessionStorage.getItem('gg-token')).toBeNull();
   });
 
-  it('change le mot de passe', () => {
+  it('change le mot de passe ; un mot de passe temporaire ne l\'est plus (RG-AUT-05)', () => {
+    auth.user.set({ ...admin, motDePasseTemporaire: true });
+    expect(auth.mustChangePassword()).toBe(true);
     auth.changePassword({ motDePasseActuel: 'ancien', nouveauMotDePasse: 'nouveau-1' }).subscribe();
     const request = http.expectOne('/api/auth/mot-de-passe');
     expect(request.request.method).toBe('PUT');
     expect(request.request.body).toEqual({ motDePasseActuel: 'ancien', nouveauMotDePasse: 'nouveau-1' });
     request.flush(null, { status: 204, statusText: 'No Content' });
+    expect(auth.mustChangePassword()).toBe(false);
   });
 
-  it('demande un lien de réinitialisation par e-mail', () => {
-    auth.forgotPassword('marie@example.com').subscribe();
+  it('garde le jeton quand le site est en maintenance (503), pour retrouver l\'accès ensuite', () => {
+    sessionStorage.setItem('gg-token', 'jeton-1');
+    auth.restoreSession().subscribe();
+    http
+      .expectOne('/api/auth/moi')
+      .flush({ code: 'MAINTENANCE', message: 'Site en maintenance.' }, { status: 503, statusText: 'Service Unavailable' });
+    expect(auth.user()).toBeNull();
+    expect(auth.token()).toBe('jeton-1');
+  });
+
+  it('demande un lien de réinitialisation avec l\'identifiant (RG-AUT-02)', () => {
+    auth.forgotPassword('marie').subscribe();
     const request = http.expectOne('/api/auth/mot-de-passe-oublie');
     expect(request.request.method).toBe('POST');
-    expect(request.request.body).toEqual({ email: 'marie@example.com' });
+    expect(request.request.body).toEqual({ identifiant: 'marie' });
     request.flush(null, { status: 202, statusText: 'Accepted' });
   });
 

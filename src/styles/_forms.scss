@@ -31,6 +31,12 @@ app-form-field {
   text-transform: none;
 }
 
+.ff__hint {
+  margin-top: var(--space-1);
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
 app-form-field.is-invalid {
   .ff__label {
     color: var(--color-danger);

@@ -5,7 +5,7 @@ import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { SortSpec } from '../../../core/api/list-params';
 import { LanguageService } from '../../../core/language-service';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { Confirm } from '../../../shared/confirm/confirm';
 import { DataTable, DataTableColumn } from '../../../shared/data-table/data-table';
 import { DataTableCell } from '../../../shared/data-table/data-table-cell';
@@ -73,7 +73,7 @@ interface Deletion {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocatairesPage {
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('TEN');
   private readonly api = inject(LocataireApi);
   private readonly errors = inject(ErrorMessageService);
   private readonly translate = inject(TranslateService);

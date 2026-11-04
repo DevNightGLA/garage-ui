@@ -19,7 +19,8 @@
 }
 
 // Tablette et smartphone : tiroir hors écran, ouvert par le bouton du menu
-@media (max-width: 991.98px) {
+// RG-APP-01 : tiroir sur tablette et smartphone (≤ 1024 px)
+@media (max-width: 1024px) {
   :host {
     position: fixed;
     top: 0;
@@ -105,9 +106,95 @@
   color: var(--text-heading);
 }
 
-.is-active .sb__tile {
+.is-active .sb__tile,
+.has-active .sb__tile {
   background: var(--gradient-primary);
   color: var(--white);
+}
+
+// Groupe dépliable (Garages, Locataires…) : bouton au style d'un lien, chevron, sous-liste animée
+.sb__toggle {
+  width: calc(100% - 2 * var(--space-4));
+  border: 0;
+  background: transparent;
+  font-family: var(--font-sans);
+  text-align: left;
+  cursor: pointer;
+}
+
+.sb__chev {
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--slate-800);
+  transition: transform 0.2s;
+}
+
+.sb__group.is-open .sb__chev {
+  transform: rotate(180deg);
+}
+
+.sb__kids {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  opacity: 0;
+  transition:
+    grid-template-rows 0.24s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.24s,
+    visibility 0.24s;
+
+  > ul {
+    overflow: hidden;
+    min-height: 0;
+    margin: 0 0 0 24px;
+    padding: 0 0 0 var(--space-4);
+  }
+}
+
+.sb__group.is-open .sb__kids {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  opacity: 1;
+}
+
+.sb__kid {
+  position: relative;
+  display: flex;
+  align-items: center;
+  min-height: 32px;
+  margin: 0 var(--space-4) 0 21.6px;
+  padding: 6.4px var(--space-4);
+  font-size: 14px;
+  font-weight: 400;
+  color: var(--text-body);
+  text-decoration: none;
+  white-space: nowrap;
+
+  // Puce de la maquette : grise, foncée pour la page courante
+  &::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: -20px;
+    width: 8px;
+    height: 8px;
+    margin-top: -4px;
+    border-radius: 24px;
+    background: var(--gray-300);
+  }
+
+  &.is-active {
+    font-weight: 600;
+    color: var(--slate-800);
+
+    &::before {
+      background: var(--slate-800);
+    }
+  }
+}
+
+.sb__kid-icon {
+  display: none;
 }
 
 .sb__label {
@@ -249,6 +336,69 @@
 
   .is-active .sb__tile {
     background: none;
+  }
+
+  .sb__toggle {
+    width: 44px;
+    position: relative;
+  }
+
+  // Petit chevron en bas à droite du bouton de groupe
+  .sb__chev {
+    position: absolute;
+    right: 3px;
+    bottom: 2px;
+    margin: 0;
+    font-size: 9px;
+    color: inherit;
+  }
+
+  .sb__group.is-open .sb__chev {
+    transform: rotate(180deg);
+  }
+
+  .has-active .sb__tile {
+    background: none;
+    color: inherit;
+  }
+
+  .sb__kids > ul {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+    margin: var(--space-2) 0 0;
+    padding: var(--space-1);
+    border-radius: var(--radius-xl);
+    background: #f1f4f9;
+  }
+
+  .sb__kid {
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    border-radius: var(--radius-lg);
+    font-size: 16px;
+    color: var(--text-heading);
+
+    &::before {
+      display: none;
+    }
+
+    &.is-active {
+      background: var(--gradient-brand);
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.15);
+      color: var(--white);
+    }
+  }
+
+  .sb__kid-icon {
+    display: inline;
+  }
+
+  .sb__kid-label {
+    display: none;
   }
 
   .sb__user {

@@ -32,7 +32,7 @@
     [placeholder]="'locataires.recherche' | translate"
     (valueChange)="setSearch($event)"
   />
-  @if (roles.canWrite()) {
+  @if (droits.canAdd()) {
     <button dtToolbarEnd type="button" class="btn btn--primary" (click)="openForm(null)">
       <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'locataires.nouveau' | translate }}
     </button>
@@ -82,12 +82,12 @@
       <button
         type="button"
         class="icon-btn"
-        [appTooltip]="(roles.isReadOnly() ? 'locataires.visualiser' : 'locataires.modifier') | translate"
+        [appTooltip]="(droits.isReadOnly() ? 'locataires.visualiser' : 'locataires.modifier') | translate"
         (click)="openForm(locataire)"
       >
-        <i class="fa-solid" [class.fa-eye]="roles.isReadOnly()" [class.fa-pen]="!roles.isReadOnly()" aria-hidden="true"></i>
+        <i class="fa-solid" [class.fa-eye]="droits.isReadOnly()" [class.fa-pen]="!droits.isReadOnly()" aria-hidden="true"></i>
       </button>
-      @if (roles.canDelete()) {
+      @if (droits.canDelete()) {
         <button type="button" class="icon-btn" [appTooltip]="'locataires.supprimer' | translate" (click)="askDelete(locataire)">
           <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
         </button>
@@ -100,7 +100,7 @@
 @if (form(); as current) {
   <app-locataire-form
     [locataire]="current.locataire"
-    [readOnly]="roles.isReadOnly()"
+    [readOnly]="droits.isReadOnly()"
     (saved)="formSaved()"
     (closed)="form.set(null)"
   />
