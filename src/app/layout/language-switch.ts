@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Lang, LanguageService } from '../language-service';
-import { Tooltip } from '../../shared/tooltip/tooltip';
+import { Lang, LanguageService } from '../core/language-service';
+import { Tooltip } from '../shared/tooltip/tooltip';
 
 @Component({
   selector: 'app-language-switch',

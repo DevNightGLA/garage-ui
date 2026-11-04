@@ -13,7 +13,7 @@ import { routes } from './app.routes';
 import { authInterceptor } from './core/auth/auth-interceptor';
 import { AuthService } from './core/auth/auth-service';
 import { LanguageService } from './core/language-service';
-import { PageTitleStrategy } from './core/layout/page-title-strategy';
+import { PageTitleStrategy } from './layout/page-title-strategy';
 import { registerFrenchLocale } from './core/locale';
 
 registerFrenchLocale();

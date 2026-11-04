@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { STORAGE_KEYS, StorageService } from '../storage';
+import { STORAGE_KEYS, StorageService } from '../core/storage';
 import { DEFAULT_PATH, NAV_ITEMS } from './nav-items';
 
 /** Dernière page visitée, mémorisée dans le navigateur (RG-NAV-02). */

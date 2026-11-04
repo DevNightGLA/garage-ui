@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, TitleStrategy, provideRouter } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import en from '../../../assets/i18n/en.json';
-import { provideTestTranslations } from '../../../testing/translations';
-import { LanguageService } from '../language-service';
+import en from '../../assets/i18n/en.json';
+import { provideTestTranslations } from '../../testing/translations';
+import { LanguageService } from '../core/language-service';
 import { PageTitleStrategy } from './page-title-strategy';
 
 @Component({ template: '' })

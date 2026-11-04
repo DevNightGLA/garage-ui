@@ -6,7 +6,7 @@ La v1 (étapes 0 à 6 du premier plan) est livrée : socle, composants partagés
 
 ## Étape 1 : documents et structure
 - [x] `CLAUDE.md` v2, documents v2 et maquette complète dans `docs/`, contrat d'API du back.
-- [ ] Structure v2 : `src/app/layout/` (shell, menu, en-tête) sorti de `core/`.
+- [x] Structure v2 : `src/app/layout/` (shell, menu, en-tête) sorti de `core/`.
 
 ## Étape 2 : socle v2 (point de validation avec Gregory à la fin)
 - [ ] Profils v2 (`CONSULTANT`, `LOCATAIRE`), `UtilisateurDTO` v2.

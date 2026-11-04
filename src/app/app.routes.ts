@@ -1,9 +1,9 @@
 import { Type, inject } from '@angular/core';
 import { Routes } from '@angular/router';
 import { authGuard, guestGuard } from './core/auth/auth-guard';
-import { NAV_ITEMS } from './core/layout/nav-items';
-import { NavigationMemory } from './core/layout/navigation-memory';
-import { Shell } from './core/layout/shell';
+import { NAV_ITEMS } from './layout/nav-items';
+import { NavigationMemory } from './layout/navigation-memory';
+import { Shell } from './layout/shell';
 
 /** Un écran par entrée du menu (RG-NAV-01) : `app.routes.spec.ts` vérifie qu'aucune n'en manque. */
 const SCREENS: Record<string, () => Promise<Type<unknown>>> = {

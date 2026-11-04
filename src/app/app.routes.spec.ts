@@ -1,4 +1,4 @@
-import { NAV_ITEMS } from './core/layout/nav-items';
+import { NAV_ITEMS } from './layout/nav-items';
 import { routes } from './app.routes';
 
 describe('routes', () => {

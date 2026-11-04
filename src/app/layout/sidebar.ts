@@ -1,8 +1,8 @@
 import { ChangeDetectionStrategy, Component, computed, input, output } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { TranslatePipe } from '@ngx-translate/core';
-import { Tooltip } from '../../shared/tooltip/tooltip';
-import { Utilisateur } from '../auth/auth.models';
+import { Tooltip } from '../shared/tooltip/tooltip';
+import { Utilisateur } from '../core/auth/auth.models';
 import { NAV_ITEMS } from './nav-items';
 
 /** « marie.dupont » → « MD », « admin » → « AD ». */

@@ -4,10 +4,10 @@ import { Component } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { provideTestTranslations } from '../../../testing/translations';
-import { AuthService } from '../auth/auth-service';
-import { Role, Utilisateur } from '../auth/auth.models';
-import { LanguageService } from '../language-service';
+import { provideTestTranslations } from '../../testing/translations';
+import { AuthService } from '../core/auth/auth-service';
+import { Role, Utilisateur } from '../core/auth/auth.models';
+import { LanguageService } from '../core/language-service';
 import { Shell } from './shell';
 import { displayName, initials, userInitials } from './sidebar';
 

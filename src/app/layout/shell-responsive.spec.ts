@@ -4,9 +4,9 @@ import { Component } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { Router, provideRouter } from '@angular/router';
 import { RouterTestingHarness } from '@angular/router/testing';
-import { mockMatchMedia } from '../../../testing/match-media';
-import { provideTestTranslations } from '../../../testing/translations';
-import { AuthService } from '../auth/auth-service';
+import { mockMatchMedia } from '../../testing/match-media';
+import { provideTestTranslations } from '../../testing/translations';
+import { AuthService } from '../core/auth/auth-service';
 import { Shell } from './shell';
 
 @Component({ template: `<p id="page">Page</p>` })
