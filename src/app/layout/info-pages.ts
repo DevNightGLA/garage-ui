@@ -84,18 +84,3 @@ export class ScreenUnavailable {
 export class AccessDenied {
   protected readonly rights = inject(RightsService);
 }
-
-/** Écran v2 inscrit au menu, pas encore construit (étape 3 de docs/TASKS.md). */
-@Component({
-  selector: 'app-screen-pending',
-  imports: [TranslatePipe],
-  template: `
-    <section class="card info" role="status">
-      <span class="info__icon" aria-hidden="true"><i class="fa-solid fa-person-digging"></i></span>
-      <h2 class="info__title">{{ 'acces.enConstruction' | translate }}</h2>
-    </section>
-  `,
-  styles: STYLES,
-  changeDetection: ChangeDetectionStrategy.OnPush,
-})
-export class ScreenPending {}

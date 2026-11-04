@@ -14,10 +14,9 @@ describe('routes', () => {
     }
   });
 
-  it('les écrans de la v1 restent branchés sur leur composant', () => {
-    for (const path of ['tableau-de-bord', 'garages', 'locataires', 'locations', 'paiements']) {
-      expect(SCREENS[path], path).toEqual(expect.any(Function));
-    }
+  it('chaque page du menu a son composant, et rien d\'autre n\'est déclaré', () => {
+    const paths = NAV_ITEMS.map((item) => item.path).sort();
+    expect(Object.keys(SCREENS).sort()).toEqual(paths);
   });
 
   it('fil d\'Ariane : « Garages » pour la liste, « Garages / Historique des loyers » pour une sous-page', () => {

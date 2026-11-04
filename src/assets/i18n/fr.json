@@ -554,8 +554,7 @@
       "ORDINATEUR": "ordinateur",
       "TABLETTE": "tablette",
       "SMARTPHONE": "smartphone"
-    },
-    "enConstruction": "Écran en cours de construction"
+    }
   },
   "chronologie": {
     "actifs": "Actifs",

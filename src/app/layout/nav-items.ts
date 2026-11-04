@@ -112,4 +112,3 @@ export function itemOfUrl(url: string): NavItem | null {
   return NAV_ITEMS.find((item) => item.path === path) ?? null;
 }
 
-export const DEFAULT_PATH = NAV_ITEMS[0].path;

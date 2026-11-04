@@ -6,11 +6,7 @@ import { ACCESS_DENIED_PATH, UNAVAILABLE_PATH, homeGuard, screenGuard } from './
 import { NAV_ITEMS, headingOf } from './layout/nav-items';
 import { Shell } from './layout/shell';
 
-/**
- * Écrans construits, par chemin du menu. Une page du menu absente d'ici affiche « Écran en cours de
- * construction » (`ScreenPending`) jusqu'à son étape de docs/TASKS.md ; `app.routes.spec.ts` vérifie
- * qu'aucune page n'est oubliée.
- */
+/** Composant de chaque page du menu, par chemin ; `app.routes.spec.ts` vérifie qu'aucune page n'est oubliée. */
 const statistiques = () =>
   import('./features/statistiques/statistiques-page/statistiques-page').then((m) => m.StatistiquesPage);
 const messageList = () =>
@@ -18,7 +14,7 @@ const messageList = () =>
 const garageHistory = () =>
   import('./features/garages/garage-history-page/garage-history-page').then((m) => m.GarageHistoryPage);
 
-export const SCREENS: Partial<Record<string, () => Promise<Type<unknown>>>> = {
+export const SCREENS: Record<string, () => Promise<Type<unknown>>> = {
   'tableau-de-bord': () =>
     import('./features/tableau-de-bord/tableau-de-bord-page/tableau-de-bord-page').then((m) => m.TableauDeBordPage),
   garages: () => import('./features/garages/garages-page/garages-page').then((m) => m.GaragesPage),
@@ -56,8 +52,6 @@ const SCREEN_DATA: Partial<Record<string, Record<string, unknown>>> = {
   'avis-de-loyer': { vue: 'avis' },
   relances: { vue: 'relances' },
 };
-
-const pending = () => import('./layout/info-pages').then((m) => m.ScreenPending);
 
 export const routes: Routes = [
   {
@@ -100,7 +94,7 @@ export const routes: Routes = [
         path: item.path,
         canActivate: [screenGuard(item.ecran)],
         data: { ...headingOf(item), ...SCREEN_DATA[item.path] },
-        loadComponent: SCREENS[item.path] ?? pending,
+        loadComponent: SCREENS[item.path],
       })),
       {
         path: UNAVAILABLE_PATH,

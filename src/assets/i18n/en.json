@@ -681,8 +681,7 @@
       "ORDINATEUR": "a computer",
       "TABLETTE": "a tablet",
       "SMARTPHONE": "a smartphone"
-    },
-    "enConstruction": "Screen under construction"
+    }
   },
   "chronologie": {
     "actifs": "Active",
