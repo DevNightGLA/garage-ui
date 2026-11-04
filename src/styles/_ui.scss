@@ -428,3 +428,20 @@
     font-size: 15px;
   }
 }
+
+// Lien d'action dans un texte (récapitulatif : « Modifier »).
+.link-btn {
+  min-height: 32px;
+  padding: 0 var(--space-2);
+  border: 0;
+  background: none;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: #cb0c9f;
+  cursor: pointer;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

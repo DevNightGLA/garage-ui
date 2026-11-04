@@ -1033,5 +1033,115 @@
       "titre": "Closing and signature",
       "description": "Added automatically at the bottom of every message sent. Do not repeat them in the templates."
     }
+  },
+  "utilisateurs": {
+    "nom": "users",
+    "vide": "No user matches these criteria.",
+    "recherche": "Filter by name, login or e-mail",
+    "nouveau": "New user",
+    "vous": "You",
+    "actif": "Active",
+    "desactive_": "Deactivated",
+    "statut": {
+      "ACTIFS": "Active",
+      "DESACTIVES": "Deactivated",
+      "TOUS": "All"
+    },
+    "comptes": {
+      "un": "{{n}} account",
+      "n": "{{n}} accounts"
+    },
+    "col": {
+      "utilisateur": "User",
+      "login": "Login",
+      "derniereConnexion": "Last sign-in",
+      "profil": "Profile",
+      "statut": "Status",
+      "actions": "Actions"
+    },
+    "connexion": {
+      "aujourdhui": "Today",
+      "hier": "Yesterday",
+      "jours": "{{n}} days ago",
+      "mois": "{{n}} months ago",
+      "jamais": "Never signed in"
+    },
+    "profilDesc": {
+      "ADMIN": "All rights: deletions, cancelling payments and managing accounts.",
+      "GESTIONNAIRE": "Like the Admin, without the Configuration menu.",
+      "LOCATAIRE": "Sees only their own garages, leases, rents and payments.",
+      "CONSULTANT": "Same screens as the Manager, without changing anything."
+    },
+    "action": {
+      "modifier": "Edit",
+      "visualiser": "View",
+      "reinitialiser": "Reset the password",
+      "desactiver": "Deactivate the account",
+      "reactiver": "Reactivate the account",
+      "supprimer": "Delete the account"
+    },
+    "refus": {
+      "reinitSoi": "For your own account, use “Change password” in the menu.",
+      "reinitDesactive": "Deactivated account: reset not possible.",
+      "desactiverSoi": "You cannot deactivate your own account.",
+      "dernierAdmin": "Last active administrator: cannot be deactivated.",
+      "supprimerSoi": "You cannot delete your own account."
+    },
+    "confirmer": {
+      "reset": {
+        "titre": "Reset the password?",
+        "message": "A temporary password will be generated for {{nom}}. The old password will stop working and the user will have to choose a new one at their next sign-in.",
+        "bouton": "Reset"
+      },
+      "deactivate": {
+        "titre": "Deactivate the account?",
+        "message": "{{nom}} will no longer be able to sign in. The account and its data are kept, and it can be reactivated at any time.",
+        "bouton": "Deactivate"
+      },
+      "delete": {
+        "titre": "Delete the account?",
+        "message": "The account of {{nom}} will be permanently deleted. An account with recorded activity cannot be deleted: deactivate it instead.",
+        "bouton": "Delete"
+      }
+    },
+    "enregistre": "User saved successfully",
+    "desactive": "Account of {{nom}} deactivated",
+    "reactive": "Account of {{nom}} reactivated",
+    "supprime": "Account of {{nom}} deleted",
+    "mdp": {
+      "cree": "Account created",
+      "reinitialise": "Password reset",
+      "de": "Temporary password for {{nom}}:",
+      "copier": "Copy",
+      "copie": "Copied",
+      "note": "It will not be shown again once this window is closed. The user will have to replace it at their next sign-in."
+    },
+    "etape": {
+      "identite": "Identity",
+      "connexion": "Sign-in",
+      "profil": "Profile",
+      "recapitulatif": "Summary"
+    },
+    "form": {
+      "nouveau": "New user",
+      "modifier": "Edit user",
+      "visualiser": "View user",
+      "nom": "Last name",
+      "prenom": "First name",
+      "email": "E-mail",
+      "login": "Login",
+      "loginAide": "3 to 30 characters: letters, digits, dot, hyphen or underscore.",
+      "loginFige": "The login cannot be changed.",
+      "profil": "Profile",
+      "propreProfil": "You cannot change your own profile.",
+      "fiche": "Tenant record",
+      "ficheAide": "The Tenant account sees the data of this record.",
+      "ficheActuelle": "Current record: {{nom}}",
+      "changer": "Edit",
+      "mdpNote": "A temporary password will be generated and shown only once. The user will have to replace it at their first sign-in.",
+      "precedent": "Previous",
+      "suivant": "Next",
+      "creer": "Create user"
+    }
   }
 }

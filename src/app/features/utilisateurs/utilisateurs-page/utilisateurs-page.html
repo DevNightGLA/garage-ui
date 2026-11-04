@@ -1,0 +1,178 @@
+<div class="up__cards">
+  @for (r of roles; track r) {
+    <button
+      type="button"
+      class="card up__card"
+      [class.is-on]="role() === r"
+      [attr.aria-pressed]="role() === r"
+      (click)="toggleRole(r)"
+    >
+      <span class="up__card-head">
+        <span class="up__card-icon" [style.background]="profils[r].gradient" aria-hidden="true">
+          <i class="fa-solid" [class]="profils[r].icon"></i>
+        </span>
+        <span class="up__card-text">
+          <span class="up__card-label">{{ 'role.' + r | translate }}</span>
+          <span class="up__card-count">
+            @if (roleCount(r) !== null) {
+              {{ 'utilisateurs.comptes.' + (roleCount(r)! > 1 ? 'n' : 'un') | translate: { n: roleCount(r) } }}
+            }
+          </span>
+        </span>
+      </span>
+      <span class="up__card-desc">{{ 'utilisateurs.profilDesc.' + r | translate }}</span>
+    </button>
+  }
+</div>
+
+<app-filter-buttons [options]="statutOptions()" [value]="statut()" (valueChange)="setStatut($event)" />
+
+<app-data-table
+  [columns]="columns"
+  [rows]="rows()"
+  [total]="total()"
+  [size]="pageSize()"
+  [noun]="'utilisateurs.nom' | translate"
+  [(page)]="page"
+  [(sort)]="sort"
+  [loading]="list.isLoading()"
+  [error]="loadError()"
+  emptyMessage="utilisateurs.vide"
+  [rowKey]="rowKey"
+  [rowClass]="rowClass"
+  (retry)="refresh()"
+>
+  <app-search-input
+    dtToolbarStart
+    [value]="search()"
+    [placeholder]="'utilisateurs.recherche' | translate"
+    (valueChange)="setSearch($event)"
+  />
+  @if (droits.canAdd()) {
+    <button dtToolbarEnd type="button" class="btn btn--primary" (click)="openForm(null)">
+      <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'utilisateurs.nouveau' | translate }}
+    </button>
+  }
+
+  <ng-template appCell="utilisateur" let-user>
+    <span class="who">
+      <span class="who__avatar" [style.background]="user.actif ? gradient(user) : 'var(--gradient-ancien)'" aria-hidden="true">
+        {{ initials(user) }}
+      </span>
+      <span class="who__text">
+        <span class="who__name">
+          <b>{{ fullName(user) }}</b>
+          @if (user.vous) {
+            <span class="who__me">{{ 'utilisateurs.vous' | translate }}</span>
+          }
+        </span>
+        <span class="who__mail"><i class="fa-regular fa-envelope" aria-hidden="true"></i> {{ user.email }}</span>
+        @if (user.locataireNom) {
+          <span class="who__mail"><i class="fa-solid fa-house-user" aria-hidden="true"></i> {{ user.locataireNom }}</span>
+        }
+      </span>
+    </span>
+  </ng-template>
+
+  <ng-template appCell="login" let-user><span class="login">{{ user.login }}</span></ng-template>
+
+  <ng-template appCell="derniereConnexion" let-user>
+    @if (lastLogin(user); as last) {
+      <span class="last">
+        <span>{{ last.date }}</span>
+        <span class="last__rel">{{ last.relative }}</span>
+      </span>
+    } @else {
+      <span class="last__never">{{ 'utilisateurs.connexion.jamais' | translate }}</span>
+    }
+  </ng-template>
+
+  <ng-template appCell="role" let-user>
+    <span class="pill" [style.background]="gradient(user)">{{ 'role.' + user.role | translate }}</span>
+  </ng-template>
+
+  <ng-template appCell="actif" let-user>
+    <span class="pill" [style.background]="user.actif ? 'var(--gradient-success)' : 'var(--gradient-ancien)'">
+      {{ (user.actif ? 'utilisateurs.actif' : 'utilisateurs.desactive_') | translate }}
+    </span>
+  </ng-template>
+
+  <ng-template appCell="actions" let-user>
+    <span class="actions">
+      <button
+        type="button"
+        class="icon-btn"
+        [appTooltip]="(droits.canEdit() ? 'utilisateurs.action.modifier' : 'utilisateurs.action.visualiser') | translate"
+        [attr.aria-label]="(droits.canEdit() ? 'utilisateurs.action.modifier' : 'utilisateurs.action.visualiser') | translate"
+        (click)="openForm(user)"
+      >
+        <i class="fa-regular" [class.fa-pen-to-square]="droits.canEdit()" [class.fa-eye]="!droits.canEdit()" aria-hidden="true"></i>
+      </button>
+      @if (droits.canEdit()) {
+        @let resetNo = resetBlocked(user);
+        <button
+          type="button"
+          class="icon-btn"
+          [class.is-blocked]="resetNo"
+          [attr.aria-disabled]="!!resetNo"
+          [appTooltip]="(resetNo ?? 'utilisateurs.action.reinitialiser') | translate"
+          [attr.aria-label]="(resetNo ?? 'utilisateurs.action.reinitialiser') | translate"
+          (click)="resetNo ? null : ask('reset', user)"
+        >
+          <i class="fa-solid fa-key" aria-hidden="true"></i>
+        </button>
+        @let toggleNo = toggleBlocked(user);
+        <button
+          type="button"
+          class="icon-btn"
+          [class.is-blocked]="toggleNo"
+          [attr.aria-disabled]="!!toggleNo"
+          [appTooltip]="(toggleNo ?? (user.actif ? 'utilisateurs.action.desactiver' : 'utilisateurs.action.reactiver')) | translate"
+          [attr.aria-label]="(toggleNo ?? (user.actif ? 'utilisateurs.action.desactiver' : 'utilisateurs.action.reactiver')) | translate"
+          (click)="toggleNo ? null : user.actif ? ask('deactivate', user) : reactivate(user)"
+        >
+          <i class="fa-solid" [class.fa-user-slash]="user.actif" [class.fa-user-check]="!user.actif" aria-hidden="true"></i>
+        </button>
+      }
+      @if (droits.canDelete()) {
+        @let deleteNo = deleteBlocked(user);
+        <button
+          type="button"
+          class="icon-btn"
+          [class.is-blocked]="deleteNo"
+          [attr.aria-disabled]="!!deleteNo"
+          [appTooltip]="(deleteNo ?? 'utilisateurs.action.supprimer') | translate"
+          [attr.aria-label]="(deleteNo ?? 'utilisateurs.action.supprimer') | translate"
+          (click)="deleteNo ? null : ask('delete', user)"
+        >
+          <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
+        </button>
+      }
+    </span>
+  </ng-template>
+</app-data-table>
+
+@if (form(); as current) {
+  <app-utilisateur-form [utilisateur]="current.user" [readOnly]="droits.isReadOnly()" (created)="created($event)" (saved)="saved()" (closed)="form.set(null)" />
+}
+
+@if (password(); as current) {
+  <app-temp-password-dialog
+    [name]="fullName(current.result.utilisateur)"
+    [password]="current.result.motDePasseTemporaire"
+    [created]="current.created"
+    (closed)="password.set(null)"
+  />
+}
+
+@if (pending(); as current) {
+  <app-confirm
+    [title]="confirmTitle(current.kind) | translate"
+    [message]="'utilisateurs.confirmer.' + current.kind + '.message' | translate: { nom: fullName(current.user) }"
+    [confirmLabel]="'utilisateurs.confirmer.' + current.kind + '.bouton' | translate"
+    [pending]="pendingBusy()"
+    [error]="pendingError()"
+    (confirmed)="confirmPending()"
+    (cancelled)="pending.set(null)"
+  />
+}

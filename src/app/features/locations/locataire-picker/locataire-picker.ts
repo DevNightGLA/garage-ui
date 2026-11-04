@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, DestroyRef, computed, forwardRef, inject, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, DestroyRef, computed, forwardRef, inject, output, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslatePipe } from '@ngx-translate/core';
@@ -36,6 +36,8 @@ export class LocatairePicker implements ControlValueAccessor {
   protected readonly page = signal(0);
   protected readonly selectedId = signal<number | null>(null);
   protected readonly disabled = signal(false);
+  /** Locataire choisi dans la liste (pour afficher son nom ailleurs, comme un récapitulatif). */
+  readonly picked = output<LocataireDTO>();
 
   protected readonly list = rxResource({
     params: () => ({ page: this.page(), q: this.query() }),
@@ -109,6 +111,7 @@ export class LocatairePicker implements ControlValueAccessor {
     this.text.set(this.fullName(locataire));
     this.onChange(locataire.id);
     this.onTouched();
+    this.picked.emit(locataire);
   }
 
   protected touched(): void {

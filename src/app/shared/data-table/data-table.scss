@@ -234,3 +234,8 @@
     flex-basis: 100%;
   }
 }
+
+// Ligne atténuée (compte désactivé…).
+tr.is-muted > td {
+  opacity: 0.6;
+}

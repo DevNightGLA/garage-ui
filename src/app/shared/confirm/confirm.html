@@ -18,11 +18,17 @@
 
   @if (reasons().length === 0) {
     <div modalFooter class="confirm__foot">
-      <button type="button" class="btn btn--secondary btn--wide" (click)="cancelled.emit()">
-        {{ 'commun.non' | translate }}
+      <button type="button" class="btn btn--secondary btn--wide" [disabled]="pending()" (click)="cancelled.emit()">
+        {{ (confirmLabel() ? 'commun.annuler' : 'commun.non') | translate }}
       </button>
-      <button type="button" class="btn btn--primary btn--wide" (click)="confirmed.emit()">
-        {{ 'commun.oui' | translate }}
+      <button
+        type="button"
+        class="btn btn--primary btn--wide"
+        [disabled]="pending()"
+        [attr.aria-busy]="pending()"
+        (click)="confirmed.emit()"
+      >
+        {{ confirmLabel() ?? ('commun.oui' | translate) }}
       </button>
     </div>
   } @else {

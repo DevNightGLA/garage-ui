@@ -1,0 +1,148 @@
+<app-modal
+  [title]="(isNew() ? 'utilisateurs.form.nouveau' : readOnly() ? 'utilisateurs.form.visualiser' : 'utilisateurs.form.modifier') | translate"
+  [width]="560"
+  [error]="error()"
+  (closed)="closed.emit()"
+>
+  @if (isNew()) {
+    <app-stepper class="uf__stepper" [labels]="stepLabels()" [current]="step()" (select)="goTo($event)" />
+  }
+
+  <form id="utilisateur-form" class="modal-form uf" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    @if (!isNew() || step() === 0) {
+      <div class="uf__row">
+        <app-form-field [label]="'utilisateurs.form.nom' | translate" [error]="fieldErrors()['nom']">
+          <input class="input" type="text" formControlName="nom" autocomplete="family-name" />
+        </app-form-field>
+        <app-form-field [label]="'utilisateurs.form.prenom' | translate" [error]="fieldErrors()['prenom']">
+          <input class="input" type="text" formControlName="prenom" autocomplete="given-name" />
+        </app-form-field>
+      </div>
+    }
+
+    @if (!isNew() || step() === 1) {
+      <app-form-field [label]="'utilisateurs.form.email' | translate" [error]="fieldErrors()['email']">
+        <input class="input" type="email" inputmode="email" formControlName="email" autocomplete="off" />
+      </app-form-field>
+      <app-form-field
+        [label]="'utilisateurs.form.login' | translate"
+        [error]="fieldErrors()['login']"
+        [hint]="isNew() ? ('utilisateurs.form.loginAide' | translate) : ('utilisateurs.form.loginFige' | translate)"
+      >
+        <input class="input" type="text" formControlName="login" autocomplete="off" autocapitalize="none" />
+      </app-form-field>
+    }
+
+    @if (!isNew() || step() === 2) {
+      <div class="uf__field" role="radiogroup" [attr.aria-labelledby]="'uf-role'">
+        <span class="uf__label" id="uf-role">{{ 'utilisateurs.form.profil' | translate }}<span class="uf__req"> *</span></span>
+        @if (self()) {
+          <span class="uf__hint">{{ 'utilisateurs.form.propreProfil' | translate }}</span>
+        }
+        @for (r of roles; track r) {
+          <button
+            type="button"
+            role="radio"
+            class="uf__role"
+            [class.is-on]="role() === r"
+            [attr.aria-checked]="role() === r"
+            [disabled]="(self() || readOnly()) && role() !== r"
+            (click)="setRole(r)"
+          >
+            <span class="uf__radio" aria-hidden="true"></span>
+            <span class="uf__icon" [style.background]="profils[r].gradient" aria-hidden="true">
+              <i class="fa-solid" [class]="profils[r].icon"></i>
+            </span>
+            <span class="uf__text">
+              <span class="uf__name">{{ 'role.' + r | translate }}</span>
+              <span class="uf__desc">{{ 'utilisateurs.profilDesc.' + r | translate }}</span>
+            </span>
+          </button>
+        }
+        @if (fieldErrors()['role']; as message) {
+          <div class="message-error" role="alert">{{ message }}</div>
+        }
+      </div>
+
+      @if (role() === 'LOCATAIRE') {
+        <app-form-field
+          [label]="'utilisateurs.form.fiche' | translate"
+          [error]="fieldErrors()['locataireId']"
+          [group]="true"
+          [hint]="locataireNom() ? ('utilisateurs.form.ficheActuelle' | translate: { nom: locataireNom() }) : ('utilisateurs.form.ficheAide' | translate)"
+        >
+          <app-locataire-picker formControlName="locataireId" (picked)="pickedLocataire($event)" />
+        </app-form-field>
+      }
+    }
+
+    @if (isNew() && step() === lastStep) {
+      @let s = summary();
+      <div class="uf__recap">
+        <div class="uf__who">
+          <span class="uf__avatar" [style.background]="profils[role()].gradient" aria-hidden="true">{{ initials() }}</span>
+          <div>
+            <div class="uf__name">{{ s.prenom }} {{ s.nom }}</div>
+            <div class="uf__desc">{{ 'role.' + role() | translate }}</div>
+          </div>
+        </div>
+        <dl class="uf__list">
+          <div>
+            <dt>{{ 'utilisateurs.form.nom' | translate }}</dt>
+            <dd>{{ s.prenom }} {{ s.nom }}</dd>
+            <button type="button" class="link-btn" (click)="goTo(0)">{{ 'utilisateurs.form.changer' | translate }}</button>
+          </div>
+          <div>
+            <dt>{{ 'utilisateurs.form.email' | translate }}</dt>
+            <dd>{{ s.email }}</dd>
+            <button type="button" class="link-btn" (click)="goTo(1)">{{ 'utilisateurs.form.changer' | translate }}</button>
+          </div>
+          <div>
+            <dt>{{ 'utilisateurs.form.login' | translate }}</dt>
+            <dd>{{ s.login }}</dd>
+            <button type="button" class="link-btn" (click)="goTo(1)">{{ 'utilisateurs.form.changer' | translate }}</button>
+          </div>
+          <div>
+            <dt>{{ 'utilisateurs.form.profil' | translate }}</dt>
+            <dd>
+              {{ 'role.' + role() | translate }}
+              @if (role() === 'LOCATAIRE' && locataireNom()) {
+                · {{ locataireNom() }}
+              }
+            </dd>
+            <button type="button" class="link-btn" (click)="goTo(2)">{{ 'utilisateurs.form.changer' | translate }}</button>
+          </div>
+        </dl>
+        <p class="page-note" role="note">
+          <i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>{{ 'utilisateurs.form.mdpNote' | translate }}</span>
+        </p>
+      </div>
+    }
+  </form>
+
+  <div modalFooter class="uf__foot">
+    <button type="button" class="btn btn--secondary" [disabled]="pending()" (click)="closed.emit()">
+      {{ (readOnly() ? 'commun.fermer' : 'commun.annuler') | translate }}
+    </button>
+    <span class="uf__spacer"></span>
+    @if (isNew() && step() > 0) {
+      <button type="button" class="btn btn--secondary" [disabled]="pending()" (click)="previous()">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ 'utilisateurs.form.precedent' | translate }}
+      </button>
+    }
+    @if (isNew() && step() < lastStep) {
+      <button type="submit" form="utilisateur-form" class="btn btn--primary">
+        {{ 'utilisateurs.form.suivant' | translate }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </button>
+    } @else if (!readOnly()) {
+      <button type="submit" form="utilisateur-form" class="btn btn--primary" [disabled]="pending()" [attr.aria-busy]="pending()">
+        @if (pending()) {
+          {{ 'commun.enregistrement' | translate }}
+        } @else {
+          <i class="fa-solid" [class.fa-user-plus]="isNew()" [class.fa-floppy-disk]="!isNew()" aria-hidden="true"></i>
+          {{ (isNew() ? 'utilisateurs.form.creer' : 'commun.enregistrer') | translate }}
+        }
+      </button>
+    }
+  </div>
+</app-modal>
