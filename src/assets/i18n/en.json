@@ -1281,5 +1281,167 @@
         "m": "Edit rights"
       }
     }
+  },
+  "journal": {
+    "mode": {
+      "utilisateur": "By user",
+      "concept": "By concept",
+      "criteres": "By criteria"
+    },
+    "navigation": "Log navigation",
+    "toute": "All activity",
+    "unUtilisateur": "Operations by this user",
+    "table": "Table {{table}}",
+    "filTitre": "Audit trail",
+    "filSous": "Record no. {{id}}, oldest first",
+    "retour": "Back to the log",
+    "modifierCriteres": "Edit criteria",
+    "generer": "Generate history",
+    "regenerer": "Regenerate history",
+    "perime": "The criteria have changed: the history shown is out of date. Click “Regenerate history” to update it.",
+    "invite": {
+      "utilisateur": "Choose a user and a period, then generate the history.",
+      "concept": "Choose a concept and a period, then generate the history."
+    },
+    "typeAction": "Action type",
+    "filtre": {
+      "toutes": "All actions",
+      "C": "Creations",
+      "M": "Changes",
+      "S": "Deletions"
+    },
+    "du": "From",
+    "au": "to",
+    "recherche": "Search (label, identifier, user, value)…",
+    "reinitialiser": "Reset",
+    "ordre": {
+      "desc": "Newest first",
+      "asc": "Oldest first"
+    },
+    "action": {
+      "C": "Creation",
+      "M": "Change",
+      "S": "Deletion"
+    },
+    "concept": {
+      "GARAGE": "Garage",
+      "LOYER_GARAGE": "Rent",
+      "LOCATAIRE": "Tenant",
+      "LOCATION": "Lease",
+      "ECHEANCE": "Instalment",
+      "VERSEMENT": "Payment",
+      "REMARQUE": "Remark",
+      "UTILISATEUR": "User",
+      "PARAMETRE": "Setting"
+    },
+    "numero": "no. {{id}}",
+    "lies": "{{n}} linked records",
+    "vide": "No operation matches these criteria.",
+    "affichees": {
+      "un": "{{n}} of {{total}} operation",
+      "n": "{{n}} of {{total}} operations"
+    },
+    "afficherInchanges": "Show unchanged fields",
+    "historique": "History of this record",
+    "etape": {
+      "periode": "Period",
+      "qui": "By whom",
+      "quoi": "On what",
+      "validation": "Confirm"
+    },
+    "periodeTitre": "Period to audit",
+    "periodeAide": "Optional dates: without a date, the whole period.",
+    "raccourcis": "Period shortcuts",
+    "preset": {
+      "jours": "{{n}} days",
+      "tout": "Whole period"
+    },
+    "quiTitre": "By whom?",
+    "quiAide": "No selection: all users.",
+    "quoiTitre": "On which concepts?",
+    "quoiAide": "No selection: all concepts.",
+    "criteres": "Audit criteria",
+    "afficherFil": "Show the audit trail",
+    "recap": {
+      "duAu": "From {{du}} to {{au}}",
+      "toutePeriode": "Whole period",
+      "tousUtilisateurs": "All users",
+      "nUtilisateurs": "{{n}} users",
+      "tousConcepts": "All concepts",
+      "nConcepts": "{{n}} concepts"
+    },
+    "correspondent": {
+      "un": "operation matches these criteria",
+      "n": "operations match these criteria"
+    },
+    "erreur": {
+      "ordre": "The start date must be before the end date."
+    },
+    "champ": {
+      "commun": {
+        "numero": "Number",
+        "adresse": "Address",
+        "statut": "Status",
+        "garage_id": "Garage",
+        "locataire_id": "Tenant",
+        "location_id": "Lease",
+        "echeance_id": "Instalment",
+        "montant": "Amount",
+        "date_debut": "Start",
+        "date_fin": "End",
+        "civilite": "Title",
+        "nom": "Last name",
+        "prenom": "First name",
+        "rue": "Street",
+        "numero_rue": "No.",
+        "code_postal": "Postcode",
+        "localite": "Town",
+        "tel1": "Phone 1",
+        "tel2": "Phone 2",
+        "email": "E-mail",
+        "nb_cles_total": "Keys (total)",
+        "nb_cles_reserve": "Spare keys",
+        "nb_cles_remises": "Keys handed over",
+        "periode": "Period",
+        "montant_du": "Amount due",
+        "mode_paiement": "Payment method",
+        "date_paiement": "Payment date",
+        "date_creation": "Created on",
+        "type": "Type",
+        "texte": "Text",
+        "resolu": "Resolved",
+        "date_resolution": "Resolved on",
+        "login": "Login",
+        "role": "Profile",
+        "actif": "Active",
+        "mot_de_passe": "Password",
+        "mot_de_passe_temporaire": "Temporary password",
+        "nature": "Nature",
+        "categorie": "Category",
+        "cle": "Key",
+        "libelle": "Label",
+        "valeur": "Value",
+        "obligatoire": "Required",
+        "ordre": "Order"
+      },
+      "LOYER_GARAGE": {
+        "montant": "Monthly rent"
+      },
+      "UTILISATEUR": {
+        "date_creation": "Created on"
+      },
+      "LOCATAIRE": {
+        "date_creation": "Created on"
+      }
+    }
+  },
+  "diff": {
+    "champ": "Field",
+    "avant": "As is · before",
+    "apres": "To be · after",
+    "vide": "(empty)",
+    "inchange": "unchanged",
+    "masque": "(hidden)",
+    "modifieMasque": "changed, value hidden"
   }
 }

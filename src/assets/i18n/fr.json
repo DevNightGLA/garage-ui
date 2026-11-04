@@ -1154,5 +1154,167 @@
         "m": "Modifier les droits"
       }
     }
+  },
+  "journal": {
+    "mode": {
+      "utilisateur": "Par utilisateur",
+      "concept": "Par concept",
+      "criteres": "Par critères"
+    },
+    "navigation": "Navigation du journal",
+    "toute": "Toute l’activité",
+    "unUtilisateur": "Opérations de cet utilisateur",
+    "table": "Table {{table}}",
+    "filTitre": "Fil conducteur de l’audit",
+    "filSous": "Enregistrement n° {{id}}, du plus ancien au plus récent",
+    "retour": "Retour au journal",
+    "modifierCriteres": "Modifier les critères",
+    "generer": "Générer l’historique",
+    "regenerer": "Régénérer l’historique",
+    "perime": "Les critères ont changé : l’historique affiché n’est plus à jour. Cliquez sur « Régénérer l’historique » pour le mettre à jour.",
+    "invite": {
+      "utilisateur": "Choisissez un utilisateur et une période, puis générez l’historique.",
+      "concept": "Choisissez un concept et une période, puis générez l’historique."
+    },
+    "typeAction": "Type d’action",
+    "filtre": {
+      "toutes": "Toutes les actions",
+      "C": "Créations",
+      "M": "Modifications",
+      "S": "Suppressions"
+    },
+    "du": "Du",
+    "au": "au",
+    "recherche": "Rechercher (libellé, identifiant, utilisateur, valeur)…",
+    "reinitialiser": "Réinitialiser",
+    "ordre": {
+      "desc": "Plus récentes d’abord",
+      "asc": "Plus anciennes d’abord"
+    },
+    "action": {
+      "C": "Création",
+      "M": "Modification",
+      "S": "Suppression"
+    },
+    "concept": {
+      "GARAGE": "Garage",
+      "LOYER_GARAGE": "Loyer",
+      "LOCATAIRE": "Locataire",
+      "LOCATION": "Location",
+      "ECHEANCE": "Échéance",
+      "VERSEMENT": "Versement",
+      "REMARQUE": "Remarque",
+      "UTILISATEUR": "Utilisateur",
+      "PARAMETRE": "Paramètre"
+    },
+    "numero": "n° {{id}}",
+    "lies": "{{n}} enregistrements liés",
+    "vide": "Aucune opération ne correspond à ces critères.",
+    "affichees": {
+      "un": "{{n}} sur {{total}} opération",
+      "n": "{{n}} sur {{total}} opérations"
+    },
+    "afficherInchanges": "Afficher les champs inchangés",
+    "historique": "Historique de cet enregistrement",
+    "etape": {
+      "periode": "Période",
+      "qui": "Par qui",
+      "quoi": "Sur quoi",
+      "validation": "Validation"
+    },
+    "periodeTitre": "Période à auditer",
+    "periodeAide": "Bornes facultatives : sans date, toute la période.",
+    "raccourcis": "Raccourcis de période",
+    "preset": {
+      "jours": "{{n}} jours",
+      "tout": "Toute la période"
+    },
+    "quiTitre": "Par qui ?",
+    "quiAide": "Aucune sélection : tous les utilisateurs.",
+    "quoiTitre": "Sur quels concepts ?",
+    "quoiAide": "Aucune sélection : tous les concepts.",
+    "criteres": "Critères de l’audit",
+    "afficherFil": "Afficher le fil conducteur",
+    "recap": {
+      "duAu": "Du {{du}} au {{au}}",
+      "toutePeriode": "Toute la période",
+      "tousUtilisateurs": "Tous les utilisateurs",
+      "nUtilisateurs": "{{n}} utilisateurs",
+      "tousConcepts": "Tous les concepts",
+      "nConcepts": "{{n}} concepts"
+    },
+    "correspondent": {
+      "un": "opération correspond à ces critères",
+      "n": "opérations correspondent à ces critères"
+    },
+    "erreur": {
+      "ordre": "La date de début doit précéder la date de fin."
+    },
+    "champ": {
+      "commun": {
+        "numero": "Numéro",
+        "adresse": "Adresse",
+        "statut": "Statut",
+        "garage_id": "Garage",
+        "locataire_id": "Locataire",
+        "location_id": "Location",
+        "echeance_id": "Échéance",
+        "montant": "Montant",
+        "date_debut": "Début",
+        "date_fin": "Fin",
+        "civilite": "Civilité",
+        "nom": "Nom",
+        "prenom": "Prénom",
+        "rue": "Rue",
+        "numero_rue": "N°",
+        "code_postal": "Code postal",
+        "localite": "Localité",
+        "tel1": "Téléphone 1",
+        "tel2": "Téléphone 2",
+        "email": "E-mail",
+        "nb_cles_total": "Clés (total)",
+        "nb_cles_reserve": "Clés en réserve",
+        "nb_cles_remises": "Clés remises",
+        "periode": "Période",
+        "montant_du": "Montant dû",
+        "mode_paiement": "Mode de paiement",
+        "date_paiement": "Date de paiement",
+        "date_creation": "Créée le",
+        "type": "Type",
+        "texte": "Texte",
+        "resolu": "Résolu",
+        "date_resolution": "Résolu le",
+        "login": "Login",
+        "role": "Profil",
+        "actif": "Actif",
+        "mot_de_passe": "Mot de passe",
+        "mot_de_passe_temporaire": "Mot de passe temporaire",
+        "nature": "Nature",
+        "categorie": "Catégorie",
+        "cle": "Clé",
+        "libelle": "Libellé",
+        "valeur": "Valeur",
+        "obligatoire": "Obligatoire",
+        "ordre": "Ordre"
+      },
+      "LOYER_GARAGE": {
+        "montant": "Montant mensuel"
+      },
+      "UTILISATEUR": {
+        "date_creation": "Créé le"
+      },
+      "LOCATAIRE": {
+        "date_creation": "Créé le"
+      }
+    }
+  },
+  "diff": {
+    "champ": "Champ",
+    "avant": "As is · avant",
+    "apres": "To be · après",
+    "vide": "(vide)",
+    "inchange": "inchangé",
+    "masque": "(masqué)",
+    "modifieMasque": "modifié, valeur masquée"
   }
 }

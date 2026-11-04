@@ -1,0 +1,118 @@
+<app-segmented [options]="modeOptions()" [value]="mode()" [caps]="true" [ariaLabel]="'nav.journalAudit' | translate" (valueChange)="setMode($event)" />
+
+@if (mode() === 'criteres' && !wizardDone()) {
+  <app-journal-wizard [users]="userList()" [initial]="wizardCriteria()" [startStep]="wizardStep()" (generate)="generateFromWizard($event)" />
+} @else {
+  <div class="jp" [class.jp--full]="mode() === 'criteres'">
+    @if (mode() !== 'criteres') {
+      <nav class="card jp__nav" [attr.aria-label]="'journal.navigation' | translate">
+        <button type="button" class="jp__nav-btn" [class.is-on]="!record() && (mode() === 'utilisateur' ? selectedUser() === null : selectedConcept() === null)" (click)="mode() === 'utilisateur' ? selectUser(null) : selectConcept(null)">
+          <span class="jp__nav-icon" aria-hidden="true"><i class="fa-solid fa-list"></i></span>
+          <span>{{ 'journal.toute' | translate }}</span>
+        </button>
+        @if (mode() === 'utilisateur') {
+          @for (user of userList(); track user.id) {
+            <button type="button" class="jp__nav-btn" [class.is-on]="!record() && selectedUser() === user.id" (click)="selectUser(user.id)">
+              <span class="jp__nav-avatar" aria-hidden="true">{{ user.nom.charAt(0) }}{{ user.nom.split(' ')[1]?.charAt(0) }}</span>
+              <span>{{ user.nom }}</span>
+            </button>
+          }
+        } @else {
+          @for (c of concepts; track c.concept) {
+            <button type="button" class="jp__nav-btn" [class.is-on]="!record() && selectedConcept() === c.concept" (click)="selectConcept(c.concept)">
+              <span class="jp__nav-icon" aria-hidden="true"><i [class]="c.icon"></i></span>
+              <span>{{ 'journal.concept.' + c.concept | translate }}</span>
+            </button>
+          }
+        }
+      </nav>
+    }
+
+    <div class="jp__main">
+      <div class="card jp__head">
+        <div class="jp__titles">
+          <h2 class="jp__title">
+            {{ title() }}
+            @if (mode() === 'criteres' && !record()) {
+              <span class="jp__count" [attr.title]="'journal.correspondent.' + (total() > 1 ? 'n' : 'un') | translate">{{ total() }}</span>
+            }
+          </h2>
+          <p class="jp__sub">{{ subtitle() }}</p>
+        </div>
+        <span class="jp__head-actions">
+          @if (record()) {
+            <button type="button" class="btn btn--secondary" (click)="closeRecord()">
+              <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ 'journal.retour' | translate }}
+            </button>
+          } @else if (mode() === 'criteres') {
+            <button type="button" class="btn btn--secondary" (click)="editCriteria()">
+              <i class="fa-solid fa-sliders" aria-hidden="true"></i> {{ 'journal.modifierCriteres' | translate }}
+            </button>
+          } @else if (!isGenerated() || stale()) {
+            <button type="button" class="btn btn--primary" (click)="generate()">
+              <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i>
+              {{ (stale() ? 'journal.regenerer' : 'journal.generer') | translate }}
+            </button>
+          }
+        </span>
+
+        @if (mode() !== 'criteres' && !record()) {
+          <div class="jp__filters">
+            <select class="input jp__action" [formControl]="action" [attr.aria-label]="'journal.typeAction' | translate">
+              <option value="">{{ 'journal.filtre.toutes' | translate }}</option>
+              <option value="C">{{ 'journal.filtre.C' | translate }}</option>
+              <option value="M">{{ 'journal.filtre.M' | translate }}</option>
+              <option value="S">{{ 'journal.filtre.S' | translate }}</option>
+            </select>
+            <span class="jp__period">
+              <span class="jp__period-label">{{ 'journal.du' | translate }}</span>
+              <app-date-input class="jp__date" [formControl]="du" />
+              <span class="jp__period-label">{{ 'journal.au' | translate }}</span>
+              <app-date-input class="jp__date" [formControl]="au" />
+            </span>
+            <app-search-input class="jp__search" [value]="search()" [placeholder]="'journal.recherche' | translate" (valueChange)="search.set($event)" />
+            <span class="jp__filter-actions">
+              @if (hasFilters()) {
+                <button type="button" class="link-btn" (click)="resetFilters()">
+                  <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> {{ 'journal.reinitialiser' | translate }}
+                </button>
+              }
+              <button type="button" class="btn btn--secondary" (click)="toggleOrder()">
+                <i class="fa-solid" [class.fa-arrow-up-wide-short]="asc()" [class.fa-arrow-down-wide-short]="!asc()" aria-hidden="true"></i>
+                {{ (asc() ? 'journal.ordre.asc' : 'journal.ordre.desc') | translate }}
+              </button>
+            </span>
+          </div>
+        }
+      </div>
+
+      @if (error(); as message) {
+        <p class="card jp__error message-error" role="alert">{{ message }}</p>
+      }
+
+      @if (record()) {
+        <app-journal-list [operations]="recordOps()" [total]="recordOps().length" [recordMode]="true" [loading]="loading()" />
+      } @else if (isGenerated()) {
+        @if (stale()) {
+          <p class="jp__stale" role="status">
+            <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i> {{ 'journal.perime' | translate }}
+          </p>
+        }
+        <app-journal-list
+          [class.is-stale]="stale()"
+          [operations]="operations()"
+          [total]="total()"
+          [hideUser]="mode() === 'utilisateur' && selectedUser() !== null"
+          [loading]="loading()"
+          (more)="more()"
+          (history)="openRecord($event)"
+        />
+      } @else {
+        <div class="card jp__prompt">
+          <span class="jp__prompt-icon" aria-hidden="true"><i class="fa-solid fa-clock-rotate-left"></i></span>
+          <p>{{ 'journal.invite.' + mode() | translate }}</p>
+        </div>
+      }
+    </div>
+  </div>
+}
