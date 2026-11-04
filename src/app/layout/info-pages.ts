@@ -67,7 +67,7 @@ export class ScreenUnavailable {
   );
 }
 
-/** Profil sans aucun écran autorisé (« Le profil … n'a pas accès à cet écran », complements-maquette § 12). */
+/** Profil sans aucun écran autorisé (« Le profil … n'a pas accès à cet écran », regles-de-gestion ch. 23). */
 @Component({
   selector: 'app-access-denied',
   imports: [TranslatePipe],

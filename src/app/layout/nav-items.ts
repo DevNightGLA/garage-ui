@@ -31,7 +31,7 @@ export function isGroup(entry: NavEntry): entry is NavGroup {
   return 'children' in entry;
 }
 
-/** Menu de la maquette (`Gestion Garages.dc.html`, sections de RG-NAV-01 et complements-maquette § 1). */
+/** Menu de la maquette (`Gestion Garages.dc.html`, sections de RG-NAV-01, regles-de-gestion ch. 1). */
 export const NAV: readonly NavEntry[] = [
   { path: 'tableau-de-bord', labelKey: 'nav.tableauDeBord', icon: 'fa-gauge', ecran: 'DASH' },
   {

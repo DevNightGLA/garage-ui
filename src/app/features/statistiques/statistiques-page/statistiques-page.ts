@@ -30,7 +30,7 @@ const STATUT_COLOR = { loues: '#0f8a2a', libres: '#17c1e8', indisponibles: '#f97
 const REMARQUE_COLOR = { probleme: '#d40505', information: '#17c1e8', autre: '#344767' };
 
 /**
- * Pages Statistiques (RG-STA-01 à 04, complements-maquette § 9) : une carte par page, avec le sélecteur d'année.
+ * Pages Statistiques (RG-STA-01 à 04, regles-de-gestion ch. 22) : une carte par page, avec le sélecteur d'année.
  * L'année est dans l'adresse (`?annee=2025`), l'année en cours par défaut ; les données viennent du back.
  */
 @Component({
