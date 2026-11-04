@@ -37,7 +37,7 @@ describe('Traductions FR et EN', () => {
 
   it('une valeur anglaise ne garde pas de texte français : pas de lettre accentuée hors noms de langue', () => {
     const accented = [...english]
-      .filter(([key]) => key !== 'langue.francais')
+      .filter(([key]) => key !== 'langue.francais' && key !== 'parametres.choix.langue_defaut.fr')
       .filter(([key, value]) => key.startsWith('messagesBack.') === false && /[àâçéèêëîïôûùü]/i.test(value));
     expect(accented.map(([key]) => key)).toEqual([]);
   });

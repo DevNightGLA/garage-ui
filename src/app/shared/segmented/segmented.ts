@@ -13,7 +13,7 @@ export interface SegmentedOption<V extends string = string> {
 @Component({
   selector: 'app-segmented',
   template: `
-    <div class="sg" role="radiogroup" [attr.aria-label]="ariaLabel() || null">
+    <div class="sg" [class.is-caps]="caps()" role="radiogroup" [attr.aria-label]="ariaLabel() || null">
       @for (option of options(); track option.value) {
         <button
           type="button"
@@ -37,10 +37,15 @@ export interface SegmentedOption<V extends string = string> {
       gap: 2px;
       width: fit-content;
       max-width: 100%;
+      flex-wrap: wrap;
       padding: 4px;
       box-sizing: border-box;
       border-radius: 12px;
       background: #eef1f6;
+    }
+    .sg.is-caps .sg__btn {
+      padding: 8px 18px;
+      text-transform: uppercase;
     }
     .sg__btn {
       min-height: 32px;
@@ -73,6 +78,8 @@ export class Segmented<V extends string = string> {
   readonly value = model.required<V>();
   readonly ariaLabel = input('');
   readonly disabled = input(false);
+  /** Libellés en capitales (onglets « Paramètres métier » / « de l'application »). */
+  readonly caps = input(false);
 
   private readonly host = inject<ElementRef<HTMLElement>>(ElementRef);
 

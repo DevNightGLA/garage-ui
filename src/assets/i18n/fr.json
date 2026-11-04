@@ -747,5 +747,137 @@
     "entreprise": "Nom de l’entreprise ou du bailleur",
     "coordonnees": "Adresse postale et téléphone (adresse · téléphone)",
     "iban": "Numéro de compte (IBAN)"
+  },
+  "parametres": {
+    "categories": "Catégories",
+    "enregistres": "Paramètres enregistrés avec succès",
+    "nature": {
+      "METIER": {
+        "titre": "Paramètres métier",
+        "description": "Règles de gestion et données de l’activité."
+      },
+      "APPLICATION": {
+        "titre": "Paramètres de l’application",
+        "description": "Messagerie, affichage et sécurité de l’application."
+      }
+    },
+    "categorie": {
+      "expediteur": {
+        "titre": "Expéditeur",
+        "description": "Identité utilisée pour l’envoi des e-mails aux locataires."
+      },
+      "organisation": {
+        "titre": "Organisation",
+        "description": "Coordonnées du bailleur, disponibles comme variables dans les messages."
+      },
+      "garages_loyers_locations": {
+        "titre": "Garages, loyers et locations",
+        "description": "Formats et contrôles appliqués à la saisie des garages et des locations."
+      },
+      "paiements_impayes": {
+        "titre": "Paiements et impayés",
+        "description": "Règle de calcul des retards de paiement."
+      },
+      "affichage": {
+        "titre": "Affichage",
+        "description": "Présentation des listes, du menu et de la langue."
+      },
+      "securite": {
+        "titre": "Sécurité",
+        "description": "Connexion, mots de passe et maintenance."
+      }
+    },
+    "cle": {
+      "expediteur_nom": {
+        "libelle": "Nom de l’expéditeur",
+        "aide": "Remplace la variable {expediteur} dans les messages et s’affiche comme nom d’envoi."
+      },
+      "expediteur_email": {
+        "libelle": "Adresse e-mail d’envoi",
+        "aide": "Adresse depuis laquelle les e-mails sont envoyés aux locataires."
+      },
+      "reponse_email": {
+        "libelle": "Adresse de réponse",
+        "aide": "Facultatif. Reçoit les réponses des locataires ; à défaut, l’adresse d’envoi."
+      },
+      "cci_email": {
+        "libelle": "Copie cachée (Cci)",
+        "aide": "Facultatif. Reçoit une copie de chaque e-mail envoyé."
+      },
+      "org_nom": {
+        "libelle": "Nom de l’entreprise ou du bailleur",
+        "aide": "Facultatif. Variable {entreprise} des messages."
+      },
+      "org_adresse": {
+        "libelle": "Adresse postale",
+        "aide": "Facultatif. Incluse dans la variable {coordonnees} des messages."
+      },
+      "org_tel": {
+        "libelle": "Téléphone",
+        "aide": "Facultatif. Inclus dans la variable {coordonnees} des messages."
+      },
+      "org_iban": {
+        "libelle": "Numéro de compte (IBAN)",
+        "aide": "Facultatif. Variable {iban} des messages, utile pour les relances."
+      },
+      "garage_prefixe": {
+        "libelle": "Préfixe du numéro de garage",
+        "aide": "Proposé à la création d’un garage (ex. G05)."
+      },
+      "garage_chiffres": {
+        "libelle": "Nombre de chiffres du numéro de garage",
+        "aide": "Complété par des zéros (2 : G05)."
+      },
+      "location_duree_min": {
+        "libelle": "Durée minimale d’une location",
+        "aide": "En mois calendaires. Contrôlée à la saisie de la date de fin."
+      },
+      "jour_limite": {
+        "libelle": "Jour limite de paiement dans le mois",
+        "aide": "Après ce jour, l’échéance du mois en cours passe « En retard ». 31 : en retard seulement le mois suivant."
+      },
+      "lignes_liste": {
+        "libelle": "Lignes par page (listes)",
+        "aide": "Garages, locataires, locations, paiements et messages."
+      },
+      "lignes_hist": {
+        "libelle": "Lignes par page (historiques et cartes)",
+        "aide": "Historiques, cartes du tableau de bord et choix du locataire."
+      },
+      "graph_mois": {
+        "libelle": "Nombre de mois des graphiques",
+        "aide": "Tableau de bord et statistiques."
+      },
+      "langue_defaut": {
+        "libelle": "Langue par défaut",
+        "aide": "Appliquée tant que l’utilisateur n’a pas choisi sa langue."
+      },
+      "menu_replie": {
+        "libelle": "Menu latéral replié par défaut",
+        "aide": "À l’ouverture de l’application."
+      },
+      "inactivite_min": {
+        "libelle": "Déconnexion après inactivité",
+        "aide": "En minutes. 0 : désactivée."
+      },
+      "mdp_min": {
+        "libelle": "Longueur minimale du mot de passe",
+        "aide": "En caractères, au changement du mot de passe."
+      },
+      "maintenance_verif_sec": {
+        "libelle": "Vérification du site en maintenance",
+        "aide": "En secondes, de 5 à 300. Intervalle entre deux vérifications automatiques de la page « Site en maintenance »."
+      }
+    },
+    "choix": {
+      "langue_defaut": {
+        "fr": "Français",
+        "en": "English"
+      },
+      "menu_replie": {
+        "non": "Non",
+        "oui": "Oui"
+      }
+    }
   }
 }

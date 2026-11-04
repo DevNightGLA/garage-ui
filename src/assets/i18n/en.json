@@ -874,5 +874,137 @@
     "entreprise": "Company or landlord name",
     "coordonnees": "Postal address and phone (address · phone)",
     "iban": "Account number (IBAN)"
+  },
+  "parametres": {
+    "categories": "Categories",
+    "enregistres": "Settings saved successfully",
+    "nature": {
+      "METIER": {
+        "titre": "Business settings",
+        "description": "Business rules and activity data."
+      },
+      "APPLICATION": {
+        "titre": "Application settings",
+        "description": "Messaging, display and security of the application."
+      }
+    },
+    "categorie": {
+      "expediteur": {
+        "titre": "Sender",
+        "description": "Identity used when sending e-mails to tenants."
+      },
+      "organisation": {
+        "titre": "Organisation",
+        "description": "Landlord details, available as variables in messages."
+      },
+      "garages_loyers_locations": {
+        "titre": "Garages, rents and leases",
+        "description": "Formats and checks applied when entering garages and leases."
+      },
+      "paiements_impayes": {
+        "titre": "Payments and unpaid rent",
+        "description": "How payment delays are calculated."
+      },
+      "affichage": {
+        "titre": "Display",
+        "description": "Lists, menu and language."
+      },
+      "securite": {
+        "titre": "Security",
+        "description": "Sign-in, passwords and maintenance."
+      }
+    },
+    "cle": {
+      "expediteur_nom": {
+        "libelle": "Sender name",
+        "aide": "Replaces the {expediteur} variable in messages and is shown as the sender name."
+      },
+      "expediteur_email": {
+        "libelle": "Sending e-mail address",
+        "aide": "Address from which e-mails are sent to tenants."
+      },
+      "reponse_email": {
+        "libelle": "Reply-to address",
+        "aide": "Optional. Receives tenants’ replies; otherwise the sending address."
+      },
+      "cci_email": {
+        "libelle": "Blind copy (Bcc)",
+        "aide": "Optional. Receives a copy of every e-mail sent."
+      },
+      "org_nom": {
+        "libelle": "Company or landlord name",
+        "aide": "Optional. {entreprise} variable in messages."
+      },
+      "org_adresse": {
+        "libelle": "Postal address",
+        "aide": "Optional. Included in the {coordonnees} variable in messages."
+      },
+      "org_tel": {
+        "libelle": "Phone",
+        "aide": "Optional. Included in the {coordonnees} variable in messages."
+      },
+      "org_iban": {
+        "libelle": "Account number (IBAN)",
+        "aide": "Optional. {iban} variable in messages, useful for payment reminders."
+      },
+      "garage_prefixe": {
+        "libelle": "Garage number prefix",
+        "aide": "Suggested when creating a garage (e.g. G05)."
+      },
+      "garage_chiffres": {
+        "libelle": "Number of digits in the garage number",
+        "aide": "Padded with zeros (2: G05)."
+      },
+      "location_duree_min": {
+        "libelle": "Minimum lease duration",
+        "aide": "In calendar months. Checked when entering the end date."
+      },
+      "jour_limite": {
+        "libelle": "Payment deadline day in the month",
+        "aide": "After this day, the current month’s instalment becomes “Late”. 31: late only the following month."
+      },
+      "lignes_liste": {
+        "libelle": "Rows per page (lists)",
+        "aide": "Garages, tenants, leases, payments and messages."
+      },
+      "lignes_hist": {
+        "libelle": "Rows per page (histories and cards)",
+        "aide": "Histories, dashboard cards and tenant picker."
+      },
+      "graph_mois": {
+        "libelle": "Number of months in charts",
+        "aide": "Dashboard and statistics."
+      },
+      "langue_defaut": {
+        "libelle": "Default language",
+        "aide": "Used until the user chooses a language."
+      },
+      "menu_replie": {
+        "libelle": "Side menu collapsed by default",
+        "aide": "When the application opens."
+      },
+      "inactivite_min": {
+        "libelle": "Sign-out after inactivity",
+        "aide": "In minutes. 0: disabled."
+      },
+      "mdp_min": {
+        "libelle": "Minimum password length",
+        "aide": "In characters, when the password is changed."
+      },
+      "maintenance_verif_sec": {
+        "libelle": "Maintenance page check",
+        "aide": "In seconds, 5 to 300. Interval between two automatic checks on the “Site under maintenance” page."
+      }
+    },
+    "choix": {
+      "langue_defaut": {
+        "fr": "Français",
+        "en": "English"
+      },
+      "menu_replie": {
+        "non": "No",
+        "oui": "Yes"
+      }
+    }
   }
 }

@@ -35,6 +35,7 @@ export const SCREENS: Partial<Record<string, () => Promise<Type<unknown>>>> = {
   relances: messageList,
   'message-libre': () =>
     import('./features/messages/message-libre-page/message-libre-page').then((m) => m.MessageLibrePage),
+  parametres: () => import('./features/parametres/parametres-page/parametres-page').then((m) => m.ParametresPage),
   chronologie: () => import('./features/chronologie/chronologie-page/chronologie-page').then((m) => m.ChronologiePage),
 };
 

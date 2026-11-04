@@ -1,0 +1,96 @@
+<app-segmented
+  [options]="natureOptions()"
+  [value]="nature()"
+  [caps]="true"
+  [ariaLabel]="'nav.parametres' | translate"
+  (valueChange)="setNature($event)"
+/>
+
+<p class="pp__intro">{{ 'parametres.nature.' + nature() + '.description' | translate }}</p>
+
+@if (loadError(); as message) {
+  <div class="card pp__card" role="alert">
+    <p class="message-error">{{ message }}</p>
+    <button type="button" class="btn btn--secondary" (click)="parametres.reload()">
+      {{ 'commun.reessayer' | translate }}
+    </button>
+  </div>
+} @else if (parametres.isLoading() && !parametres.hasValue()) {
+  <p class="pp__intro">{{ 'commun.chargement' | translate }}</p>
+} @else if (categorie(); as current) {
+  @if (categoryOptions().length > 1) {
+    <app-segmented
+      [options]="categoryOptions()"
+      [value]="current"
+      [ariaLabel]="'parametres.categories' | translate"
+      (valueChange)="setCategory($event)"
+    />
+  }
+
+  <form class="card pp__card" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="pp__head">
+      <h2 class="pp__title">{{ categoryLabel(current) }}</h2>
+      @if (categoryDescription(current); as description) {
+        <p class="pp__desc">{{ description }}</p>
+      }
+    </div>
+
+    <div class="pp__fields">
+      <!-- Clé + version : chaque champ est recréé avec le formulaire de la catégorie affichée. -->
+      @for (p of fields(); track p.cle + '-' + formVersion()) {
+        <app-form-field [label]="label(p)" [hint]="help(p)" [error]="fieldErrors()[p.cle]">
+          @switch (p.type) {
+            @case ('LISTE') {
+              <select class="input" [formControlName]="p.cle" [attr.name]="p.cle">
+                @for (choix of p.choix ?? []; track choix) {
+                  <option [value]="choix">{{ choiceLabel(p, choix) }}</option>
+                }
+              </select>
+            }
+            @case ('ENTIER') {
+              <input
+                class="input pp__number"
+                type="number"
+                inputmode="numeric"
+                [formControlName]="p.cle"
+                [attr.name]="p.cle"
+                [attr.min]="p.min"
+                [attr.max]="p.max"
+              />
+            }
+            @case ('EMAIL') {
+              <input
+                class="input"
+                type="email"
+                [formControlName]="p.cle"
+                [attr.name]="p.cle"
+                placeholder="nom@exemple.be"
+              />
+            }
+            @default {
+              <input class="input" type="text" [formControlName]="p.cle" [attr.name]="p.cle" />
+            }
+          }
+        </app-form-field>
+      }
+    </div>
+
+    @if (error(); as message) {
+      <p class="message-error" role="alert">{{ message }}</p>
+    }
+
+    @if (canEdit()) {
+      <div class="pp__actions">
+        <button
+          type="submit"
+          class="btn btn--primary"
+          [disabled]="saving()"
+          [attr.aria-busy]="saving()"
+        >
+          <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+          {{ (saving() ? 'commun.enregistrement' : 'commun.enregistrer') | translate }}
+        </button>
+      </div>
+    }
+  </form>
+}
