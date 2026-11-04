@@ -645,6 +645,31 @@
       "verification": "Checking…",
       "accesAdmin": "Administrator access",
       "quitterApercu": "Leave preview"
+    },
+    "admin": {
+      "titreOn": "The site is under maintenance",
+      "titreOff": "The site is online",
+      "sousOn": "Only the Admin can sign in. Other profiles see the maintenance page.",
+      "sousOff": "All profiles can sign in.",
+      "activer": "Put the site under maintenance",
+      "reactiver": "Bring the site back online",
+      "pageAffichee": "Page shown to users during maintenance.",
+      "previsualiser": "Preview",
+      "intervalle": "The page checks the site status every {{n}} seconds.",
+      "reglage": "Set it in Settings > Security",
+      "acces": "Profile access during maintenance",
+      "comptes": {
+        "un": "{{n}} active account",
+        "n": "{{n}} active accounts"
+      },
+      "maintenu": "Access kept",
+      "bloque": "Sign-in blocked",
+      "note": "Accounts are not deactivated: their status does not change, and every user regains access as soon as the site is back online.",
+      "confirmerTitre": "Put the site under maintenance?",
+      "confirmerTexte": "The Manager, Tenant and Consultant profiles will be signed out immediately and will see the maintenance page. Accounts and data stay unchanged. You remain signed in as Admin.",
+      "confirmerBouton": "Start maintenance",
+      "activee": "Site under maintenance: the Manager, Tenant and Consultant profiles are signed out",
+      "desactivee": "Site back online: users can sign in again"
     }
   },
   "acces": {

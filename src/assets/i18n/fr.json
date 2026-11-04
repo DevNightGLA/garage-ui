@@ -518,6 +518,31 @@
       "verification": "Vérification…",
       "accesAdmin": "Accès administrateur",
       "quitterApercu": "Quitter l’aperçu"
+    },
+    "admin": {
+      "titreOn": "Le site est en maintenance",
+      "titreOff": "Le site est en ligne",
+      "sousOn": "Seul l’Admin peut se connecter. Les autres profils voient la page de maintenance.",
+      "sousOff": "Tous les profils peuvent se connecter.",
+      "activer": "Mettre le site en maintenance",
+      "reactiver": "Réactiver le site",
+      "pageAffichee": "Page affichée aux utilisateurs pendant la maintenance.",
+      "previsualiser": "Prévisualiser",
+      "intervalle": "La page vérifie l’état du site toutes les {{n}} secondes.",
+      "reglage": "Régler dans Paramètres > Sécurité",
+      "acces": "Accès des profils pendant la maintenance",
+      "comptes": {
+        "un": "{{n}} compte actif",
+        "n": "{{n}} comptes actifs"
+      },
+      "maintenu": "Accès maintenu",
+      "bloque": "Connexion bloquée",
+      "note": "Les comptes ne sont pas désactivés : leur statut ne change pas, et chaque utilisateur retrouve l’accès dès la réactivation du site.",
+      "confirmerTitre": "Mettre le site en maintenance ?",
+      "confirmerTexte": "Les profils Gestionnaire, Locataire et Consultant seront déconnectés immédiatement et verront la page de maintenance. Les comptes et les données restent inchangés. Vous restez connecté en tant qu’Admin.",
+      "confirmerBouton": "Mettre en maintenance",
+      "activee": "Site en maintenance : les profils Gestionnaire, Locataire et Consultant sont déconnectés",
+      "desactivee": "Site réactivé : les utilisateurs peuvent à nouveau se connecter"
     }
   },
   "acces": {

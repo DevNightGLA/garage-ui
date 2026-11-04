@@ -41,6 +41,7 @@ export const SCREENS: Partial<Record<string, () => Promise<Type<unknown>>>> = {
     import('./features/utilisateurs/utilisateurs-page/utilisateurs-page').then((m) => m.UtilisateursPage),
   'droits-acces': () => import('./features/droits/droits-page/droits-page').then((m) => m.DroitsPage),
   'journal-audit': () => import('./features/journal/journal-page/journal-page').then((m) => m.JournalPage),
+  maintenance: () => import('./features/maintenance/maintenance-page/maintenance-page').then((m) => m.MaintenancePage),
   chronologie: () => import('./features/chronologie/chronologie-page/chronologie-page').then((m) => m.ChronologiePage),
 };
 

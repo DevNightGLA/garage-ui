@@ -1,0 +1,84 @@
+@if (loadError(); as message) {
+  <div class="card mn__card" role="alert">
+    <p class="message-error">{{ message }}</p>
+    <button type="button" class="btn btn--secondary" (click)="state.reload()">{{ 'commun.reessayer' | translate }}</button>
+  </div>
+} @else if (state.hasValue()) {
+  <div class="mn">
+    <section class="card mn__card mn__status" [class.is-on]="active()">
+      <div class="mn__status-row">
+        <span class="mn__status-icon" aria-hidden="true">
+          <i class="fa-solid" [class.fa-screwdriver-wrench]="active()" [class.fa-circle-check]="!active()"></i>
+        </span>
+        <div class="mn__status-text">
+          <h2 class="mn__title">{{ (active() ? 'maintenance.admin.titreOn' : 'maintenance.admin.titreOff') | translate }}</h2>
+          <p class="mn__sub">{{ (active() ? 'maintenance.admin.sousOn' : 'maintenance.admin.sousOff') | translate }}</p>
+        </div>
+        <button
+          type="button"
+          class="btn"
+          [class.btn--primary]="!active()"
+          [class.btn--success]="active()"
+          [disabled]="pending()"
+          [attr.aria-busy]="pending()"
+          (click)="toggle()"
+        >
+          <i class="fa-solid" [class.fa-power-off]="active()" [class.fa-screwdriver-wrench]="!active()" aria-hidden="true"></i>
+          {{ (active() ? 'maintenance.admin.reactiver' : 'maintenance.admin.activer') | translate }}
+        </button>
+      </div>
+
+      <div class="mn__preview">
+        <a class="mn__thumb" routerLink="/site-en-maintenance" [queryParams]="{ apercu: 1 }" target="_blank" [attr.aria-label]="'maintenance.admin.previsualiser' | translate">
+          <span class="mn__thumb-icon"><i class="fa-solid fa-screwdriver-wrench" aria-hidden="true"></i></span>
+          <span class="mn__thumb-line"></span>
+          <span class="mn__thumb-line mn__thumb-line--short"></span>
+        </a>
+        <div class="mn__preview-text">
+          <p>{{ 'maintenance.admin.pageAffichee' | translate }}</p>
+          <p class="mn__interval">
+            {{ 'maintenance.admin.intervalle' | translate: { n: state.value().intervalleVerifSec } }}
+            <a routerLink="/parametres" class="mn__link">{{ 'maintenance.admin.reglage' | translate }}</a>
+          </p>
+          <a class="btn btn--secondary" routerLink="/site-en-maintenance" [queryParams]="{ apercu: 1 }" target="_blank">
+            <i class="fa-regular fa-eye" aria-hidden="true"></i> {{ 'maintenance.admin.previsualiser' | translate }}
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <section class="card mn__card">
+      <h2 class="mn__title">{{ 'maintenance.admin.acces' | translate }}</h2>
+      <div class="mn__profiles">
+        @for (r of roles; track r) {
+          <div class="mn__profile">
+            <span class="mn__badge" [style.background]="profils[r].gradient" aria-hidden="true"><i class="fa-solid" [class]="profils[r].icon"></i></span>
+            <span class="mn__profile-text">
+              <b>{{ 'role.' + r | translate }}</b>
+              <span>{{ 'maintenance.admin.comptes.' + (accounts(r) > 1 ? 'n' : 'un') | translate: { n: accounts(r) } }}</span>
+            </span>
+            <span class="mn__access" [class.is-kept]="r === 'ADMIN'">
+              <i class="fa-solid" [class.fa-circle-check]="r === 'ADMIN'" [class.fa-lock]="r !== 'ADMIN'" aria-hidden="true"></i>
+              {{ (r === 'ADMIN' ? 'maintenance.admin.maintenu' : 'maintenance.admin.bloque') | translate }}
+            </span>
+          </div>
+        }
+      </div>
+      <p class="page-note" role="note">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>{{ 'maintenance.admin.note' | translate }}</span>
+      </p>
+    </section>
+  </div>
+}
+
+@if (confirming()) {
+  <app-confirm
+    [title]="'maintenance.admin.confirmerTitre' | translate"
+    [message]="'maintenance.admin.confirmerTexte' | translate"
+    [confirmLabel]="'maintenance.admin.confirmerBouton' | translate"
+    [pending]="pending()"
+    [error]="confirmError()"
+    (confirmed)="change(true)"
+    (cancelled)="confirming.set(false)"
+  />
+}
