@@ -1,43 +1,37 @@
-# Plan de travail
+# Plan de travail du front v2
 
-Faire valider chaque étape avant la suivante. Un commit par module. Les numéros `RG-xxx` renvoient à `docs/regles-de-gestion.md`.
+Branche `feature/v2-gestion-garages`. Un commit par écran. Les numéros `RG-xxx` renvoient à `docs/regles-de-gestion.md`. Le back v2 est terminé (`garage-api`, même branche) : toutes les API existent.
 
-## Étape 0 : socle (back et front)
-- [x] Back : `docker-compose.yml` PostgreSQL, `application.yaml`, Liquibase (XML, dossier `data/` pour le profil dev), `Clock`, CORS, `ApiError` et `@RestControllerAdvice`, Testcontainers.
-- [ ] Front : `ng new garages-web --routing --style=scss --ssr=false`, proxy `/api`, tokens SCSS (voir README), Open Sans, Font Awesome, ngx-translate.
-- [x] Trancher les « Décisions ouvertes » du README (voir `docs/README-handoff.md` et le chapitre 13 des règles).
+La v1 (étapes 0 à 6 du premier plan) est livrée : socle, composants partagés, authentification, Garages, Locataires, Locations, Paiements, Tableau de bord, traductions EN, finition.
 
-## Étape 1 : base de données (back)
-- [x] `master.xml` et un changelog Liquibase XML par entité (`liquibase/changes/garage.xml`...) d'après `Modele de donnees.dc.html`, avec plusieurs changesets par table : 8 tables, types, UNIQUE, CHECK, clés étrangères avec RESTRICT/CASCADE comme dans la section Relations.
-- [x] Entités JPA (`model`) et repositories. Jeu de données de démonstration en XML dans `liquibase/data/` (profil `dev` uniquement).
+## Étape 1 : documents et structure
+- [x] `CLAUDE.md` v2, documents v2 et maquette complète dans `docs/`, contrat d'API du back.
+- [ ] Structure v2 : `src/app/layout/` (shell, menu, en-tête) sorti de `core/`.
 
-## Étape 2 : sécurité et contrat d'API (back)
-- [x] Utilisateurs, JWT, rôles, changement de mot de passe, mot de passe oublié (RG-ROL, chapitre 4).
-- [x] Rédiger `docs/api-contract.md` : endpoints, DTO, codes d'erreur. Tous les modules de l'étape 3 y sont désormais implémentés ; il reste à le copier dans le projet front.
+## Étape 2 : socle v2 (point de validation avec Gregory à la fin)
+- [ ] Profils v2 (`CONSULTANT`, `LOCATAIRE`), `UtilisateurDTO` v2.
+- [ ] `SettingsService` (`GET /api/contexte`) : date du jour, lignes par page, mois des graphiques, langue et menu par défaut, inactivité, longueur du mot de passe.
+- [ ] `RightsService` (`GET /api/droits/moi`) et `rightsGuard` ; `DeviceService` (ordinateur, tablette, smartphone) et écrans par appareil.
+- [ ] Intercepteur d'erreurs : 503 `MAINTENANCE`, 403 `MOT_DE_PASSE_TEMPORAIRE`, 403 `ACCES_REFUSE`.
+- [ ] Mot de passe temporaire : écran obligatoire après connexion. Longueur minimale `mdpMin`.
+- [ ] `IdleService` : déconnexion après `inactiviteMin`.
+- [ ] Page « Site en maintenance » (Réessayer, vérification toutes les `intervalleVerifSec`).
+- [ ] Menu en six sections filtré par droits et appareil, pages « non disponible sur cet appareil » et « droit insuffisant ».
+- [ ] Écrans existants branchés sur `RightsService` au lieu du rôle figé.
 
-## Étape 3 : modules back, dans l'ordre
-Chaque module : services, contrôleurs, tests par règle.
-1. [x] Garages et loyers (chapitres 5 et 6) : numéro auto `G##`, premier loyer à la création, historique, blocages RG-LOY-08/09, suppression avec motifs.
-2. [x] Locataires (chapitre 7) : statut calculé (actuel, à venir, ancien, sans location) et solde, alerte doublon, suppression avec motifs.
-3. [x] Locations (chapitre 8) : statuts calculés, contrôles RG-LOC-13, non-chevauchement, date de fin dernier jour du mois, mois payés, clôture, suppression, historique du garage.
-4. [x] Paiements (chapitre 9) : lignes du mois, échéances créées chaque jour pour le mois courant, versements, annulation Admin, retards.
-5. [x] Remarques (chapitre 10) : texte enrichi nettoyé (liste blanche), problème résolu ou rouvert, suppression Admin.
-6. [x] Tableau de bord (chapitre 11) : indicateurs, séries sur 12 mois, impayés à relancer.
+## Étape 3 : écrans v2
+1. [ ] Garages : réalignement v2, pages Historique des loyers et Historique des locations.
+2. [ ] Locataires : réalignement v2, Chronologie.
+3. [ ] Locations (durée minimale, nouveaux codes) et Paiements.
+4. [ ] Tableau de bord v2 (cartes Avis de loyer et Remarques à traiter, `graphMois`) et Statistiques (4 pages).
+5. [ ] Envoi de messages : avis de loyer, relances d'impayés, message libre.
+6. [ ] Paramètres et modèles de messages.
+7. [ ] Utilisateurs (création en deux étapes, mot de passe temporaire, désactivation, suppression).
+8. [ ] Droits d'accès (écrans, actions, appareils).
+9. [ ] Journal d'audit (assistant, détail avant / après, fil conducteur).
+10. [ ] Maintenance (interrupteur, prévisualisation).
+11. [ ] Traductions EN des nouveaux écrans et messages.
 
-**Le back est terminé (étapes 0 à 3)** : 514 tests, contrat d'API entièrement implémenté, jeu de démonstration au 9 octobre 2026. Les étapes 4 à 6 concernent le front (`garage-web`).
-
-## Étape 4 : composants partagés (front)
-- [ ] `data-table` (tri multi-colonnes, pagination, compteur), filtre à boutons avec compteurs, `date-input` + calendrier, modal et confirmation, badges de statut, éditeur riche, layout (menu latéral repliable, en-tête, sélecteur de langue).
-- [ ] Authentification : connexion, intercepteur JWT, guard de rôle, mot de passe oublié, changement de mot de passe.
-
-## Étape 5 : écrans front, dans l'ordre
-1. [ ] Garages + historique des loyers + historique des locations (+ remarques).
-2. [ ] Locataires (+ remarques).
-3. [ ] Locations.
-4. [ ] Paiements.
-5. [ ] Tableau de bord.
-6. [ ] Traductions EN complètes d'après `maquette/i18n.js`.
-
-## Étape 6 : finition
-- [ ] Parcours de bout en bout par rôle (Admin, Gestionnaire, Lecture seule).
+## Étape 4 : finition
+- [ ] Parcours de bout en bout par profil (Admin, Gestionnaire, Locataire, Consultant) et par appareil.
 - [ ] Revue des écarts avec la maquette, accessibilité, build de production.

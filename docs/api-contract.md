@@ -2,7 +2,7 @@
 
 Contrat entre `garages-api` (Spring Boot) et `garages-web` (Angular). À copier dans le projet front.
 
-Toutes les parties sont **implémentées et testées** : le front peut s'y brancher. Les règles de gestion sont dans `docs/regles-de-gestion.md` (notées `RG-xxx`) ; les messages d'erreur sont ceux des règles, mot pour mot. Un message marqué *(proposé)* n'existe pas dans les règles : il a été ajouté par l'implémentation et reste à valider.
+Version 2 (branche `feature/v2-gestion-garages`) : toutes les parties sont **implémentées et testées**. Décisions prises le 03/11/2026 : `docs/decisions-v2.md`. Les règles de gestion sont dans `docs/regles-de-gestion.md` (notées `RG-xxx`) ; les messages d'erreur sont ceux des règles, mot pour mot. Un message marqué *(proposé)* n'existe pas dans les règles : il a été ajouté par l'implémentation et reste à valider.
 
 ---
 
@@ -13,7 +13,7 @@ Toutes les parties sont **implémentées et testées** : le front peut s'y branc
 | Base | Tous les endpoints sont sous `/api`. JSON UTF-8. |
 | Dates | `yyyy-MM-dd` (`2026-10-09`). Date et heure : `yyyy-MM-dd'T'HH:mm:ss`. Mois : `yyyy-MM`. |
 | Montants | Nombres décimaux en euros, 2 décimales (`90.00`). Le formatage `1 234,50 €` est fait par le front. |
-| Énumérations | Valeurs en majuscules (`ADMIN`, `A_VENIR`, `LECTURE_SEULE`). |
+| Énumérations | Valeurs en majuscules (`ADMIN`, `A_VENIR`, `CONSULTANT`). |
 | Statuts calculés | Fournis par l'API, jamais recalculés par le front. Ils dépendent de la date du jour du serveur. |
 | Authentification | En-tête `Authorization: Bearer <accessToken>` sur tous les endpoints, sauf ceux marqués **public**. |
 | CORS | `http://localhost:4200` autorisé. |
@@ -29,7 +29,7 @@ Chaque ressource a un seul objet JSON, nommé `XxxDTO`, utilisé en requête **e
 ### Pagination, tri, recherche
 
 Les listes acceptent `?page=0&size=10&sort=numero,asc&sort=cles,desc&q=texte`.
-- `page` commence à 0. `size` vaut 10 par défaut (5 pour les historiques, 3 pour les impayés du tableau de bord, à demander par le front), 100 au maximum.
+- `page` commence à 0. `size` vaut 10 par défaut (5 pour les historiques et les cartes du tableau de bord) ; le front prend `lignesListe` et `lignesHist` du contexte. 100 au maximum.
 - `sort=propriété,asc|desc`, répétable : le tri est cumulatif dans l'ordre des paramètres. Un tri sur une propriété non prévue renvoie 400 `REQUETE_INVALIDE`.
 - `q` : recherche insensible à la casse et aux accents (RG-LST-04).
 - Réponse :
@@ -71,103 +71,122 @@ Toute erreur, y compris 401 et 403, a ce corps :
 
 Alerte non bloquante (RG-LOCT-04) : 409 `LOCT_DOUBLON`. La même requête avec `?force=true` enregistre.
 
-### Rôles et droits (RG chapitre 4)
+### Profils et droits (RG chapitres 4 et 18)
 
-| Action | `LECTURE_SEULE` | `GESTIONNAIRE` | `ADMIN` |
-| --- | --- | --- | --- |
-| Consulter (garages, locataires, locations, paiements, remarques, historiques, tableau de bord) | oui | oui | oui |
-| Créer, modifier, clôturer, payer, gérer les remarques et les loyers | non | oui | oui |
-| Annuler un versement, supprimer garage, locataire, location, remarque | non | non | oui (sous conditions) |
-| Gérer les comptes utilisateurs | non | non | oui |
+Quatre profils : `ADMIN`, `GESTIONNAIRE`, `LOCATAIRE`, `CONSULTANT` (`CONSULTANT` remplace `LECTURE_SEULE`). Les droits ne sont pas figés : chaque endpoint vérifie le droit (profil, écran, action) lu dans la table `DROIT_PROFIL`, modifiable par l'Admin (section 12). Un droit modifié s'applique à la requête suivante. Le front lit ses droits par `GET /api/droits/moi` pour masquer menus et boutons ; le back reste l'autorité (403 `ACCES_REFUSE`).
 
-Le back refuse toute action non autorisée (403) : le front masque les boutons mais ne se fie qu'à l'API.
+Codes d'écran : `DASH`, `STA`, `GAR`, `LOY`, `HLOC`, `TEN`, `CHR`, `LOC`, `PAI`, `REM`, `AVI`, `REL`, `LIB`, `PAR`, `TPL`, `USR`, `DRO`, `AUD`, `MNT`. Actions : voir (v), ajouter (a), modifier (m), supprimer (d). Journal d'audit (`AUD`) et maintenance (`MNT`) : Admin seulement, non modifiable.
+
+Droits par défaut (données de départ) : Admin tout ; Gestionnaire comme l'Admin hors Configuration, **suppressions comprises** (décision du 03/11/2026) ; Consultant consulte les mêmes écrans sans action ; Locataire consulte Garages, Historique des loyers, Historique des locations, Locations et Paiements, **limité à ses propres données** (le back filtre sur la fiche reliée au compte : listes réduites, 404 sur une ressource d'un autre locataire).
+
+| Endpoint | Écran et action |
+| --- | --- |
+| Garages : lecture / création et `prochain-numero` / modification / suppression | `GAR` v / a / m / d |
+| Loyers d'un garage | `LOY` v / a / m / d |
+| Historique des locations d'un garage (`/api/garages/{id}/locations`) | `HLOC` v |
+| Locataires | `TEN` v / a / m / d |
+| Chronologie | `CHR` v |
+| Locations, conditions de location | `LOC` v / a / m / d |
+| Paiements : lecture / payer / annuler un versement | `PAI` v / a / d |
+| Remarques : lecture / création / modification, résolution / suppression | `REM` v / a / m / d |
+| Tableau de bord | `DASH` v |
+| Statistiques | `STA` v |
+| Avis de loyer, relances, message libre : lecture et aperçu / envoi et contact manuel | `AVI`, `REL`, `LIB` v / a |
+| Paramètres ; modèles de messages et signature | `PAR` v / m ; `TPL` v / m |
+| Utilisateurs | `USR` v / a / m / d |
+| Droits d'accès ; écrans par appareil | `DRO` v / m ; Admin seulement |
+| Journal d'audit, maintenance | Admin seulement |
+
+### États de session (RG-AUT-05, RG-MNT-02)
+
+| HTTP | Code | Quand |
+| --- | --- | --- |
+| 403 | `MOT_DE_PASSE_TEMPORAIRE` | Le compte a un mot de passe temporaire : seuls `GET /api/auth/moi`, `PUT /api/auth/mot-de-passe`, `GET /api/droits/moi`, `GET /api/contexte` et `GET /api/maintenance/etat` répondent. Message : « Vous devez choisir un nouveau mot de passe avant de continuer. » |
+| 503 | `MAINTENANCE` | Site en maintenance, profil autre qu'Admin, à la connexion et sur toute requête. Le front affiche la page « Site en maintenance » et interroge `GET /api/maintenance/etat`. |
 
 ---
 
 ## 2. Authentification (implémenté)
 
-Jeton JWT signé HS256, valable **8 heures**, sans renouvellement : à l'expiration (401), l'utilisateur se reconnecte. Les droits sont relus en base à chaque requête : désactiver un compte ou changer son rôle prend effet immédiatement, sans attendre l'expiration.
+Jeton JWT signé HS256, valable **8 heures**, sans renouvellement. Le compte est relu en base à chaque requête : désactiver un compte ou changer son profil prend effet immédiatement. La déconnexion après inactivité (`inactiviteMin` du contexte, 0 = désactivée) est faite par le front.
 
-Mot de passe : 8 à 72 caractères. Le login n'est pas sensible à la casse.
+Mot de passe : au moins `mdpMin` caractères (paramètre `mdp_min`, 8 par défaut, lu dans `GET /api/contexte`), 72 au plus. Le login n'est pas sensible à la casse.
+
+### `GET /api/contexte` — public
+Réponse 200 : `{ "dateDuJour": "2026-10-09", "lignesListe": 10, "lignesHist": 5, "graphMois": 12, "langueDefaut": "fr", "menuReplie": false, "inactiviteMin": 0, "mdpMin": 8, "maintenance": false }`. Le front prend la date du jour et ses valeurs par défaut de l'API.
 
 ### `POST /api/auth/connexion` — public
 
-Un même `ConnexionDTO` : `login` et `motDePasse` en entrée (jamais renvoyés), `accessToken`, `tokenType`, `expiresIn` et `utilisateur` en sortie.
-
-Requête :
-```json
-{ "login": "admin", "motDePasse": "Garages2026!" }
-```
-Réponse 200 :
-```json
-{
-  "accessToken": "eyJ...",
-  "tokenType": "Bearer",
-  "expiresIn": 28800,
-  "utilisateur": { "id": 1, "login": "admin", "prenom": "Alice", "nom": "Verhaegen", "email": "admin@example.com", "role": "ADMIN", "actif": true }
-}
-```
-Erreurs :
+Requête `{ "login": "admin", "motDePasse": "Garages2026!" }`. Réponse 200 : `accessToken`, `tokenType`, `expiresIn`, `utilisateur` (`UtilisateurDTO`, section 3). Si `utilisateur.motDePasseTemporaire` est vrai, le front impose l'écran de changement de mot de passe (RG-AUT-05). La dernière connexion est enregistrée.
 
 | HTTP | Code | Message |
 | --- | --- | --- |
 | 401 | `AUTH_IDENTIFIANTS_INVALIDES` | Login ou mot de passe incorrect. (même réponse pour un login inconnu) |
 | 401 | `AUTH_COMPTE_DESACTIVE` | Ce compte est désactivé. |
-| 422 | `VALIDATION` | `fieldErrors.login` : Le login est obligatoire. `fieldErrors.motDePasse` : Le mot de passe est obligatoire. |
+| 503 | `MAINTENANCE` | Site en maintenance (profil autre qu'Admin). |
 
 ### `GET /api/auth/moi`
-Réponse 200 : l'objet `utilisateur` ci-dessus. Sert à restaurer la session au rechargement de la page.
+Réponse 200 : l'`UtilisateurDTO` du compte connecté.
 
-### `PUT /api/auth/mot-de-passe` — changement de mot de passe
-Requête : `{ "motDePasseActuel": "...", "nouveauMotDePasse": "..." }`. Réponse 204.
+### `PUT /api/auth/mot-de-passe`
+Requête `{ "motDePasseActuel": "...", "nouveauMotDePasse": "..." }`. Réponse 204 ; le mot de passe n'est plus temporaire.
 
 | HTTP | Code | Message |
 | --- | --- | --- |
 | 409 | `AUTH_MOT_DE_PASSE_ACTUEL_INCORRECT` | Le mot de passe actuel est incorrect. |
-| 422 | `VALIDATION` | `fieldErrors.nouveauMotDePasse` : Le mot de passe doit contenir entre 8 et 72 caractères. |
+| 422 | `VALIDATION` | `fieldErrors.nouveauMotDePasse` : Le mot de passe doit contenir entre n et 72 caractères. |
 
 ### `POST /api/auth/mot-de-passe-oublie` — public
-Requête : `{ "email": "marie@example.com" }`. Réponse **202 dans tous les cas**, que l'adresse corresponde à un compte actif ou non (pas d'énumération des comptes). Si elle correspond, un e-mail contient le lien `<APP_RESET_LINK_BASE_URL>?jeton=<jeton>`, par défaut `http://localhost:4200/reinitialisation?jeton=...`, valable **60 minutes** et utilisable **une seule fois**.
-Erreur : 422 `fieldErrors.email` : Format d'e-mail invalide.
+Requête `{ "identifiant": "marie" }` (le login ; une adresse e-mail est aussi acceptée). Réponse **202 dans tous les cas** (RG-AUT-02). Si un compte actif correspond, un e-mail contient le lien `<APP_RESET_LINK_BASE_URL>?jeton=<jeton>`, valable **60 minutes**, utilisable **une seule fois** (jeton JWT, pas de table : décision du 03/11/2026).
 
 ### `POST /api/auth/reinitialisation` — public
-Requête : `{ "jeton": "<jeton du lien>", "nouveauMotDePasse": "..." }`. Réponse 204.
-
-| HTTP | Code | Message |
-| --- | --- | --- |
-| 409 | `AUTH_JETON_INVALIDE` | Le lien de réinitialisation est invalide ou a expiré. (jeton falsifié, expiré, déjà utilisé, ou compte désactivé) |
-| 422 | `VALIDATION` | `fieldErrors.nouveauMotDePasse` : Le mot de passe doit contenir entre 8 et 72 caractères. |
-
-Écran front « réinitialisation » : lit `jeton` dans l'URL, demande le nouveau mot de passe, appelle cet endpoint puis renvoie vers la connexion.
+Requête `{ "jeton": "...", "nouveauMotDePasse": "..." }`. Réponse 204. Erreurs : 409 `AUTH_JETON_INVALIDE` « Le lien de réinitialisation est invalide ou a expiré. », 422 longueur du mot de passe.
 
 ---
 
-## 3. Comptes utilisateurs (implémenté, `ADMIN` seulement, sans écran prévu pour l'instant)
+## 3. Utilisateurs (écran `USR`, RG chapitre 17)
 
-`UtilisateurDTO` : `{ "id": 2, "login": "paul", "prenom": "Paul", "nom": "Martin", "email": "paul@example.com", "role": "GESTIONNAIRE", "actif": true }`. Le mot de passe n'est jamais renvoyé.
-- Création (`POST`) : `login`, `email`, `motDePasse` et `role` obligatoires ; `prenom` et `nom` facultatifs ; `id` et `actif` ignorés (le compte est créé actif).
-- Modification (`PUT`) : `email`, `role` et `actif` obligatoires ; `prenom` et `nom` **remplacent** les valeurs actuelles (absents ou vides, ils sont effacés : renvoyer les deux à chaque `PUT`) ; `id`, `login` et `motDePasse` ignorés.
-- `prenom` et `nom` (RG-ROL-04) : facultatifs, 100 caractères au plus, espaces retirés ; un texte vide ou blanc est enregistré comme absent et renvoyé `null`. Les comptes existants et le premier administrateur créé au démarrage n'en ont pas : le front affiche alors le login.
+`UtilisateurDTO` :
+```json
+{ "id": 2, "login": "paul.test", "prenom": "Paul", "nom": "Test", "email": "paul@example.com", "role": "CONSULTANT",
+  "locataireId": null, "locataireNom": null, "actif": true, "motDePasseTemporaire": true,
+  "derniereConnexion": null, "dateCreation": "2026-10-09T10:00:00", "vous": false }
+```
+- Création : `nom`, `prenom`, `email`, `login`, `role` obligatoires ; `locataireId` obligatoire pour `LOCATAIRE` (une fiche n'a qu'un compte). Pas de mot de passe : la réponse `MotDePasseTemporaireDTO` `{ "utilisateur": {...}, "motDePasseTemporaire": "kwCKGunf22ET" }` le donne **une seule fois** (12 caractères sans caractères ambigus).
+- Modification : `nom`, `prenom`, `email`, `role` (et `locataireId`). Le login ne change pas.
+- Login et e-mail enregistrés en minuscules.
 
-| Méthode et chemin | Requête | Réponse |
+| Méthode et chemin | Droit | Réponse |
 | --- | --- | --- |
-| `GET /api/utilisateurs` | pagination ; tri sur `id`, `login`, `email`, `role`, `actif` (défaut `login`) | 200 page d'`UtilisateurDTO` |
-| `GET /api/utilisateurs/{id}` | | 200 |
-| `POST /api/utilisateurs` | `UtilisateurDTO` de création | 201 `UtilisateurDTO` + en-tête `Location` |
-| `PUT /api/utilisateurs/{id}` | `UtilisateurDTO` de modification (le login ne change pas) | 200 `UtilisateurDTO` |
-| `DELETE /api/utilisateurs/{id}` | | 204 |
+| `GET /api/utilisateurs?statut=ACTIFS\|DESACTIVES&role=...&q=...` | `USR` v | page ; tri sur `nom` (défaut), `prenom`, `login`, `email`, `derniereConnexion`, `role`, `actif` |
+| `GET /api/utilisateurs/compteurs` | `USR` v | `ACTIFS`, `DESACTIVES`, `TOUS`, `ADMIN`, `GESTIONNAIRE`, `LOCATAIRE`, `CONSULTANT` |
+| `GET /api/utilisateurs/{id}` | `USR` v | 200 |
+| `POST /api/utilisateurs` | `USR` a | 201 `MotDePasseTemporaireDTO` |
+| `PUT /api/utilisateurs/{id}` | `USR` m | 200 |
+| `POST /api/utilisateurs/{id}/reinitialisation` | `USR` m | 200 `MotDePasseTemporaireDTO` |
+| `POST /api/utilisateurs/{id}/desactivation` | `USR` m | 200 (désactive) |
+| `DELETE /api/utilisateurs/{id}/desactivation` | `USR` m | 200 (réactive) |
+| `DELETE /api/utilisateurs/{id}` | `USR` d | 204 (décision du 03/11/2026 : suppression conservée pour un compte sans activité) |
 
 | HTTP | Code | Message |
 | --- | --- | --- |
 | 404 | `UTIL_INTROUVABLE` | Utilisateur introuvable. |
-| 409 | `UTIL_LOGIN_EXISTE` | Ce login existe déjà. |
-| 409 | `UTIL_EMAIL_EXISTE` | Cet e-mail existe déjà. |
-| 409 | `UTIL_DERNIER_ADMIN` | Il doit toujours rester au moins un administrateur actif. (désactivation, rétrogradation ou suppression du dernier admin actif) |
-| 422 | `VALIDATION` | login obligatoire (50 caractères au plus), e-mail obligatoire et valide, mot de passe de 8 à 72 caractères, rôle obligatoire ; `fieldErrors.prenom` : Le prénom ne peut pas dépasser 100 caractères. ; `fieldErrors.nom` : Le nom ne peut pas dépasser 100 caractères. |
+| 409 | `USR_LOGIN_EXISTE` | Ce login existe déjà. |
+| 409 | `USR_EMAIL_EXISTE` | Cette adresse e-mail est déjà utilisée. |
+| 409 | `USR_LOGIN_FIGE` | Le login n'est pas modifiable. |
+| 409 | `USR_PROPRE_PROFIL` | Vous ne pouvez pas modifier votre propre profil. |
+| 409 | `USR_DERNIER_ADMIN` | Au moins un administrateur actif est requis. / Dernier administrateur actif : désactivation impossible. |
+| 409 | `USR_REINIT_SOI` | Pour votre compte, utilisez « Modifier le mot de passe » dans le menu. |
+| 409 | `USR_REINIT_DESACTIVE` | Compte désactivé : réinitialisation impossible. |
+| 409 | `USR_DESACTIVER_SOI` | Vous ne pouvez pas désactiver votre propre compte. |
+| 409 | `USR_SUPPRIMER_SOI` | Vous ne pouvez pas supprimer votre propre compte. *(proposé)* |
+| 409 | `USR_ACTIVITE` | Ce compte a une activité enregistrée dans l'application : désactivez-le plutôt. *(proposé)* |
+| 409 | `USR_FICHE_PRISE` | Cette fiche locataire est déjà reliée à un autre compte. *(proposé)* |
+| 422 | `VALIDATION` | `email` : Format d'e-mail invalide. ; `login` : Le login doit compter 3 à 30 caractères : lettres, chiffres, point, tiret ou tiret bas. ; `locataireId` : La fiche locataire est obligatoire pour le profil Locataire. *(proposé)* |
 
-Premier administrateur (hors profil `dev`) : au démarrage, si aucun compte n'existe, l'API crée un `ADMIN` actif à partir des variables d'environnement `ADMIN_LOGIN`, `ADMIN_EMAIL` et `ADMIN_PASSWORD` (définies toutes les trois, mot de passe de 8 à 72 caractères). Les variables facultatives `ADMIN_PRENOM` et `ADMIN_NOM` donnent son prénom et son nom (RG-ROL-04 : 100 caractères au plus, espaces retirés, vide = absent, `null` dans l'API) ; elles ne servent qu'à cette création et sont ignorées si des comptes existent déjà (le premier admin existant se corrige par `PUT /api/utilisateurs/{id}`). Les comptes suivants se créent ensuite par `POST /api/utilisateurs`.
+Premier administrateur (hors profil `dev`) : créé au démarrage sur une base sans compte à partir de `ADMIN_LOGIN`, `ADMIN_EMAIL`, `ADMIN_PASSWORD`, `ADMIN_PRENOM` et `ADMIN_NOM` (les cinq obligatoires ensemble).
 
-Comptes de démonstration (profil `dev` uniquement), mot de passe `Garages2026!` : `admin`, `gestionnaire`, `lecture`.
+Comptes de démonstration (profil `dev`), mot de passe `Garages2026!` : `admin` (Admin), `gestionnaire`, `consultant`, `mdupont` (Locataire relié à Marie Dupont), `ancien.gestionnaire` (désactivé), `nouveau` (mot de passe temporaire).
 
 ---
 
@@ -426,11 +445,11 @@ Un type inconnu ou une date de résolution illisible renvoie 400 `REQUETE_INVALI
 
 ---
 
-## 9. Tableau de bord (implémenté, étape 3.6, RG chapitre 11)
+## 9. Tableau de bord (écran `DASH`, RG chapitre 11)
 
-Tous les rôles peuvent le consulter. Tout est calculé à la date du jour du serveur.
+Tout est calculé à la date du jour du serveur.
 
-### `GET /api/tableau-de-bord` — lecture
+### `GET /api/tableau-de-bord`
 ```json
 {
   "tauxOccupation": { "pourcentage": 58, "garagesLoues": 7, "garagesTotal": 12 },
@@ -441,27 +460,144 @@ Tous les rôles peuvent le consulter. Tout est calculé à la date du jour du se
   "tauxOccupation12Mois": [ { "mois": "2025-11", "pourcentage": 58 }, "..." ]
 }
 ```
-- **Taux d'occupation** (RG-DAS-01) : garages loués sur le total, `pourcentage` arrondi à l'entier le plus proche (12,5 donne 13), 0 s'il n'y a aucun garage. Un garage est loué selon RG-GAR-02 : un garage indisponible qui a une location active est loué.
-- **Loyers mensuels** (RG-DAS-02) : somme des loyers en vigueur aujourd'hui des garages actuellement loués.
-- **Impayés** (RG-DAS-03) : somme des restes dus de **toutes les échéances enregistrées en retard**, c'est-à-dire non soldées et d'un mois strictement avant le mois courant (le mois courant n'est jamais en retard). `nbTotaux` = échéances sans aucun versement, `nbPartiels` = échéances avec des versements et un reste dû. Même définition que le solde d'un locataire (section 5) et que l'écran Paiements (section 7).
-- **Garages libres** (RG-DAS-04) : garages au statut affiché `LIBRE` et `INDISPONIBLE` (un garage indisponible mais loué est compté loué).
-- **Séries** (RG-DAS-05) : 12 points, du plus ancien (mois courant moins 11) au mois courant, `mois` au format `yyyy-MM`.
-  - `loyersEncaisses12Mois` : somme des versements des échéances de chaque **mois de loyer** (comme l'« encaissé » de l'écran Paiements), pas de la date de paiement : un paiement tardif de septembre augmente septembre. 0.00 pour un mois sans versement.
-  - `tauxOccupation12Mois` : pourcentage de garages loués **au dernier jour de chaque mois** (une location qui se termine le dernier jour libère le garage ce jour-là, RG-GAR-02), et **à la date du jour pour le mois courant** : le dernier point est donc exactement `tauxOccupation.pourcentage`. Le total est le nombre **actuel** de garages (un garage n'a pas de date de création).
+- **Taux d'occupation** (RG-DAS-01), **loyers mensuels** (RG-DAS-02), **garages libres** (RG-DAS-04) : inchangés.
+- **Impayés** (RG-DAS-03) : restes dus des échéances enregistrées en retard. Une échéance est en retard si sa période précède le **seuil de retard** : le mois courant passe en retard quand le jour du mois dépasse `jour_limite` (RG-PAR-08) ; à 31 (défaut), seuls les mois passés le sont. Même définition pour le solde d'un locataire et l'écran Paiements.
+- **Séries** (RG-DAS-05) : `graphMois` points (paramètre `graph_mois`, 12 par défaut ; les noms de champs `...12Mois` sont gardés). `loyersEncaisses12Mois` range les versements **par mois de paiement** (décision du 03/11/2026). `tauxOccupation12Mois` : inchangé.
 
-### `GET /api/tableau-de-bord/impayes` — lecture
-Liste « Impayés à relancer » (RG-DAS-06), paginée, **3 par page par défaut**. Une ligne par échéance en retard, de la plus ancienne à la plus récente (période, puis locataire et garage). **L'ordre n'est pas modifiable** : un paramètre `sort` est ignoré. Élément :
-```json
-{ "locataire": { "id": 6, "nom": "Dubois", "prenom": "Pierre" }, "garage": { "id": 6, "numero": "G06" },
-  "periode": "2026-09-01", "resteDu": 40.00, "type": "PARTIEL", "montantRecu": 40.00, "montantDu": 80.00 }
-```
-`type` : `TOTAL` (aucun versement, badge rouge) ou `PARTIEL` (badge orange, « Reçu `montantRecu` sur `montantDu` » en info-bulle). Les montants ont toujours 2 décimales.
+### `GET /api/tableau-de-bord/impayes`
+Carte « Impayés à relancer » (RG-DAS-06), **5 par page par défaut**, ordre non modifiable. Seulement les échéances en retard **pas encore relancées** pour leur reste dû (RG-REL-01). Élément : `locataire`, `garage`, `periode`, `resteDu`, `type` (`TOTAL` ou `PARTIEL`), `montantRecu`, `montantDu`.
+
+### `GET /api/tableau-de-bord/avis`
+Carte « Avis de loyer à communiquer » (RG-DAS-07) : liste d'`AvisLoyerDTO` (section 13) de statut `A_ENVOYER` ou `A_CONTACTER` (sans e-mail, avec `telephone`), les plus proches d'abord. Le front en affiche 4 et « n autres avis ».
+
+### `GET /api/tableau-de-bord/remarques`
+Carte « Remarques à traiter » : problèmes non résolus, les plus récents d'abord, 5 par page. Élément `{ "id", "dateCreation", "texte", "garageId", "garage", "locataireId", "locataire" }`.
 
 ---
 
-## 10. Hors périmètre
+## 10. Évolutions v2 des sections 4 à 8
+
+Dans les tableaux des sections 4 à 8, la dernière colonne se lit désormais avec les droits de la section 1 : « lecture » = droit voir de l'écran, « écriture » = ajouter (`POST`) ou modifier (`PUT`), « admin » = supprimer (y compris l'annulation d'un versement). Pour un compte Locataire, les listes ne contiennent que ses données.
+
+- **Garages** : `GET /api/garages/prochain-numero` suit `garage_prefixe` et `garage_chiffres` (RG-PAR-07). La suppression supprime aussi loyers et remarques (journalisés).
+- **Loyers** (RG-LOY-09) : motifs `LOY_LOCATION_EN_COURS` « Modification impossible : une location est en cours depuis la date de début de ce loyer » et `LOY_LOCATION_DEMARREE` « Modification impossible : une location a eu lieu depuis la date de début de ce loyer » ; garage libre : `LOY_DEBUT_AVANT_LOCATION` « La date de début doit être postérieure à la fin de la dernière location (jj/mm/aaaa). »
+- **Locataires** : quatre statuts conservés (`ACTUEL`, `A_VENIR`, `ANCIEN`, `SANS_LOCATION`, décision du 03/11/2026). Suppression refusée aussi si un compte Locataire est relié à la fiche.
+- **Locations** : durée minimale `location_duree_min` mois calendaires : 409 `LOC_DUREE_MINIMALE` « La durée minimale d’une location est de n mois. » Contrôles RG-LOC-17 (chevauchement) et RG-LOC-28 (mois payés) conservés.
+- **Paiements** : retard selon `jour_limite` (section 9).
+- **Remarques** (RG-REM-05, RG-REM-06) : l'interrupteur « Résolu » passe par `PUT /api/remarques/{id}` avec `resolu` et `dateResolution` (obligatoire si `resolu` est vrai) ; `resolu: false` rouvre. Les endpoints `/resolution` restent disponibles.
+
+---
+
+## 11. Paramètres et modèles de messages (écrans `PAR` et `TPL`, RG chapitre 15)
+
+`ParametreDTO` : `{ "nature": "APPLICATION", "categorie": "affichage", "cle": "lignes_liste", "libelle": "Lignes par page (listes)", "type": "ENTIER", "valeur": "10", "obligatoire": true, "ordre": 1, "min": 5, "max": 50, "choix": null, "dateModification": "..." }`. Types : `TEXTE`, `EMAIL`, `ENTIER`, `LISTE` (`choix`), `TEXTE_RICHE`. Natures : `METIER`, `APPLICATION` (la nature `SYSTEME`, maintenance, n'est jamais listée).
+
+| Méthode et chemin | Droit | Réponse |
+| --- | --- | --- |
+| `GET /api/parametres` | `PAR` v | tous les paramètres hors modèles, triés par catégorie et ordre |
+| `PUT /api/parametres/{categorie}` | `PAR` m | corps `{ "parametres": [ { "cle": "...", "valeur": "..." } ] }`, renvoie la catégorie |
+| `GET /api/modeles-messages` | `TPL` v | objets et textes des 3 modèles + `signature` |
+| `PUT /api/modeles-messages` | `TPL` m | même corps |
+
+Catégories : `expediteur`, `organisation`, `garages_loyers_locations`, `paiements_impayes`, `affichage`, `securite` (`inactivite_min`, `mdp_min`, `maintenance_verif_sec`) ; `modeles_messages` (modèles et signature). Erreur 422 `VALIDATION` avec un `fieldErrors` par clé : « … est obligatoire. », « Format d’e-mail invalide : … », « … : entier compris entre min et max. » (RG-PAR-11). Le HTML des textes riches est nettoyé.
+
+---
+
+## 12. Droits d'accès (écran `DRO`, RG chapitres 18 et 23)
+
+`DroitProfilDTO` : `{ "profil": "GESTIONNAIRE", "ecran": "GAR", "section": "Garages", "libelle": "Liste des garages", "ajoutPropose": true, "modificationProposee": true, "suppressionProposee": true, "peutVoir": true, "peutAjouter": true, "peutModifier": true, "peutSupprimer": true }`.
+
+| Méthode et chemin | Droit | Réponse |
+| --- | --- | --- |
+| `GET /api/droits/moi` | connecté | `{ "profil", "ecrans": [DroitProfilDTO], "appareils": [DroitAppareilDTO] }` |
+| `GET /api/droits/profils` | `DRO` v | grille 4 profils × 19 écrans (colonne Admin calculée) |
+| `PUT /api/droits/profils` | `DRO` m | lignes modifiées (brouillon, RG-DRO-12) ; renvoie la grille |
+| `GET /api/droits/appareils` | Admin | `[{ "appareil": "TABLETTE", "ecran": "GAR", "autorise": true }]` |
+| `PUT /api/droits/appareils` | Admin | lignes modifiées ; `DRO` reste toujours autorisé |
+
+À l'enregistrement : lignes Admin ignorées ; sans `peutVoir`, les autres droits sont retirés ; une action non proposée reste fausse ; 409 `DRO_RESERVE_ADMIN` pour un droit sur `AUD` ou `MNT`. La restriction par appareil est appliquée par le front (le back ne détecte pas l'appareil).
+
+---
+
+## 13. Envoi de messages (écrans `AVI`, `REL`, `LIB`, RG chapitres 13 et 14)
+
+Les variables (`{civilite}`, `{nom}`, `{prenom}`, `{garage}`, `{ancien_loyer}`, `{nouveau_loyer}`, `{date_effet}`, `{periode}`, `{montant_du}`, `{montant_recu}`, `{reste_du}`, `{expediteur}`, `{entreprise}`, `{coordonnees}`, `{iban}`) sont remplacées par le back, montants au format `1 234,50 €`, dates `jj/mm/aaaa`. La signature est ajoutée. `ApercuMessageDTO` : `{ "de", "reponseA", "cci", "a", "objet", "texte" }`. Chaque envoi ou contact crée une remarque « Information » sur la fiche du locataire.
+
+### Avis de loyer
+`AvisLoyerDTO` : `avisId` (null tant qu'il n'est pas communiqué), `locationId`, `loyerGarageId`, `locataireId`, `locataire`, `email`, `telephone`, `garageId`, `garage`, `ancienMontant`, `nouveauMontant`, `ecart`, `dateEffet`, `statut` (`A_ENVOYER`, `A_CONTACTER`, `ENVOYE`, `INFORME`), `moyen`, `dateEnvoi`.
+
+| Méthode et chemin | Droit | Détail |
+| --- | --- | --- |
+| `GET /api/messages/avis?filtre=A_ENVOYER\|ENVOYES&q=` | `AVI` v | page ; tri `locataire`, `garage`, `loyer`, `dateEffet` |
+| `GET /api/messages/avis/compteurs?q=` | `AVI` v | `A_ENVOYER`, `ENVOYES` |
+| `GET /api/messages/avis/apercu?locationId=&loyerGarageId=` | `AVI` v | aperçu |
+| `GET /api/messages/avis/{avisId}/apercu` | `AVI` v | message tel qu'envoyé |
+| `POST /api/messages/avis/envoi` | `AVI` a | `{ "lignes": [ { "locationId", "loyerGarageId" } ] }` → `{ "envoyes", "sansEmail", "destinataires" }` |
+| `POST /api/messages/avis/informe` | `AVI` a | `{ "locationId", "loyerGarageId", "moyen": "TELEPHONE\|COURRIER\|ORAL", "date" }` |
+
+Erreurs 409 : `AVI_INCONNU` « Cet avis n'est pas à communiquer (déjà communiqué ou loyer modifié). » *(proposé)*, `AVI_SANS_EMAIL`, `AVI_MOYEN_INVALIDE`.
+
+### Relances d'impayés
+`RelanceDTO` : `relanceId`, `echeanceId`, `locationId`, `locataireId`, `locataire`, `email`, `telephone`, `garageId`, `garage`, `periode`, `montantDu`, `montantRecu`, `resteDu`, `cas` (`TOTAL` ou `PARTIEL`), `statut` (`A_RELANCER` ou `RELANCE`), `moyen`, `dateRelance`.
+
+| Méthode et chemin | Droit | Détail |
+| --- | --- | --- |
+| `GET /api/messages/relances?filtre=A_RELANCER\|RELANCES&q=` | `REL` v | page ; tri `locataire`, `garage`, `resteDu`, `periode` |
+| `GET /api/messages/relances/compteurs?q=` | `REL` v | `A_RELANCER`, `RELANCES` |
+| `GET /api/messages/relances/apercu?echeanceId=` | `REL` v | modèle du cas |
+| `GET /api/messages/relances/{relanceId}/apercu` | `REL` v | message tel qu'envoyé |
+| `POST /api/messages/relances/envoi` | `REL` a | `{ "lignes": [ { "echeanceId" } ] }` |
+| `POST /api/messages/relances/manuelle` | `REL` a | `{ "echeanceId", "moyen", "date" }` |
+
+Une relance est faite pour un reste dû : si un versement le change, l'échéance redevient à relancer (RG-REL-01).
+
+### Message libre
+| Méthode et chemin | Droit | Détail |
+| --- | --- | --- |
+| `GET /api/messages/libre/destinataires` | `LIB` v | `{ "actuels", "actuelsSansEmail", "locataires": [ { "id", "nom", "email", "ancien" } ] }` |
+| `POST /api/messages/libre/apercu` | `LIB` v | corps ci-dessous, aperçu pour le premier destinataire |
+| `POST /api/messages/libre/envoi` | `LIB` a | `{ "destinataires": "UN\|TOUS_ACTUELS", "locataireId", "objet", "texte" }` → `{ "envoyes", "sansEmail", "destinataires" }` |
+
+Sans SMTP configuré (`SPRING_MAIL_HOST`), le profil `dev` écrit les e-mails dans les logs ; ailleurs, 409 `MAIL_NON_CONFIGURE`.
+
+---
+
+## 14. Statistiques et chronologie (écrans `STA` et `CHR`, RG chapitres 21 et 22)
+
+`GET /api/statistiques?annee=2026` (`STA` v) : `{ "annee", "loyersEncaisses": [12 points par mois de paiement], "totalEncaisse", "tauxOccupation": [jusqu'au mois courant], "repartition": { "date", "loues", "libres", "indisponibles", "total" }, "remarques": { "information", "probleme", "autre", "problemesResolus", "tauxResolution" }, "anneesDisponibles": [2024, 2025, 2026] }`. `tauxResolution` est null sans problème. Le statut Indisponible n'étant pas historisé, il est lu à la date du jour.
+
+`GET /api/locataires/{id}/chronologie?filtre=TOUS\|LOCATIONS\|REMARQUES\|PAIEMENTS&page=0&size=10` (`CHR` v) : `{ "locataire": LocataireDTO, "nbLocations", "totalVerse", "remarquesOuvertes", "compteurs", "evenements": { "content": [ { "type", "categorie", "dateHeure", "titre", "pastille", "montant", "description", "aVenir" } ], "page", "size", "totalElements", "totalPages" } }`. Types : `LOCATION_DEBUT`, `LOCATION_FIN`, `PAIEMENT`, `REMARQUE`, `REMARQUE_RESOLUE`.
+
+---
+
+## 15. Journal d'audit (écran `AUD`, Admin seulement, RG chapitre 19)
+
+Toute création, modification et suppression sur les 9 tables (`GARAGE`, `LOYER_GARAGE`, `LOCATAIRE`, `LOCATION`, `ECHEANCE`, `VERSEMENT`, `REMARQUE`, `UTILISATEUR`, `PARAMETRE`) est enregistrée par **Hibernate Envers** dans la transaction de l'opération (décision du 03/11/2026). Le journal est en lecture seule.
+
+| Méthode et chemin | Détail |
+| --- | --- |
+| `GET /api/journal?du=&au=&utilisateurs=&concepts=&action=CREATION\|MODIFICATION\|SUPPRESSION&q=&page=&size=20&sort=dateHeure,desc` | page d'`OperationAuditDTO` ; `totalElements` = « n opérations correspondent » ; 400 « La date de début doit précéder la date de fin. » |
+| `GET /api/journal/{concept}/{id}` | fil conducteur, du plus ancien au plus récent |
+| `GET /api/journal/{concept}/{id}/{revisionId}` | détail : `{ "operation", "valeurs", "champs": [ { "champ", "avant", "apres", "modifie", "masque" } ] }` |
+
+`OperationAuditDTO` : `{ "revisionId", "dateHeure", "action": "C\|M\|S", "utilisateurId", "utilisateurLogin", "utilisateurNom" ("Système" pour une tâche planifiée), "concept", "conceptLibelle", "enregistrementId", "libelle", "contexte" }`. Le mot de passe n'est jamais historisé : le champ `mot_de_passe` porte un compteur qui change à chaque nouveau mot de passe, affiché « modifié, valeur masquée » (`masque: true`).
+
+---
+
+## 16. Maintenance (écran `MNT`, Admin seulement, RG chapitre 20)
+
+| Méthode et chemin | Droit | Réponse |
+| --- | --- | --- |
+| `GET /api/maintenance/etat` | public | `{ "active": false, "intervalleVerifSec": 15 }` |
+| `GET /api/maintenance` | Admin | `{ "active", "intervalleVerifSec", "comptesActifsParProfil": { "ADMIN": 1, ... } }` |
+| `PUT /api/maintenance` | Admin | corps `{ "active": true }` |
+
+`intervalleVerifSec` : nombre de secondes entre deux vérifications automatiques de la page « Site en maintenance » (RG-MNT-03). Il vient du paramètre `maintenance_verif_sec` (catégorie `securite`, entier de 5 à 300, 15 par défaut, décision du 04/11/2026), modifiable par `PUT /api/parametres/securite`. Il est public parce que la page de maintenance est affichée aux comptes bloqués.
+
+---
+
+## 17. Hors périmètre
 
 - Pas de verrouillage de compte après des échecs de connexion, ni de limitation de débit.
 - Pas de renouvellement de jeton (refresh token).
-- Pas d'écran de gestion des comptes (l'API existe).
 - Les traductions anglaises sont côté front : l'API renvoie des messages français et des `code` stables.
