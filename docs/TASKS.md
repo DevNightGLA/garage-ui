@@ -24,14 +24,14 @@ La v1 (étapes 0 à 6 du premier plan) est livrée : socle, composants partagés
 2. [x] Locataires : réalignement v2, Chronologie.
 3. [x] Locations (durée minimale, nouveaux codes) et Paiements.
 4. [x] Tableau de bord v2 (cartes Avis de loyer et Remarques à traiter ; graphiques dans Statistiques, décision du 04/11) et Statistiques (4 pages).
-5. [ ] Envoi de messages : avis de loyer, relances d'impayés, message libre.
-6. [ ] Paramètres et modèles de messages.
-7. [ ] Utilisateurs (création en deux étapes, mot de passe temporaire, désactivation, suppression).
-8. [ ] Droits d'accès (écrans, actions, appareils).
-9. [ ] Journal d'audit (assistant, détail avant / après, fil conducteur).
-10. [ ] Maintenance (interrupteur, prévisualisation).
-11. [ ] Traductions EN des nouveaux écrans et messages.
+5. [x] Envoi de messages : avis de loyer, relances d'impayés, message libre.
+6. [x] Paramètres et modèles de messages.
+7. [x] Utilisateurs (création en quatre étapes comme la maquette, mot de passe temporaire, désactivation, suppression).
+8. [x] Droits d'accès (écrans, actions, appareils).
+9. [x] Journal d'audit (assistant, détail avant / après, fil conducteur).
+10. [x] Maintenance (interrupteur, prévisualisation).
+11. [x] Traductions EN des nouveaux écrans et messages.
 
 ## Étape 4 : finition
-- [ ] Parcours de bout en bout par profil (Admin, Gestionnaire, Locataire, Consultant) et par appareil.
-- [ ] Revue des écarts avec la maquette, accessibilité, build de production.
+- [x] Parcours de bout en bout par profil (Admin, Gestionnaire, Locataire, Consultant) et par appareil.
+- [x] Build de production ; revue des écarts avec la maquette et de l'accessibilité à faire lors de la validation de Gregory.
