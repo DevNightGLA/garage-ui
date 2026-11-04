@@ -1006,5 +1006,32 @@
         "oui": "Yes"
       }
     }
+  },
+  "modeles": {
+    "intro": "Subject and text of the e-mails sent from “Messages”.",
+    "objetLigne": "Subject: {{objet}}",
+    "modifier": "Edit",
+    "visualiser": "View",
+    "objet": "Subject",
+    "message": "Message",
+    "enregistre": "Message template saved successfully",
+    "signatureEnregistree": "Signature saved successfully",
+    "avis": {
+      "libelle": "Rent notice",
+      "titre": "Template · Rent notice"
+    },
+    "total": {
+      "libelle": "Reminder · Fully unpaid",
+      "titre": "Template · Fully unpaid"
+    },
+    "partiel": {
+      "libelle": "Reminder · Partial payment",
+      "titre": "Template · Partial payment"
+    },
+    "signature": {
+      "libelle": "Closing and signature",
+      "titre": "Closing and signature",
+      "description": "Added automatically at the bottom of every message sent. Do not repeat them in the templates."
+    }
   }
 }

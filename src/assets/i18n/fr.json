@@ -879,5 +879,32 @@
         "oui": "Oui"
       }
     }
+  },
+  "modeles": {
+    "intro": "Objet et texte des e-mails envoyés depuis « Envoi de messages ».",
+    "objetLigne": "Objet : {{objet}}",
+    "modifier": "Modifier",
+    "visualiser": "Visualiser",
+    "objet": "Objet",
+    "message": "Message",
+    "enregistre": "Modèle du message enregistré avec succès",
+    "signatureEnregistree": "Signature enregistrée avec succès",
+    "avis": {
+      "libelle": "Avis de loyer",
+      "titre": "Modèle · Avis de loyer"
+    },
+    "total": {
+      "libelle": "Relance · Impayé total",
+      "titre": "Modèle · Impayé total"
+    },
+    "partiel": {
+      "libelle": "Relance · Paiement partiel",
+      "titre": "Modèle · Paiement partiel"
+    },
+    "signature": {
+      "libelle": "Formule de politesse et signature",
+      "titre": "Formule de politesse et signature",
+      "description": "Reprises automatiquement en bas de chaque message envoyé. Ne pas les répéter dans les modèles."
+    }
   }
 }

@@ -1,0 +1,47 @@
+@if (loadError(); as message) {
+  <div class="card mp__card mp__pad" role="alert">
+    <p class="message-error">{{ message }}</p>
+    <button type="button" class="btn btn--secondary" (click)="data.reload()">{{ 'commun.reessayer' | translate }}</button>
+  </div>
+} @else {
+  <section class="card mp__card" [attr.aria-busy]="data.isLoading()">
+    <p class="mp__intro">{{ 'modeles.intro' | translate }}</p>
+    @for (modele of modeles; track modele.key) {
+      <div class="mp__row">
+        <span class="mp__icon" aria-hidden="true"><i class="fa-solid" [class]="modele.icon"></i></span>
+        <div class="mp__text">
+          <span class="mp__label">{{ 'modeles.' + modele.key + '.libelle' | translate }}</span>
+          <span class="mp__subject">{{ 'modeles.objetLigne' | translate: { objet: subject(modele) } }}</span>
+        </div>
+        <button type="button" class="btn btn--primary mp__btn" [disabled]="!data.hasValue()" (click)="editing.set(modele)">
+          <i class="fa-regular" [class.fa-pen-to-square]="canEdit()" [class.fa-eye]="!canEdit()" aria-hidden="true"></i>
+          {{ (canEdit() ? 'modeles.modifier' : 'modeles.visualiser') | translate }}
+        </button>
+      </div>
+    }
+  </section>
+
+  <section class="card mp__card">
+    <div class="mp__head">
+      <h2 class="mp__title">{{ 'modeles.signature.libelle' | translate }}</h2>
+      <p class="mp__desc">{{ 'modeles.signature.description' | translate }}</p>
+    </div>
+    <div class="mp__row mp__row--top">
+      <div class="mp__signature" [innerHTML]="values()['signature'] ?? ''"></div>
+      <button type="button" class="btn btn--primary mp__btn" [disabled]="!data.hasValue()" (click)="editing.set(signature)">
+        <i class="fa-regular" [class.fa-pen-to-square]="canEdit()" [class.fa-eye]="!canEdit()" aria-hidden="true"></i>
+        {{ (canEdit() ? 'modeles.modifier' : 'modeles.visualiser') | translate }}
+      </button>
+    </div>
+  </section>
+}
+
+@if (editing(); as modele) {
+  <app-modele-form
+    [modele]="modele"
+    [values]="values()"
+    [readOnly]="!canEdit()"
+    (saved)="saved($event)"
+    (closed)="editing.set(null)"
+  />
+}
