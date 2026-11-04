@@ -1,12 +1,13 @@
 import { CurrencyPipe, formatCurrency } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { SortSpec } from '../../../core/api/list-params';
 import { LanguageService } from '../../../core/language-service';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { Confirm } from '../../../shared/confirm/confirm';
 import { DataTable, DataTableColumn } from '../../../shared/data-table/data-table';
 import { DataTableCell } from '../../../shared/data-table/data-table-cell';
@@ -24,8 +25,7 @@ import { GarageForm } from '../garage-form/garage-form';
 import { GarageDTO, GarageFilter, GarageStatut } from '../garage.models';
 import { LocationsHistory } from '../locations-history/locations-history';
 import { LoyersHistory } from '../loyers-history/loyers-history';
-
-export const GARAGES_PAGE_SIZE = 10;
+import { SettingsService } from '../../../core/settings-service';
 
 const STATUT_TONE: Record<GarageStatut, BadgeTone> = {
   LOUE: 'success',
@@ -79,13 +79,14 @@ interface Deletion {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class GaragesPage {
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('GAR');
   private readonly api = inject(GarageApi);
   private readonly errors = inject(ErrorMessageService);
   private readonly translate = inject(TranslateService);
   private readonly language = inject(LanguageService);
 
-  protected readonly pageSize = GARAGES_PAGE_SIZE;
+  /** Lignes par page : paramètre `lignes_liste` (RG-PAR-09). */
+  protected readonly pageSize = inject(SettingsService).lignesListe;
   protected readonly filter = signal<GarageFilter>('TOUS');
   protected readonly search = signal('');
   protected readonly page = signal(0);
@@ -110,7 +111,7 @@ export class GaragesPage {
     stream: ({ params }) =>
       this.api.list({
         page: params.page,
-        size: GARAGES_PAGE_SIZE,
+        size: this.pageSize(),
         sort: params.sort,
         q: params.q,
         filters: { statut: params.statut === 'TOUS' ? null : params.statut },
@@ -175,12 +176,26 @@ export class GaragesPage {
   protected readonly rowKey = (garage: GarageDTO) => garage.id;
   protected readonly rowClass = (garage: GarageDTO) => (garage.id === this.history()?.id ? 'is-selected' : null);
 
+  /** `?remarques=id` (carte « Remarques à traiter » du tableau de bord) : ouvre directement ses remarques. */
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly deepLink = (() => {
+    const id = Number(this.route.snapshot.queryParamMap.get('remarques'));
+    if (id) {
+      this.api.get(id).subscribe({ next: (target) => this.remarks.set(target) });
+    }
+    return id || null;
+  })();
+
   protected openRemarks(garage: GarageDTO): void {
     this.remarks.set(garage);
   }
 
   protected closeRemarks(): void {
     this.remarks.set(null);
+    if (this.route.snapshot.queryParamMap.has('remarques')) {
+      this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+    }
   }
 
   /** Statut, locataire actuel, clés et réserve, loyer actuel (maquette). */

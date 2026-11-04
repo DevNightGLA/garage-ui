@@ -26,6 +26,11 @@ const TOOLBAR_LABELS: [selector: string, key: string][] = [
 interface EditorInstance {
   root: HTMLElement;
   getModule(name: string): unknown;
+  getSelection(focus?: boolean): { index: number; length: number } | null;
+  getLength(): number;
+  insertText(index: number, text: string, source?: string): unknown;
+  deleteText(index: number, length: number, source?: string): unknown;
+  setSelection(index: number, length?: number, source?: string): void;
 }
 
 /**
@@ -82,6 +87,24 @@ export class RichText implements ControlValueAccessor {
     } else {
       this.inner.enable({ emitEvent: false });
     }
+  }
+
+  /**
+   * Insère un texte (variable `{nom}`…) à l'emplacement du curseur, en remplaçant la sélection ; à la fin du texte si
+   * l'éditeur n'a jamais eu le focus. Le bouton qui appelle cette méthode doit empêcher la perte du focus
+   * (`(mousedown)="$event.preventDefault()"`), comme dans la maquette.
+   */
+  insertText(text: string): void {
+    const editor = this.editor;
+    if (!editor || this.readOnly()) {
+      return;
+    }
+    const range = editor.getSelection() ?? { index: Math.max(0, editor.getLength() - 1), length: 0 };
+    if (range.length > 0) {
+      editor.deleteText(range.index, range.length, 'user');
+    }
+    editor.insertText(range.index, text, 'user');
+    editor.setSelection(range.index + text.length, 0, 'user');
   }
 
   protected blurred(): void {

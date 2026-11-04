@@ -1,0 +1,23 @@
+.yp__btn {
+  min-width: 150px;
+}
+
+.mp__month:disabled,
+.mp__nav:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+.yp__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: var(--space-2);
+}
+
+.yp__this {
+  text-transform: uppercase;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-primary);
+}

@@ -60,7 +60,7 @@ describe('authInterceptor', () => {
 
   it('renvoie vers la connexion quand le jeton est refusé (session expirée)', () => {
     sessionStorage.setItem('gg-token', 'expire');
-    auth.user.set({ id: 1, login: 'admin', email: 'a@b.c', role: 'ADMIN', actif: true });
+    auth.user.set({ id: 1, login: 'admin', prenom: 'Marie', nom: 'Dupont', email: 'a@b.c', role: 'ADMIN', actif: true });
     let status = 0;
     http.get('/api/garages').subscribe({ error: (e) => (status = e.status) });
     controller.expectOne('/api/garages').flush({ code: 'NON_AUTHENTIFIE' }, { status: 401, statusText: 'Unauthorized' });
@@ -83,7 +83,7 @@ describe('authInterceptor', () => {
 
   it('laisse passer les autres erreurs (403, 409) sans déconnecter', () => {
     sessionStorage.setItem('gg-token', 'jeton-1');
-    auth.user.set({ id: 1, login: 'admin', email: 'a@b.c', role: 'ADMIN', actif: true });
+    auth.user.set({ id: 1, login: 'admin', prenom: 'Marie', nom: 'Dupont', email: 'a@b.c', role: 'ADMIN', actif: true });
     http.delete('/api/garages/1').subscribe({ error: () => undefined });
     controller.expectOne('/api/garages/1').flush({ code: 'ACCES_REFUSE' }, { status: 403, statusText: 'Forbidden' });
     expect(auth.isAuthenticated()).toBe(true);

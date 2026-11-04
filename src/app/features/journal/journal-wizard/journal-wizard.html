@@ -1,0 +1,110 @@
+<div class="card jw">
+  <app-stepper class="jw__stepper" [labels]="labels()" [current]="step()" (select)="goTo($event)" />
+
+  <div class="jw__body">
+    @switch (step()) {
+      @case (0) {
+        <h3 class="jw__title">{{ 'journal.periodeTitre' | translate }}</h3>
+        <div class="jw__period">
+          <label class="jw__date">
+            <span>{{ 'journal.du' | translate }}</span>
+            <app-date-input [formControl]="du" />
+          </label>
+          <label class="jw__date">
+            <span>{{ 'journal.au' | translate }}</span>
+            <app-date-input [formControl]="au" />
+          </label>
+        </div>
+        <div class="jw__presets" role="group" [attr.aria-label]="'journal.raccourcis' | translate">
+          @for (days of presets; track days) {
+            <button type="button" class="jw__preset" [class.is-on]="presetActive(days)" [attr.aria-pressed]="presetActive(days)" (click)="applyPreset(days)">
+              {{ (days ? 'journal.preset.jours' : 'journal.preset.tout') | translate: { n: days } }}
+            </button>
+          }
+        </div>
+        <p class="jw__hint">{{ 'journal.periodeAide' | translate }}</p>
+      }
+      @case (1) {
+        <div class="jw__head">
+          <h3 class="jw__title">{{ 'journal.quiTitre' | translate }}</h3>
+          <span class="jw__hint">{{ 'journal.quiAide' | translate }}</span>
+        </div>
+        <div class="jw__choices">
+          @for (user of users(); track user.id) {
+            @let on = selectedUsers().has(user.id);
+            <button type="button" class="jw__choice" role="checkbox" [class.is-on]="on" [attr.aria-checked]="on" (click)="toggleUser(user.id)">
+              <span class="jw__box" aria-hidden="true"><i class="fa-solid fa-check"></i></span>
+              <span class="jw__avatar" aria-hidden="true">{{ initials(user.nom) }}</span>
+              <span class="jw__name">{{ user.nom }}</span>
+            </button>
+          }
+        </div>
+      }
+      @case (2) {
+        <div class="jw__head">
+          <h3 class="jw__title">{{ 'journal.quoiTitre' | translate }}</h3>
+          <span class="jw__hint">{{ 'journal.quoiAide' | translate }}</span>
+        </div>
+        <div class="jw__choices">
+          @for (c of concepts; track c.concept) {
+            @let on = selectedConcepts().has(c.concept);
+            <button type="button" class="jw__choice" role="checkbox" [class.is-on]="on" [attr.aria-checked]="on" (click)="toggleConcept(c.concept)">
+              <span class="jw__box" aria-hidden="true"><i class="fa-solid fa-check"></i></span>
+              <span class="jw__concept" aria-hidden="true"><i [class]="c.icon"></i></span>
+              <span class="jw__name">{{ 'journal.concept.' + c.concept | translate }}</span>
+            </button>
+          }
+        </div>
+      }
+      @case (3) {
+        <h3 class="jw__title">{{ 'journal.criteres' | translate }}</h3>
+        <dl class="jw__recap">
+          <div>
+            <dt><i class="fa-regular fa-calendar" aria-hidden="true"></i> {{ 'journal.etape.periode' | translate }}</dt>
+            <dd>{{ periodText() }}</dd>
+          </div>
+          <div>
+            <dt><i class="fa-solid fa-user" aria-hidden="true"></i> {{ 'journal.etape.qui' | translate }}</dt>
+            <dd>{{ usersText() }}</dd>
+          </div>
+          <div>
+            <dt><i class="fa-solid fa-layer-group" aria-hidden="true"></i> {{ 'journal.etape.quoi' | translate }}</dt>
+            <dd>{{ conceptsText() }}</dd>
+          </div>
+        </dl>
+        @if (count.hasValue()) {
+          <p class="jw__count" role="status">
+            <b>{{ count.value() }}</b>
+            {{ 'journal.correspondent.' + (count.value() > 1 ? 'n' : 'un') | translate }}
+          </p>
+        }
+      }
+    }
+
+    @if (error(); as message) {
+      <p class="message-error" role="alert"><i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i> {{ message }}</p>
+    }
+  </div>
+</div>
+
+<div class="card jw__bar">
+  <button type="button" class="btn btn--secondary" (click)="reset()">
+    <i class="fa-solid fa-rotate-left" aria-hidden="true"></i> {{ 'journal.reinitialiser' | translate }}
+  </button>
+  <span class="jw__nav">
+    @if (step() > 0) {
+      <button type="button" class="btn btn--secondary" (click)="previous()">
+        <i class="fa-solid fa-arrow-left" aria-hidden="true"></i> {{ 'utilisateurs.form.precedent' | translate }}
+      </button>
+    }
+    @if (step() < 3) {
+      <button type="button" class="btn btn--primary" (click)="next()">
+        {{ 'utilisateurs.form.suivant' | translate }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+      </button>
+    } @else {
+      <button type="button" class="btn btn--primary" (click)="validate()">
+        <i class="fa-solid fa-timeline" aria-hidden="true"></i> {{ 'journal.afficherFil' | translate }}
+      </button>
+    }
+  </span>
+</div>

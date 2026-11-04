@@ -1,296 +1,240 @@
 import { HttpRequest, provideHttpClient } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { Router, provideRouter } from '@angular/router';
 import { pageOf } from '../../../../testing/garage-fixtures';
-import { impaye, impayeTotal, tableauDeBord } from '../../../../testing/tableau-de-bord-fixtures';
+import { revokeRight, signInAs } from '../../../../testing/rights';
+import {
+  avisLoyer,
+  impaye,
+  impayeTotal,
+  relance,
+  remarqueATraiter,
+  tableauDeBord,
+} from '../../../../testing/tableau-de-bord-fixtures';
 import { provideTestTranslations } from '../../../../testing/translations';
-import { AuthService } from '../../../core/auth/auth-service';
 import { Role } from '../../../core/auth/auth.models';
-import { BarChart } from '../../../shared/bar-chart/bar-chart';
-import { ImpayeARelancer, TableauDeBord } from '../tableau-de-bord.models';
+import { TODAY } from '../../../core/today';
 import { TableauDeBordPage } from './tableau-de-bord-page';
 
-const isDashboard = (r: HttpRequest<unknown>) => r.method === 'GET' && r.url === '/api/tableau-de-bord';
-const isUnpaid = (r: HttpRequest<unknown>) => r.method === 'GET' && r.url === '/api/tableau-de-bord/impayes';
+const url = (path: string) => (r: HttpRequest<unknown>) => r.method === 'GET' && r.url === path;
+const isDashboard = url('/api/tableau-de-bord');
+const isUnpaid = url('/api/tableau-de-bord/impayes');
+const isTodo = url('/api/tableau-de-bord/remarques');
+const isNotices = url('/api/tableau-de-bord/avis');
+const isReminders = url('/api/messages/relances');
 
 describe('TableauDeBordPage', () => {
   let fixture: ComponentFixture<TableauDeBordPage>;
   let http: HttpTestingController;
   let root: HTMLElement;
+  let navigate: ReturnType<typeof vi.spyOn>;
 
   const text = (element: Element | null) => (element?.textContent ?? '').replace(/\s+/g, ' ').trim();
-  /** Attend la stabilité : à n'utiliser qu'une fois toutes les requêtes ouvertes servies. */
   const settle = async () => {
-    fixture.detectChanges();
-    await fixture.whenStable();
+    for (let i = 0; i < 3; i++) {
+      await new Promise((resolve) => setTimeout(resolve));
+      fixture.detectChanges();
+    }
   };
-  const render = () => fixture.detectChanges();
-  const click = (element: Element | null) => {
-    (element as HTMLElement).click();
-    render();
-  };
-  const signIn = (role: Role) =>
-    TestBed.inject(AuthService).user.set({ id: 1, login: 'u', email: 'u@example.com', role, actif: true });
-  const stub = () => root.querySelector('.bar-chart-stub')!;
-  const items = () => Array.from(root.querySelectorAll('.impaye'));
+  const cards = () => Array.from(root.querySelectorAll('app-task-card'));
 
-  const create = (role: Role = 'ADMIN') => {
-    signIn(role);
+  /** Ouvre l'écran et répond aux cinq requêtes de départ. */
+  const open = async (role: Role = 'ADMIN', options: { unpaid?: unknown[]; todo?: unknown[]; notices?: unknown[] } = {}) => {
+    signInAs(role);
     fixture = TestBed.createComponent(TableauDeBordPage);
     root = fixture.nativeElement;
-    render();
-  };
-
-  /** Ouvre l'écran et répond aux indicateurs et à la première page des impayés. */
-  const open = async (
-    role: Role = 'ADMIN',
-    data: TableauDeBord = tableauDeBord(),
-    unpaid: ImpayeARelancer[] = [impaye(), impayeTotal()],
-    total = unpaid.length,
-  ) => {
-    create(role);
-    http.expectOne(isDashboard).flush(data);
-    http.expectOne(isUnpaid).flush(pageOf(unpaid, total, 0, 3));
+    fixture.detectChanges();
+    http.expectOne(isDashboard).flush(tableauDeBord());
+    const unpaid = options.unpaid ?? [impaye(), impayeTotal()];
+    http.expectOne(isUnpaid).flush(pageOf(unpaid, unpaid.length, 0, 5));
+    const todo = options.todo ?? [remarqueATraiter()];
+    http.expectOne(isTodo).flush(pageOf(todo, todo.length, 0, 5));
+    http.expectOne(isNotices).flush(options.notices ?? [avisLoyer()]);
+    if (role !== 'LOCATAIRE') {
+      http.expectOne(isReminders).flush(pageOf([relance(), relance({ echeanceId: 11, garageId: 3, periode: '2026-08-01', email: null })]));
+    }
     await settle();
   };
 
   beforeEach(() => {
     sessionStorage.clear();
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideTestTranslations()],
-    }).overrideComponent(BarChart, {
-      // jsdom ne dessine pas de canvas : le graphique est remplacé par un témoin de ce qu'on lui passe
-      set: {
-        providers: [],
-        imports: [],
-        template: `<p class="bar-chart-stub" [attr.data-labels]="labels().join()" [attr.data-values]="values().join()" [attr.data-first]="format()(values()[0])" [attr.data-caption]="caption()"></p>`,
-      },
+      providers: [
+        provideRouter([]),
+        provideHttpClient(),
+        provideHttpClientTesting(),
+        provideTestTranslations(),
+        { provide: TODAY, useValue: () => new Date(2026, 10, 1) },
+      ],
     });
     http = TestBed.inject(HttpTestingController);
+    navigate = vi.spyOn(TestBed.inject(Router), 'navigate').mockResolvedValue(true);
   });
 
   afterEach(() => http.verify());
 
-  describe('états', () => {
-    it('affiche des tirets et le chargement tant que rien n\'est arrivé', () => {
-      create();
-      expect(Array.from(root.querySelectorAll('.kpi__valeur')).map((v) => text(v))).toEqual(['—', '—', '—', '—']);
-      expect(text(root.querySelector('.graphique .td__etat'))).toBe('Chargement…');
-      expect(text(root.querySelector('.impayes .td__etat'))).toBe('Chargement…');
-      http.expectOne(isDashboard).flush(tableauDeBord());
-      http.expectOne(isUnpaid).flush(pageOf([], 0, 0, 3));
-    });
-
-    it('affiche l\'erreur des indicateurs et recharge tout au clic sur Réessayer', async () => {
-      create();
-      http
-        .expectOne(isDashboard)
-        .flush({ code: 'ERREUR_INTERNE', message: 'Une erreur inattendue est survenue.' }, { status: 500, statusText: 'Server Error' });
-      http.expectOne(isUnpaid).flush(pageOf([impaye()], 1, 0, 3));
-      await settle();
-      expect(text(root.querySelector('.td__erreur'))).toContain('Une erreur inattendue est survenue.');
-
-      click(root.querySelector('.td__erreur button'));
-      http.expectOne(isDashboard).flush(tableauDeBord());
-      http.expectOne(isUnpaid).flush(pageOf([impaye()], 1, 0, 3));
-      await settle();
-      expect(root.querySelector('.td__erreur')).toBeNull();
-      expect(text(root.querySelector('.kpi__valeur'))).toBe('58 %');
-    });
-
-    it('affiche l\'erreur des impayés dans leur carte et la recharge seule', async () => {
-      create();
-      http.expectOne(isDashboard).flush(tableauDeBord());
-      http
-        .expectOne(isUnpaid)
-        .flush({ code: 'ERREUR_INTERNE', message: 'Une erreur inattendue est survenue.' }, { status: 500, statusText: 'Server Error' });
-      await settle();
-      expect(text(root.querySelector('.impayes .td__etat--erreur'))).toContain('Une erreur inattendue est survenue.');
-      expect(root.querySelector('.td__erreur')).toBeNull();
-
-      click(root.querySelector('.impayes .td__etat--erreur button'));
-      http.expectOne(isUnpaid).flush(pageOf([impaye()], 1, 0, 3));
-      await settle();
-      expect(items()).toHaveLength(1);
-    });
-
-    it('affiche « Aucun impayé à relancer. » quand il n\'y en a aucun', async () => {
-      await open('ADMIN', tableauDeBord(), []);
-      expect(text(root.querySelector('.impayes__titre'))).toBe('Impayés à relancer (0)');
-      expect(text(root.querySelector('.impayes .td__etat'))).toBe('Aucun impayé à relancer.');
-      expect(root.querySelector('.impayes__pied')).toBeNull();
-    });
+  it('quatre indicateurs, puis les trois cartes de la maquette v2, sans graphique', async () => {
+    await open();
+    expect(Array.from(root.querySelectorAll('.kpi__valeur')).map(text)).toEqual(['58 %', '600,00 €', '120,00 €', '4']);
+    expect(cards().map((card) => text(card.querySelector('.tc__title')))).toEqual([
+      'Impayés à relancer (2)',
+      'Remarques à traiter (1)',
+      'Avis de loyer à communiquer (1)',
+    ]);
+    expect(root.querySelector('app-bar-chart')).toBeNull();
   });
 
-  describe('indicateurs (RG-DAS-01 à 04)', () => {
-    it('affiche taux d\'occupation, loyers mensuels, impayés et garages libres avec leur note', async () => {
-      await open();
-      const cards = Array.from(root.querySelectorAll('.kpi')).map((card) => ({
-        titre: text(card.querySelector('.kpi__label')),
-        valeur: text(card.querySelector('.kpi__valeur')),
-        note: text(card.querySelector('.kpi__note')),
-      }));
-      expect(cards).toEqual([
-        { titre: 'Taux d’occupation', valeur: '58 %', note: '7 garages loués sur 12' },
-        { titre: 'Loyers mensuels', valeur: '600,00 €', note: 'Locations actives' },
-        { titre: 'Impayés', valeur: '120,00 €', note: '1 impayés totaux · 1 partiels' },
-        { titre: 'Garages libres', valeur: '4', note: '1 indisponible' },
-      ]);
-    });
-
-    it('suit les valeurs de l\'API', async () => {
-      await open(
-        'ADMIN',
-        tableauDeBord({
-          tauxOccupation: { pourcentage: 100, garagesLoues: 3, garagesTotal: 3 },
-          loyersMensuels: 1234.5,
-          impayes: { montant: 0, nbTotaux: 0, nbPartiels: 0 },
-          garagesLibres: { nombre: 0, nombreIndisponibles: 0 },
-        }),
-      );
-      expect(Array.from(root.querySelectorAll('.kpi__valeur')).map((v) => text(v))).toEqual(['100 %', '1 234,50 €', '0,00 €', '0']);
-    });
-  });
-
-  describe('graphiques sur 12 mois (RG-DAS-05)', () => {
-    it('montre d\'abord les loyers encaissés : titre, légende, mois et montants', async () => {
-      await open();
-      expect(text(root.querySelector('.graphique__titre'))).toBe('Loyers encaissés');
-      expect(text(root.querySelector('.graphique__legende'))).toBe('12 derniers mois, en euros');
-      expect(text(root.querySelector('.graphique__numero'))).toBe('1/2');
-      expect(stub().getAttribute('data-labels')).toBe('Nov,Déc,Janv,Févr,Mars,Avr,Mai,Juin,Juil,Août,Sept,Oct');
-      expect(stub().getAttribute('data-values')).toBe('400,420,440,460,480,500,520,540,560,580,600,620');
-      expect(stub().getAttribute('data-first')?.replace(/\s/g, ' ')).toBe('400 €');
-      expect(stub().getAttribute('data-caption')).toBe('12 derniers mois, en euros');
-    });
-
-    it('passe au taux d\'occupation avec la flèche suivante, en pourcentage', async () => {
-      await open();
-      click(root.querySelectorAll('.graphique__fleche')[1]);
-      expect(text(root.querySelector('.graphique__titre'))).toBe('Taux d’occupation');
-      expect(text(root.querySelector('.graphique__legende'))).toBe('Garages loués, 12 derniers mois, en %');
-      expect(text(root.querySelector('.graphique__numero'))).toBe('2/2');
-      expect(stub().getAttribute('data-values')).toBe('40,42,44,46,48,50,52,54,56,58,60,62');
-      expect(stub().getAttribute('data-first')).toBe('40 %');
-    });
-
-    it('les flèches font le tour des deux graphiques', async () => {
-      await open();
-      const [previous, next] = Array.from(root.querySelectorAll('.graphique__fleche'));
-      click(previous);
-      expect(text(root.querySelector('.graphique__numero'))).toBe('2/2');
-      click(next);
-      expect(text(root.querySelector('.graphique__numero'))).toBe('1/2');
-      click(next);
-      click(next);
-      expect(text(root.querySelector('.graphique__titre'))).toBe('Loyers encaissés');
-    });
-
-    it('les flèches ont une info-bulle', async () => {
-      await open();
-      expect(Array.from(root.querySelectorAll('.graphique__fleche')).map((b) => b.getAttribute('aria-label'))).toEqual([
-        'Graphique précédent',
-        'Graphique suivant',
-      ]);
-    });
-
-    it('le dernier point des deux séries est celui du mois courant', async () => {
-      const data = tableauDeBord();
-      expect(data.loyersEncaisses12Mois.at(-1)!.mois).toBe('2026-10');
-      expect(data.tauxOccupation12Mois).toHaveLength(12);
-      await open('ADMIN', data);
-      expect(stub().getAttribute('data-labels')!.split(',').at(-1)).toBe('Oct');
-    });
+  it('lignes par carte : paramètre lignes_hist', async () => {
+    signInAs('ADMIN');
+    fixture = TestBed.createComponent(TableauDeBordPage);
+    fixture.detectChanges();
+    expect(http.expectOne(isUnpaid).request.params.get('size')).toBe('5');
+    expect(http.expectOne(isTodo).request.params.get('size')).toBe('5');
+    http.expectOne(isDashboard).flush(tableauDeBord());
+    http.expectOne(isNotices).flush([]);
+    http.expectOne(isReminders).flush(pageOf([]));
   });
 
   describe('impayés à relancer (RG-DAS-06)', () => {
-    it('demande la première page de 3, sans tri', async () => {
-      create();
-      http.expectOne(isDashboard).flush(tableauDeBord());
-      const request = http.expectOne(isUnpaid);
-      expect(request.request.params.get('page')).toBe('0');
-      expect(request.request.params.get('size')).toBe('3');
-      expect(request.request.params.has('sort')).toBe(false);
-      request.flush(pageOf([impaye()], 1, 0, 3));
-      await settle();
-    });
-
-    it('affiche locataire, reste dû, garage, période et badge Total ou Partiel', async () => {
-      await open('ADMIN', tableauDeBord(), [impaye(), impayeTotal()], 2);
-      expect(text(root.querySelector('.impayes__titre'))).toBe('Impayés à relancer (2)');
-      const [partial, total] = items();
-      expect(text(partial.querySelector('.impaye__locataire'))).toBe('Pierre Dubois');
-      expect(text(partial.querySelector('.impaye__montant'))).toBe('40,00 €');
-      expect(text(partial.querySelector('.impaye__periode'))).toBe('G06 · Septembre 2026');
-      expect(text(partial.querySelector('app-status-badge'))).toBe('Partiel');
-      expect(text(total.querySelector('.impaye__locataire'))).toBe('Sophie Lambert');
-      expect(text(total.querySelector('.impaye__montant'))).toBe('80,00 €');
-      expect(text(total.querySelector('.impaye__periode'))).toBe('G03 · Août 2026');
-      expect(text(total.querySelector('app-status-badge'))).toBe('Total');
-    });
-
-    it('colore le badge : Total en rouge, Partiel en orange', async () => {
+    it('locataire, garage et période, type et reste dû, « Reçu x sur y » pour un partiel', async () => {
       await open();
-      const tones = Array.from(root.querySelectorAll('.impaye app-status-badge')).map((badge) =>
-        Array.from(badge.classList).find((c) => c.startsWith('tone-')),
-      );
-      expect(tones).toEqual(['tone-warning', 'tone-danger']);
+      const row = cards()[0].querySelector('.task-row')!;
+      expect(text(row.querySelector('.impaye__textes b'))).toBe('Pierre Dubois');
+      expect(text(row.querySelector('.impaye__textes span'))).toBe('G06 · Septembre 2026');
+      expect(text(row.querySelector('.montant-pill__type'))).toBe('Partiel');
+      expect(text(row.querySelector('.montant-pill__valeur'))).toBe('40,00 €');
     });
 
-    it('donne « Reçu x sur y » en info-bulle d\'un impayé partiel, rien pour un total', async () => {
+    it('avec e-mail : « E-mail » ouvre l\'écran Relances sur l\'échéance ; sans e-mail : « Relancé » seul', async () => {
       await open();
-      const [partial, total] = items();
-      const bubble = () => document.querySelector<HTMLElement>('[role="tooltip"]');
-      partial.querySelector('.impaye__badge')!.dispatchEvent(new Event('mouseenter'));
-      expect(bubble()!.style.display).toBe('block');
-      expect(bubble()!.textContent?.replace(/\s/g, ' ')).toBe('Reçu 40,00 € sur 80,00 €');
-      partial.querySelector('.impaye__badge')!.dispatchEvent(new Event('mouseleave'));
-      total.querySelector('.impaye__badge')!.dispatchEvent(new Event('mouseenter'));
-      expect(bubble()!.style.display).toBe('none');
+      const [first, second] = Array.from(cards()[0].querySelectorAll('.task-row'));
+      expect(Array.from(first.querySelectorAll('.actions-pile button')).map(text)).toEqual(['E-mail', 'Relancé']);
+      expect(Array.from(second.querySelectorAll('.actions-pile button')).map(text)).toEqual(['Relancé']);
+      (first.querySelector('.actions-pile button') as HTMLButtonElement).click();
+      expect(navigate).toHaveBeenCalledWith(['/relances'], { queryParams: { echeance: 10 } });
     });
 
-    it('n\'affiche pas de pagination pour 3 impayés ou moins', async () => {
-      await open('ADMIN', tableauDeBord(), [impaye(), impayeTotal(), impaye()], 3);
-      expect(root.querySelector('.impayes__pied')).toBeNull();
+    it('« Relancé » enregistre le contact manuel puis recharge la carte', async () => {
+      await open();
+      const row = cards()[0].querySelectorAll('.task-row')[1];
+      (row.querySelector('.actions-pile button') as HTMLButtonElement).click();
+      await settle();
+      expect(text(root.querySelector('app-contact-dialog .modal__title'))).toBe('Marquer comme relancé');
+      root.querySelector('#contact-form')!.dispatchEvent(new Event('submit'));
+      await settle();
+      const post = http.expectOne('/api/messages/relances/manuelle');
+      expect(post.request.body).toEqual({ echeanceId: 11, moyen: 'TELEPHONE', date: '2026-11-01' });
+      post.flush({});
+      await settle();
+      http.expectOne(isUnpaid).flush(pageOf([impaye()], 1, 0, 5));
+      http.expectOne(isReminders).flush(pageOf([relance()]));
+      await settle();
+      expect(root.querySelector('app-contact-dialog')).toBeNull();
     });
 
-    it('pagine par 3 : compteur, flèches et demande de la page suivante', async () => {
-      await open('ADMIN', tableauDeBord(), [impaye(), impayeTotal(), impaye()], 5);
-      expect(text(root.querySelector('.impayes__pied span'))).toBe('1–3 sur 5');
-      const [previous, next] = Array.from(root.querySelectorAll<HTMLButtonElement>('.impayes__page'));
-      expect(previous.disabled).toBe(true);
-      expect(next.disabled).toBe(false);
-
-      click(next);
-      const request = http.expectOne(isUnpaid);
-      expect(request.request.params.get('page')).toBe('1');
-      expect(request.request.params.get('size')).toBe('3');
-      request.flush(pageOf([impayeTotal(), impaye()], 5, 1, 3));
+    it('sans le droit d\'ajout des relances : pas d\'actions', async () => {
+      await open('GESTIONNAIRE');
+      revokeRight('REL', { peutAjouter: false });
       await settle();
-      expect(text(root.querySelector('.impayes__pied span'))).toBe('4–5 sur 5');
-      expect(items()).toHaveLength(2);
-      expect(root.querySelectorAll<HTMLButtonElement>('.impayes__page')[0].disabled).toBe(false);
-      expect(root.querySelectorAll<HTMLButtonElement>('.impayes__page')[1].disabled).toBe(true);
-
-      click(root.querySelectorAll('.impayes__page')[0]);
-      const back = http.expectOne(isUnpaid);
-      expect(back.request.params.get('page')).toBe('0');
-      back.flush(pageOf([impaye(), impayeTotal(), impaye()], 5, 0, 3));
+      http.match(isReminders).forEach((request) => request.flush(pageOf([relance()])));
       await settle();
-      expect(text(root.querySelector('.impayes__pied span'))).toBe('1–3 sur 5');
+      expect(cards()[0].querySelector('.actions-pile')).toBeNull();
     });
   });
 
-  describe('droits', () => {
-    for (const role of ['ADMIN', 'GESTIONNAIRE', 'LECTURE_SEULE'] as const) {
-      it(`${role} : consulte indicateurs, graphiques et impayés, sans action de modification`, async () => {
-        await open(role);
-        expect(root.querySelectorAll('.kpi')).toHaveLength(4);
-        expect(stub()).not.toBeNull();
-        expect(items()).toHaveLength(2);
-        expect(root.querySelector('.btn--primary')).toBeNull();
-        expect(root.querySelector('.icon-btn')).toBeNull();
+  describe('remarques à traiter', () => {
+    it('garage ou locataire, texte sans balises, ancienneté, ouverture des remarques', async () => {
+      await open('ADMIN', {
+        todo: [
+          remarqueATraiter(),
+          remarqueATraiter({ id: 7, garageId: null, garage: null, locataireId: 6, locataire: 'Dubois Pierre', dateCreation: '2026-11-01T10:00:00' }),
+        ],
       });
-    }
+      const [garage, locataire] = Array.from(cards()[1].querySelectorAll('.task-row'));
+      expect(text(garage.querySelector('.todo__texte b'))).toBe('Garage G06');
+      expect(text(garage.querySelector('.todo__texte p'))).toBe('Porte difficile à ouvrir .');
+      expect(text(garage.querySelector('.todo__meta'))).toBe('depuis 30 j');
+      expect(text(locataire.querySelector('.avatar-rond'))).toBe('DP');
+      expect(text(locataire.querySelector('.todo__meta'))).toBe('aujourd’hui');
+
+      (garage.querySelector('.todo__ouvrir') as HTMLButtonElement).click();
+      expect(navigate).toHaveBeenCalledWith(['/garages'], { queryParams: { remarques: 6 } });
+      (locataire.querySelector('.todo__ouvrir') as HTMLButtonElement).click();
+      expect(navigate).toHaveBeenCalledWith(['/locataires'], { queryParams: { remarques: 6 } });
+    });
+
+    it('« Aucune remarque à traiter. » quand il n\'y en a pas', async () => {
+      await open('ADMIN', { todo: [] });
+      expect(text(cards()[1].querySelector('.tc__state'))).toBe('Aucune remarque à traiter.');
+    });
+  });
+
+  describe('avis de loyer à communiquer (RG-DAS-07)', () => {
+    it('quatre avis au plus et « n autres avis »', async () => {
+      await open('ADMIN', {
+        notices: Array.from({ length: 6 }, (_, i) => avisLoyer({ locationId: i + 1, email: i % 2 ? 'a@example.com' : null })),
+      });
+      expect(cards()[2].querySelectorAll('.task-row')).toHaveLength(4);
+      expect(text(cards()[2].querySelector('.avis__autres'))).toBe('2 autre(s) avis');
+    });
+
+    it('ancien et nouveau loyer avec l\'écart ; sans e-mail : téléphone et « Marquer informé »', async () => {
+      await open();
+      const row = cards()[2].querySelector('.task-row')!;
+      expect(Array.from(row.querySelectorAll('.avis__infos span')).map(text)).toEqual(['G05', 'dès le 01/12/2026', '0470 00 00 05']);
+      expect(Array.from(row.querySelectorAll('.avis__loyer > s, .avis__loyer > b, .avis__loyer > span')).map(text)).toEqual([
+        '75,00 €',
+        '78,00 €',
+        '+3,00 €',
+      ]);
+      (row.querySelector('.avis__action') as HTMLButtonElement).click();
+      await settle();
+      root.querySelector('#contact-form')!.dispatchEvent(new Event('submit'));
+      await settle();
+      const post = http.expectOne('/api/messages/avis/informe');
+      expect(post.request.body).toEqual({ locationId: 5, loyerGarageId: 18, moyen: 'TELEPHONE', date: '2026-11-01' });
+      post.flush({});
+      await settle();
+      http.expectOne(isNotices).flush([]);
+      await settle();
+      expect(text(cards()[2].querySelector('.tc__state'))).toBe('Aucun avis de loyer à communiquer.');
+    });
+
+    it('avec e-mail : « Envoyer l\'e-mail » ouvre l\'écran Avis de loyer ; Consultant : aucune action', async () => {
+      await open('ADMIN', { notices: [avisLoyer({ email: 'eva@example.com' })] });
+      (cards()[2].querySelector('.avis__action') as HTMLButtonElement).click();
+      expect(navigate).toHaveBeenCalledWith(['/avis-de-loyer']);
+    });
+
+    it('Consultant : aucune action dans les cartes', async () => {
+      await open('CONSULTANT');
+      expect(root.querySelector('.actions-pile')).toBeNull();
+      expect(root.querySelector('.avis__action')).toBeNull();
+    });
+  });
+
+  it('affiche l\'erreur des indicateurs et recharge tout au clic sur Réessayer', async () => {
+    signInAs('ADMIN');
+    fixture = TestBed.createComponent(TableauDeBordPage);
+    root = fixture.nativeElement;
+    fixture.detectChanges();
+    http
+      .expectOne(isDashboard)
+      .flush({ code: 'ERREUR_INTERNE', message: 'Une erreur inattendue est survenue.' }, { status: 500, statusText: 'Server Error' });
+    http.expectOne(isUnpaid).flush(pageOf([]));
+    http.expectOne(isTodo).flush(pageOf([]));
+    http.expectOne(isNotices).flush([]);
+    http.expectOne(isReminders).flush(pageOf([]));
+    await settle();
+    expect(text(root.querySelector('.td__erreur'))).toContain('Une erreur inattendue est survenue.');
+    (root.querySelector('.td__erreur button') as HTMLButtonElement).click();
+    await new Promise((resolve) => setTimeout(resolve));
+    http.expectOne(isDashboard).flush(tableauDeBord());
+    http.expectOne(isUnpaid).flush(pageOf([]));
+    http.expectOne(isTodo).flush(pageOf([]));
+    http.expectOne(isNotices).flush([]);
+    await settle();
+    expect(root.querySelector('.td__erreur')).toBeNull();
   });
 });

@@ -1,4 +1,5 @@
 import { HttpRequest, provideHttpClient } from '@angular/common/http';
+import { signInAs } from '../../../../testing/rights';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { garage, loyer, pageOf } from '../../../../testing/garage-fixtures';
@@ -33,7 +34,7 @@ describe('LoyersHistory', () => {
   const buttons = (row: number) => Array.from(rows()[row].querySelectorAll<HTMLButtonElement>('.icon-btn'));
 
   const create = (role: Role) => {
-    TestBed.inject(AuthService).user.set({ id: 1, login: 'u', email: 'u@e.c', role, actif: true });
+    signInAs(role);
     fixture = TestBed.createComponent(LoyersHistory);
     fixture.componentRef.setInput('garage', garage());
     changed = 0;
@@ -187,7 +188,7 @@ describe('LoyersHistory', () => {
     });
 
     it('Lecture seule : pas de nouveau loyer ni de suppression, consultation seulement', async () => {
-      await open('LECTURE_SEULE', [loyer({ etat: 'A_VENIR', supprimable: true, motifSuppression: null })]);
+      await open('CONSULTANT', [loyer({ etat: 'A_VENIR', supprimable: true, motifSuppression: null })]);
       expect(text(root.querySelector('.lh__toolbar'))).toBe('');
       expect(root.querySelector('.lh__toolbar')).toBeNull();
       expect(buttons(0)).toHaveLength(1);

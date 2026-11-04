@@ -1,4 +1,5 @@
 import { HttpRequest, provideHttpClient } from '@angular/common/http';
+import { revokeRight, signInAs } from '../../../../testing/rights';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
@@ -39,7 +40,7 @@ describe('RemarquesView', () => {
     render();
   };
   const signIn = (role: Role) =>
-    TestBed.inject(AuthService).user.set({ id: 1, login: 'u', email: 'u@example.com', role, actif: true });
+    signInAs(role);
   const buttons = (index: number) =>
     Array.from(items()[index].querySelectorAll('.rem__actions button')).map((b) => b.getAttribute('aria-label'));
 
@@ -186,9 +187,16 @@ describe('RemarquesView', () => {
       expect(buttons(0)).toEqual(['Marquer résolu', 'Modifier la remarque', 'Supprimer la remarque']);
     });
 
-    it('Gestionnaire : ajoute, résout et modifie, ne supprime pas', async () => {
+    it('Gestionnaire : ajoute, résout, modifie et supprime par défaut (RG-DRO-20)', async () => {
       await open('GESTIONNAIRE');
       expect(root.querySelector('.rv__head .btn--primary')).not.toBeNull();
+      expect(buttons(0)).toEqual(['Marquer résolu', 'Modifier la remarque', 'Supprimer la remarque']);
+    });
+
+    it('sans le droit « supprimer » des remarques, pas de bouton Supprimer', async () => {
+      await open('GESTIONNAIRE');
+      revokeRight('REM', { peutSupprimer: false });
+      render();
       expect(buttons(0)).toEqual(['Marquer résolu', 'Modifier la remarque']);
     });
 
@@ -201,14 +209,14 @@ describe('RemarquesView', () => {
     });
 
     it('Lecture seule : ni ajout, ni résolution, ni suppression, « Visualiser » à la place de « Modifier »', async () => {
-      await open('LECTURE_SEULE');
+      await open('CONSULTANT');
       expect(root.querySelector('.rv__head .btn--primary')).toBeNull();
       expect(buttons(0)).toEqual(['Visualiser la remarque']);
       expect(root.querySelector('.rem .fa-eye')).not.toBeNull();
     });
 
     it('Lecture seule : la fiche s\'ouvre en consultation, champs désactivés et sans Enregistrer', async () => {
-      await open('LECTURE_SEULE');
+      await open('CONSULTANT');
       click(root.querySelector('.rem .icon-btn'));
       expect(text(root.querySelector('.modal__title'))).toBe('Visualiser la remarque · G05');
       expect(root.querySelector<HTMLSelectElement>('app-remarque-form select')!.disabled).toBe(true);

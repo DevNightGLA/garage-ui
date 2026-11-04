@@ -1,4 +1,5 @@
 import { HttpRequest, provideHttpClient } from '@angular/common/http';
+import { revokeRight, signInAs } from '../../../../testing/rights';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { pageOf } from '../../../../testing/garage-fixtures';
@@ -40,10 +41,13 @@ describe('PaiementsPage', () => {
     (element as HTMLElement).click();
     render();
   };
-  const signIn = (role: Role | null) =>
-    TestBed.inject(AuthService).user.set(
-      role ? { id: 1, login: 'u', email: 'u@example.com', role, actif: true } : null,
-    );
+  const signIn = (role: Role | null) => {
+    if (role) {
+      signInAs(role);
+    } else {
+      TestBed.inject(AuthService).user.set(null);
+    }
+  };
 
   /** Crée l'écran avec le rôle voulu et répond aux deux premières requêtes (liste et synthèse). */
   const open = async (
@@ -343,7 +347,7 @@ describe('PaiementsPage', () => {
     });
 
     it('Lecture seule : aucun bouton de paiement, mais le détail des versements', async () => {
-      await open('LECTURE_SEULE');
+      await open('CONSULTANT');
       expect(actions(0)).toEqual([]);
       expect(actions(1)).toEqual(['Détail des versements']);
       expect(actions(2)).toEqual(['Détail des versements']);
@@ -555,15 +559,18 @@ describe('PaiementsPage', () => {
       ]);
     });
 
-    it('Gestionnaire et Lecture seule : ne peuvent pas annuler', async () => {
+    it('Gestionnaire : annule par défaut (RG-DRO-20), pas sans le droit « supprimer » des paiements', async () => {
       await openDetail('GESTIONNAIRE');
+      expect(cancelButtons()).toHaveLength(2);
+      revokeRight('PAI', { peutSupprimer: false });
+      render();
       expect(cancelButtons()).toHaveLength(0);
       click(root.querySelector('.modal__foot .btn--primary'));
       expect(root.querySelector('app-versements-detail')).toBeNull();
     });
 
     it('Lecture seule : consulte le détail', async () => {
-      await open('LECTURE_SEULE', [paiementPartiel()]);
+      await open('CONSULTANT', [paiementPartiel()]);
       click(root.querySelector('tbody tr .fa-list')!.closest('button'));
       http.expectOne(isVersements).flush(VERSEMENTS);
       await settle();

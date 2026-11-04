@@ -1,19 +1,56 @@
-import { Type, inject } from '@angular/core';
+import { Type } from '@angular/core';
 import { Routes } from '@angular/router';
-import { authGuard, guestGuard } from './core/auth/auth-guard';
-import { NAV_ITEMS } from './core/layout/nav-items';
-import { NavigationMemory } from './core/layout/navigation-memory';
-import { Shell } from './core/layout/shell';
+import { MAINTENANCE_PATH } from './core/api/session-interceptor';
+import { TEMPORARY_PASSWORD_PATH, authGuard, guestGuard, temporaryPasswordGuard } from './core/auth/auth-guard';
+import { ACCESS_DENIED_PATH, UNAVAILABLE_PATH, homeGuard, screenGuard } from './core/rights/screen-guard';
+import { NAV_ITEMS, headingOf } from './layout/nav-items';
+import { Shell } from './layout/shell';
 
-/** Un écran par entrée du menu (RG-NAV-01) : `app.routes.spec.ts` vérifie qu'aucune n'en manque. */
-const SCREENS: Record<string, () => Promise<Type<unknown>>> = {
+/** Composant de chaque page du menu, par chemin ; `app.routes.spec.ts` vérifie qu'aucune page n'est oubliée. */
+const statistiques = () =>
+  import('./features/statistiques/statistiques-page/statistiques-page').then((m) => m.StatistiquesPage);
+const messageList = () =>
+  import('./features/messages/message-list-page/message-list-page').then((m) => m.MessageListPage);
+const garageHistory = () =>
+  import('./features/garages/garage-history-page/garage-history-page').then((m) => m.GarageHistoryPage);
+
+export const SCREENS: Record<string, () => Promise<Type<unknown>>> = {
   'tableau-de-bord': () =>
     import('./features/tableau-de-bord/tableau-de-bord-page/tableau-de-bord-page').then((m) => m.TableauDeBordPage),
   garages: () => import('./features/garages/garages-page/garages-page').then((m) => m.GaragesPage),
-  locataires: () =>
-    import('./features/locataires/locataires-page/locataires-page').then((m) => m.LocatairesPage),
+  locataires: () => import('./features/locataires/locataires-page/locataires-page').then((m) => m.LocatairesPage),
   locations: () => import('./features/locations/locations-page/locations-page').then((m) => m.LocationsPage),
   paiements: () => import('./features/paiements/paiements-page/paiements-page').then((m) => m.PaiementsPage),
+  'historique-loyers': garageHistory,
+  'historique-locations': garageHistory,
+  'statistiques/loyers-encaisses': statistiques,
+  'statistiques/taux-occupation': statistiques,
+  'statistiques/repartition': statistiques,
+  'statistiques/remarques': statistiques,
+  'avis-de-loyer': messageList,
+  relances: messageList,
+  'message-libre': () =>
+    import('./features/messages/message-libre-page/message-libre-page').then((m) => m.MessageLibrePage),
+  parametres: () => import('./features/parametres/parametres-page/parametres-page').then((m) => m.ParametresPage),
+  'modeles-messages': () => import('./features/modeles/modeles-page/modeles-page').then((m) => m.ModelesPage),
+  utilisateurs: () =>
+    import('./features/utilisateurs/utilisateurs-page/utilisateurs-page').then((m) => m.UtilisateursPage),
+  'droits-acces': () => import('./features/droits/droits-page/droits-page').then((m) => m.DroitsPage),
+  'journal-audit': () => import('./features/journal/journal-page/journal-page').then((m) => m.JournalPage),
+  maintenance: () => import('./features/maintenance/maintenance-page/maintenance-page').then((m) => m.MaintenancePage),
+  chronologie: () => import('./features/chronologie/chronologie-page/chronologie-page').then((m) => m.ChronologiePage),
+};
+
+/** Données propres à certaines pages, ajoutées au titre et au groupe du fil d'Ariane. */
+const SCREEN_DATA: Partial<Record<string, Record<string, unknown>>> = {
+  'historique-loyers': { vue: 'loyers' },
+  'historique-locations': { vue: 'locations' },
+  'statistiques/loyers-encaisses': { vue: 'loyers' },
+  'statistiques/taux-occupation': { vue: 'occupation' },
+  'statistiques/repartition': { vue: 'repartition' },
+  'statistiques/remarques': { vue: 'remarques' },
+  'avis-de-loyer': { vue: 'avis' },
+  relances: { vue: 'relances' },
 };
 
 export const routes: Routes = [
@@ -27,26 +64,48 @@ export const routes: Routes = [
     path: 'mot-de-passe-oublie',
     canActivate: [guestGuard],
     data: { titleKey: 'auth.oubli.titre' },
-    loadComponent: () =>
-      import('./features/auth/forgot-password/forgot-password').then((m) => m.ForgotPassword),
+    loadComponent: () => import('./features/auth/forgot-password/forgot-password').then((m) => m.ForgotPassword),
   },
   {
     path: 'reinitialisation',
     data: { titleKey: 'auth.reinit.titre' },
+    loadComponent: () => import('./features/auth/reset-password/reset-password').then((m) => m.ResetPassword),
+  },
+  {
+    path: TEMPORARY_PASSWORD_PATH,
+    canActivate: [temporaryPasswordGuard],
+    data: { titleKey: 'auth.temporaire.titre' },
     loadComponent: () =>
-      import('./features/auth/reset-password/reset-password').then((m) => m.ResetPassword),
+      import('./features/auth/temporary-password/temporary-password').then((m) => m.TemporaryPassword),
+  },
+  {
+    path: MAINTENANCE_PATH,
+    data: { titleKey: 'maintenance.site.titre' },
+    loadComponent: () =>
+      import('./features/maintenance/site-maintenance/site-maintenance').then((m) => m.SiteMaintenance),
   },
   {
     path: '',
     component: Shell,
     canActivate: [authGuard],
     children: [
-      { path: '', pathMatch: 'full', redirectTo: () => inject(NavigationMemory).lastPath() },
+      { path: '', pathMatch: 'full', canActivate: [homeGuard], children: [] },
       ...NAV_ITEMS.map((item) => ({
         path: item.path,
-        data: { titleKey: item.labelKey },
+        canActivate: [screenGuard(item.ecran)],
+        data: { ...headingOf(item), ...SCREEN_DATA[item.path] },
         loadComponent: SCREENS[item.path],
       })),
+      {
+        path: UNAVAILABLE_PATH,
+        data: { titleKey: 'acces.titreAppareil' },
+        loadComponent: () => import('./layout/info-pages').then((m) => m.ScreenUnavailable),
+      },
+      {
+        path: ACCESS_DENIED_PATH,
+        data: { titleKey: 'acces.titre' },
+        loadComponent: () => import('./layout/info-pages').then((m) => m.AccessDenied),
+      },
     ],
   },
   { path: '**', redirectTo: '' },

@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/fonts.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/fontawesome.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/typography.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/colors.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/foundations.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/styles.css">
+<script src="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/ds_bundle.js"></script>
+<script src="droits.js"></script>
+<style>
+body{margin:0;background:#F8F9FA;font-family:'Open Sans',sans-serif;color:#67748E}a{color:#cb0c9f}a:hover{color:#344767}
+:root{--gradient-ancienl:linear-gradient(to top left,#8f9482,#a9ae9a);--gradient-danger:linear-gradient(to top left,#d40505,#f2566f)}
+select,input,button{font-family:'Open Sans',sans-serif}input::placeholder{font-style:italic}
+input:focus,select:focus{outline:none;border-color:#cb0c9f!important;box-shadow:0 0 0 3px rgba(203,12,159,.12)}
+.at th,.at td{padding:14px 10px;text-align:left;vertical-align:middle}.at th:first-child,.at td:first-child{padding-left:24px}.at th:last-child,.at td:last-child{padding-right:24px}
+.at tbody tr{transition:background .12s;cursor:pointer}.at tbody tr:hover{background:#e9edf5}
+.u-burger{display:none!important}.u-bd{display:none}
+.dt th,.dt td{padding:12px 14px;text-align:left;vertical-align:top}.dt th{border-top:0}.dt td{border-top:1px solid #e9ecef}
+@keyframes aIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media (max-width:1180px){
+.u-burger{display:flex!important}
+.u-sb{position:fixed!important;left:12px;top:12px;bottom:12px;margin:0!important;min-height:0!important;z-index:900;overflow-y:auto!important;transform:translateX(calc(-100% - 24px));transition:transform .25s ease,visibility 0s .25s;visibility:hidden}
+.u-root[data-open="1"] .u-sb{transform:none;visibility:visible;transition:transform .25s ease;box-shadow:0 20px 40px rgba(0,0,0,.28)!important}
+.u-root[data-open="1"] .u-bd{display:block;position:fixed;inset:0;z-index:850;background:rgba(52,71,103,.45)}
+.u-main{padding:16px 12px 28px!important}
+.u-top{gap:12px!important}.u-tools{width:100%;justify-content:space-between}
+.u-tw{background:transparent!important;box-shadow:none!important;overflow:visible!important}
+.at{min-width:0!important}.at,.at tbody{display:block}.at thead{display:none}
+.at tbody{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px}
+.at tbody tr{display:flex!important;flex-wrap:wrap;align-items:center;gap:12px 20px;background:#fff;border:0!important;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);padding:16px}
+.at td{padding:0!important}
+.at td[data-l]::before{content:attr(data-l);display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;opacity:.7;margin-bottom:3px}
+.at td:first-child{flex:1 1 100%}.at td:first-child::before,.at td:last-child::before{display:none}
+.at td.ch{flex:1 1 100%}
+.at td:last-child{margin-left:auto}
+.u-pgf{background:#fff;border-radius:12px;box-shadow:0 20px 27px rgba(0,0,0,.05);margin-top:12px;border-top:0!important;justify-content:center!important}
+.a-mo{border-radius:20px 20px 0 0!important;max-width:none!important}.a-ov{align-items:flex-end!important;padding:0!important}
+}
+@media (max-width:600px){
+.dt thead{display:none}.dt,.dt tbody{display:block}.dt tr{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid #e9ecef}.dt td{border-top:0!important;padding:10px 14px}
+.dt td:first-child,.dt td[colspan]{grid-column:1/-1}.dt td:first-child{padding-bottom:2px}
+.dt td[data-l]::before{content:attr(data-l);display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;opacity:.75;margin-bottom:2px}
+}
+</style>
+</helmet>
+<div class="u-root" data-open="{{ sbOpenS }}" style="display:flex;min-height:100vh;background:#F8F9FA">
+  <div class="u-sb" style="width:256px;flex:none;overflow:hidden;background:#fff;margin:16px 0 16px 16px;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);align-self:flex-start;position:sticky;top:16px;min-height:calc(100vh - 32px);display:flex;flex-direction:column;box-sizing:border-box">
+    <x-import component-from-global-scope="SoftUIDashboardDesignSystem_92ffef.Sidebar" brand="Gestion de garages" sections="{{ sections }}" active="Journal d’audit" onSelect="{{ go }}" hint-size="256px,400px"></x-import>
+    <div style="margin-top:auto;display:flex;flex-direction:column"><div style="height:1px;background:linear-gradient(to right,transparent,rgba(0,0,0,.4),transparent)"></div>
+      <div style="padding:16px 16px 12px;display:flex;flex-direction:column;gap:12px">
+        <div style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;border-radius:50%;background:linear-gradient(310deg,#7928ca,#ff0080);color:#fff;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex:none">DS</span><div style="min-width:0;flex:1"><div style="font-size:14px;font-weight:700;color:#344767;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Delmotte Sophie</div><div style="font-size:13px;color:#67748E">{{ roleLabel }}</div></div></div>
+        <div style="height:1px;background:linear-gradient(to right,transparent,rgba(0,0,0,.4),transparent)"></div>
+        <div style="display:flex;flex-direction:column;gap:2px">
+          <div style="display:flex;align-items:center;gap:10px;height:36px;font-size:14px;font-weight:600;color:#67748E"><span style="width:36px;flex:none;display:flex;justify-content:center"><i class="fa-solid fa-key" style="font-size:15px"></i></span>Modifier le mot de passe</div>
+          <div style="display:flex;align-items:center;gap:10px;height:36px;font-size:14px;font-weight:600;color:#67748E"><span style="width:36px;flex:none;display:flex;justify-content:center"><i class="fa-solid fa-right-from-bracket" style="font-size:15px"></i></span>Se déconnecter</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="u-bd" onClick="{{ toggleSb }}"></div>
+
+  <main class="u-main" style="flex:1;min-width:0;padding:24px 12px;display:flex;flex-direction:column;gap:24px">
+    <div class="u-top" style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:16px">
+        <button class="u-burger" onClick="{{ toggleSb }}" title="Afficher / masquer le menu" style="border:0;cursor:pointer;width:44px;height:44px;border-radius:8px;background:#fff;box-shadow:0 3px 5px rgba(0,0,0,.08);flex-direction:column;align-items:center;justify-content:center;gap:4px;padding:0;flex:none"><span style="width:18px;height:2px;border-radius:2px;background:#344767"></span><span style="width:18px;height:2px;border-radius:2px;background:#344767"></span><span style="width:18px;height:2px;border-radius:2px;background:#344767"></span></button>
+        <div>
+          <div style="font-size:13px;color:#67748E;white-space:nowrap">Pages / Configuration / Journal d’audit</div>
+          <h2 style="margin:0;font-size:24px;font-weight:700;color:#344767;white-space:nowrap">Journal d’audit</h2>
+        </div>
+      </div>
+      <div class="u-tools" style="display:flex;align-items:center;gap:12px">
+        <label style="font-size:13px;display:flex;align-items:center;gap:8px"><i class="fa-solid fa-user" title="Profil de l'utilisateur connecté (simulation)"></i><select onChange="{{ setRole }}" style="font-size:15px;font-weight:600;color:#344767;border:1px solid #D2D6DA;border-radius:8px;padding:8px 10px;background:#fff"><option value="admin" selected="{{ roleIsA }}">Admin</option><option value="gest" selected="{{ roleIsG }}">Gestionnaire</option><option value="tenant" selected="{{ roleIsT }}">Locataire</option><option value="cons" selected="{{ roleIsC }}">Consultant</option></select></label>
+      </div>
+    </div>
+
+    <sc-if value="{{ allowed }}" hint-placeholder-val="{{ true }}">
+      <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);overflow:clip;flex:1 0 auto">
+        <div style="padding:20px 24px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+          <div style="display:flex;align-self:flex-start;max-width:100%;gap:2px;flex-wrap:wrap;background:#eef1f6;padding:4px;border-radius:12px">
+            <sc-for list="{{ axTabs }}" as="t" hint-placeholder-count="2"><button onClick="{{ t.go }}" style="border:0;cursor:pointer;padding:8px 18px;border-radius:9px;font-weight:700;font-size:13px;text-transform:uppercase;white-space:nowrap;background:{{ t.bg }};color:{{ t.fg }};box-shadow:{{ t.sh }};transition:color .2s,background .2s"><i class="{{ t.icon }}" style="margin-right:8px"></i>{{ t.label }}</button></sc-for>
+          </div>
+        </div>
+        <sc-if value="{{ showWz }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:20px">
+          <div style="padding:4px 24px 0"><div style="position:relative;display:grid;grid-template-columns:repeat(4,1fr)"><div style="position:absolute;top:15px;left:12.5%;right:12.5%;height:2px;border-radius:1px;background:#e9ecef"><div style="height:100%;width:{{ wPct }};background:linear-gradient(310deg,#7928ca,#ff0080);transition:width .3s"></div></div><sc-for list="{{ wSteps }}" as="s" hint-placeholder-count="4"><a onClick="{{ s.go }}" style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer"><span style="width:32px;height:32px;box-sizing:border-box;border-radius:50%;background:{{ s.bg }};color:{{ s.fg }};border:2px solid {{ s.bd }};box-shadow:{{ s.sh }};transform:{{ s.tr }};display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;transition:all .2s"><i class="fa-solid fa-check" style="font-size:12px;display:{{ s.chk }}"></i><span style="display:{{ s.num }}">{{ s.n }}</span></span><span style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.3px;color:{{ s.lc }};text-align:center">{{ s.label }}</span></a></sc-for></div></div>
+          <div style="padding:0 24px;height:360px;box-sizing:border-box;overflow:auto;display:flex;flex-direction:column;gap:16px">
+            <sc-if value="{{ wS0 }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:row;align-items:center;flex-wrap:wrap;gap:12px 20px">
+              <div style="font-size:15px;font-weight:700;color:#344767;white-space:nowrap">Période à auditer</div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:13px;font-weight:700;text-transform:uppercase">Du</span><div style="position:relative;width:160px"><input name="d1" type="text" inputmode="numeric" placeholder="jj/mm/aaaa" value="{{ wz.d1 }}" onInput="{{ setD }}" onBlur="{{ blurD }}" style="width:100%;height:40px;box-sizing:border-box;padding:0 38px 0 12px;font-size:15px;color:#344767;border:1px solid #D2D6DA;border-radius:8px"><a onClick="{{ openD1 }}" style="position:absolute;right:0;top:0;width:38px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#67748E"><i class="fa-regular fa-calendar" title="Choisir une date"></i></a></div><span style="font-size:13px;font-weight:700;text-transform:uppercase">au</span><div style="position:relative;width:160px"><input name="d2" type="text" inputmode="numeric" placeholder="jj/mm/aaaa" value="{{ wz.d2 }}" onInput="{{ setD }}" onBlur="{{ blurD }}" style="width:100%;height:40px;box-sizing:border-box;padding:0 38px 0 12px;font-size:15px;color:#344767;border:1px solid #D2D6DA;border-radius:8px"><a onClick="{{ openD2 }}" style="position:absolute;right:0;top:0;width:38px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#67748E"><i class="fa-regular fa-calendar" title="Choisir une date"></i></a></div></div>
+            </div></sc-if>
+            <sc-if value="{{ wS1 }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:16px"><div><div style="font-size:15px;font-weight:700;color:#344767">Par qui ?</div><div style="font-size:13px;margin-top:2px">Aucune sélection : tous les utilisateurs.</div></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px"><sc-for list="{{ wUsers }}" as="o" hint-placeholder-count="6"><a onClick="{{ o.go }}" role="checkbox" aria-checked="{{ o.on }}" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bgc }};transition:all .15s"><span style="flex:none;width:20px;height:20px;box-sizing:border-box;border-radius:6px;border:1px solid {{ o.chkBd }};background:{{ o.chkBg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fa-solid fa-check" style="display:{{ o.chkD }}"></i></span><span style="flex:none;width:30px;height:30px;border-radius:50%;background:{{ o.grad }};color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ o.ini }}</span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:14px;font-weight:700;color:#344767;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.label }}</span></span></a></sc-for></div></div></sc-if>
+            <sc-if value="{{ wS2 }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:16px"><div><div style="font-size:15px;font-weight:700;color:#344767">Sur quels concepts ?</div><div style="font-size:13px;margin-top:2px">Aucune sélection : tous les concepts.</div></div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px"><sc-for list="{{ wConcepts }}" as="o" hint-placeholder-count="6"><a onClick="{{ o.go }}" role="checkbox" aria-checked="{{ o.on }}" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:12px;border:1px solid {{ o.bd }};background:{{ o.bgc }};transition:all .15s"><span style="flex:none;width:20px;height:20px;box-sizing:border-box;border-radius:6px;border:1px solid {{ o.chkBd }};background:{{ o.chkBg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px"><i class="fa-solid fa-check" style="display:{{ o.chkD }}"></i></span><span style="flex:none;width:30px;height:30px;border-radius:9px;background:#eef1f6;color:#344767;display:flex;align-items:center;justify-content:center;font-size:13px"><i class="{{ o.icon }}"></i></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:1px"><span style="font-size:14px;font-weight:700;color:#344767;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ o.label }}</span></span></a></sc-for></div></div></sc-if>
+            <sc-if value="{{ wS3 }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:12px"><div style="font-size:15px;font-weight:700;color:#344767">Critères de l’audit</div><div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid #e9ecef;border-radius:12px"><span style="flex:none;width:36px;height:36px;border-radius:10px;background:#eef1f6;color:#344767;display:flex;align-items:center;justify-content:center;font-size:15px"><i class="fa-regular fa-calendar"></i></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;font-weight:700;text-transform:uppercase">Période</span><span style="font-size:15px;color:#344767;font-weight:600;overflow-wrap:anywhere">{{ rcP }}</span></span></div><div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid #e9ecef;border-radius:12px"><span style="flex:none;width:36px;height:36px;border-radius:10px;background:#eef1f6;color:#344767;display:flex;align-items:center;justify-content:center;font-size:15px"><i class="fa-solid fa-user"></i></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;font-weight:700;text-transform:uppercase">Par qui</span><span style="font-size:15px;color:#344767;font-weight:600;overflow-wrap:anywhere">{{ rcU }}</span></span></div><div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border:1px solid #e9ecef;border-radius:12px"><span style="flex:none;width:36px;height:36px;border-radius:10px;background:#eef1f6;color:#344767;display:flex;align-items:center;justify-content:center;font-size:15px"><i class="fa-solid fa-layer-group"></i></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:12px;font-weight:700;text-transform:uppercase">Sur quoi</span><span style="font-size:15px;color:#344767;font-weight:600;overflow-wrap:anywhere">{{ rcC }}</span></span></div></div></sc-if>
+            <sc-if value="{{ wzHasErr }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:8px;align-items:flex-start;font-size:14px;font-weight:600;color:#d40505"><i class="fa-solid fa-circle-exclamation" style="margin-top:2px"></i><span>{{ wzErr }}</span></div></sc-if>
+          </div>
+        </div></sc-if>
+        <sc-if value="{{ showMain }}" hint-placeholder-val="{{ true }}">
+        <div style="padding:0 24px 24px;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+          <sc-if value="{{ showNav }}" hint-placeholder-val="{{ true }}"><nav aria-label="Navigation du journal" style="flex:0 0 240px;box-sizing:border-box;background:#f6f8fb;border-radius:12px;padding:8px;display:flex;flex-direction:column;gap:4px;position:sticky;top:16px">
+            <sc-for list="{{ nav }}" as="n" hint-placeholder-count="6"><a onClick="{{ n.go }}" style="cursor:pointer;display:flex;align-items:center;gap:10px;padding:9px 12px;border-radius:8px;background:{{ n.bg }};color:{{ n.fg }};box-shadow:{{ n.sh }};opacity:{{ n.op }};transition:background .15s,color .15s">
+              <sc-if value="{{ n.isU }}" hint-placeholder-val="{{ false }}"><span style="flex:none;width:28px;height:28px;border-radius:50%;background:{{ n.grad }};color:#fff;font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center">{{ n.ini }}</span></sc-if>
+              <sc-if value="{{ n.isI }}" hint-placeholder-val="{{ false }}"><span style="flex:none;width:28px;height:28px;border-radius:8px;background:{{ n.icBg }};color:{{ n.icFg }};display:flex;align-items:center;justify-content:center;font-size:13px"><i class="{{ n.icon }}"></i></span></sc-if>
+              <span style="flex:1;min-width:0;font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span>
+            </a></sc-for>
+          </nav></sc-if>
+          <div style="flex:1 1 480px;min-width:0;display:flex;flex-direction:column;gap:16px">
+            <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+              <div style="min-width:0"><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><div style="font-size:19px;font-weight:700;color:#344767;overflow-wrap:anywhere">{{ pTitle }}</div><sc-if value="{{ showWzCnt }}" hint-placeholder-val="{{ false }}"><span title="{{ rcNl }}" style="flex:none;min-width:24px;box-sizing:border-box;text-align:center;font-size:12px;font-weight:700;line-height:1;padding:5px 10px;border-radius:12px;background:linear-gradient(310deg,#7928ca,#ff0080);color:#fff">{{ rcNum }}</span></sc-if></div><div style="font-size:13px;margin-top:2px">{{ pSub }}</div></div>
+              <sc-if value="{{ hasRec }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearRec }}" style="border:0;cursor:pointer;padding:9px 16px;border-radius:8px;font-weight:700;font-size:12px;text-transform:uppercase;white-space:nowrap;background:#e9ecef;color:#344767"><i class="fa-solid fa-arrow-left" style="margin-right:8px"></i>Retour au journal</button></sc-if>
+              <sc-if value="{{ showGen }}" hint-placeholder-val="{{ true }}"><button onClick="{{ genGo }}" style="border:0;cursor:pointer;padding:9px 16px;border-radius:8px;font-weight:700;font-size:12px;text-transform:uppercase;white-space:nowrap;background:linear-gradient(310deg,#7928ca,#ff0080);color:#fff;box-shadow:0 3px 5px rgba(0,0,0,.15)"><i class="fa-solid fa-clock-rotate-left" style="margin-right:8px"></i>{{ genTxt }}</button></sc-if>
+              <sc-if value="{{ wzEditShow }}" hint-placeholder-val="{{ false }}"><button onClick="{{ wzEdit }}" style="border:0;cursor:pointer;padding:9px 16px;border-radius:8px;font-weight:700;font-size:12px;text-transform:uppercase;white-space:nowrap;background:#e9ecef;color:#344767"><i class="fa-solid fa-sliders" style="margin-right:8px"></i>Modifier les critères</button></sc-if>
+            </div>
+            <sc-if value="{{ showCtl }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+              <select value="{{ fa }}" onChange="{{ setFa }}" aria-label="Type d’action" style="flex:0 0 auto;width:180px;max-width:100%;height:40px;font-size:15px;color:#344767;border:1px solid #D2D6DA;border-radius:8px;padding:0 10px;background:#fff"><sc-for list="{{ faOpts }}" as="o" hint-placeholder-count="4"><option value="{{ o.v }}">{{ o.l }}</option></sc-for></select>
+              <div style="flex:0 1 auto;display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-size:13px;font-weight:700;text-transform:uppercase">Du</span><div style="position:relative;width:150px"><input name="f1" type="text" inputmode="numeric" placeholder="jj/mm/aaaa" aria-label="Date de début" value="{{ f1 }}" onInput="{{ setF }}" onBlur="{{ blurF }}" style="width:100%;height:40px;box-sizing:border-box;padding:0 38px 0 12px;font-size:15px;color:#344767;border:1px solid #D2D6DA;border-radius:8px"><a onClick="{{ openF1 }}" style="position:absolute;right:0;top:0;width:38px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#67748E"><i class="fa-regular fa-calendar" title="Choisir une date"></i></a></div><span style="font-size:13px;font-weight:700;text-transform:uppercase">au</span><div style="position:relative;width:150px"><input name="f2" type="text" inputmode="numeric" placeholder="jj/mm/aaaa" aria-label="Date de fin" value="{{ f2 }}" onInput="{{ setF }}" onBlur="{{ blurF }}" style="width:100%;height:40px;box-sizing:border-box;padding:0 38px 0 12px;font-size:15px;color:#344767;border:1px solid #D2D6DA;border-radius:8px"><a onClick="{{ openF2 }}" style="position:absolute;right:0;top:0;width:38px;height:40px;display:flex;align-items:center;justify-content:center;cursor:pointer;color:#67748E"><i class="fa-regular fa-calendar" title="Choisir une date"></i></a></div></div>
+              <div style="margin-left:auto;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                <sc-if value="{{ hasFilters }}" hint-placeholder-val="{{ false }}"><a onClick="{{ resetAll }}" style="cursor:pointer;font-size:14px;font-weight:600;display:flex;align-items:center;gap:6px"><i class="fa-solid fa-rotate-left"></i>Réinitialiser</a></sc-if>
+                <button onClick="{{ toggleOrder }}" style="flex:none;height:40px;border:1px solid #D2D6DA;cursor:pointer;padding:0 14px;border-radius:8px;font-weight:600;font-size:13px;white-space:nowrap;background:#fff;color:#344767"><i class="{{ orderIcon }}" style="margin-right:8px"></i>{{ orderTxt }}</button>
+              </div>
+            </div></sc-if>
+            <sc-if value="{{ showList }}" hint-placeholder-val="{{ true }}">
+            <sc-if value="{{ isStale }}" hint-placeholder-val="{{ false }}"><div role="status" style="position:sticky;top:16px;z-index:10;display:flex;gap:10px;align-items:flex-start;background:#fff4e5;color:#b45309;border-radius:8px;padding:12px 16px;font-size:14px;font-weight:600;line-height:1.5;box-shadow:0 8px 20px rgba(180,83,9,.18)"><i class="fa-solid fa-triangle-exclamation" style="margin-top:3px;flex:none"></i><span>Les critères ont changé : l’historique affiché n’est plus à jour. Cliquez sur « Régénérer l’historique » pour le mettre à jour.</span></div></sc-if>
+            <div style="display:flex;flex-direction:column;gap:16px;opacity:{{ listOp }};filter:{{ listFx }};pointer-events:{{ listPe }};transition:opacity .2s,filter .2s">
+            <sc-for list="{{ daysL }}" as="dy" hint-placeholder-count="2">
+              <div style="display:flex;flex-direction:column;gap:12px">
+                <div style="display:flex;align-items:baseline;gap:10px"><span style="font-size:13px;font-weight:700;text-transform:uppercase;color:#344767">{{ dy.label }}</span><span style="font-size:13px">{{ dy.rel }}</span></div>
+                <div style="position:relative;padding-left:26px;display:flex;flex-direction:column;gap:12px">
+                  <div style="position:absolute;left:7px;top:8px;bottom:8px;width:2px;background:#e9ecef"></div>
+                  <sc-for list="{{ dy.gs }}" as="gp" hint-placeholder-count="2">
+                    <div style="position:relative">
+                    <span style="position:absolute;left:-26px;top:12px;z-index:1;width:16px;height:16px;box-sizing:border-box;border-radius:50%;background:{{ gp.dot }};border:3px solid #fff;box-shadow:0 0 0 1px #e9ecef"></span>
+                    <div style="border:1px solid #e9ecef;border-radius:12px;overflow:hidden;background:#fff">
+                      <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 16px;background:#f6f8fb">
+                        <span style="font-size:14px;font-weight:700;color:#344767">{{ gp.time }}</span>
+                        <sc-if value="{{ gp.showUser }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:8px;min-width:0"><span style="flex:none;width:24px;height:24px;border-radius:50%;background:{{ gp.avBg }};color:#fff;font-weight:700;font-size:10px;display:flex;align-items:center;justify-content:center">{{ gp.ini }}</span><span style="font-size:13px;font-weight:700;color:#344767">{{ gp.uname }}</span><span style="font-size:13px">{{ gp.login }}</span></span></sc-if>
+                        <sc-if value="{{ gp.multi }}" hint-placeholder-val="{{ false }}"><span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:700;color:#cb0c9f"><i class="fa-solid fa-link"></i>{{ gp.multiTxt }}</span></sc-if>
+                      </div>
+                      <sc-for list="{{ gp.es }}" as="en" hint-placeholder-count="2">
+                        <div style="border-top:1px solid #e9ecef">
+                          <div onClick="{{ en.toggle }}" style="cursor:pointer;display:flex;align-items:flex-start;gap:12px;padding:12px 16px" style-hover="background:#fafbfc">
+                            <span style="flex:none;width:34px;height:34px;border-radius:10px;background:#eef1f6;color:#344767;display:flex;align-items:center;justify-content:center;font-size:14px"><i class="{{ en.icon }}"></i></span>
+                            <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px">
+                              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="display:inline-block;font-size:11px;font-weight:700;text-transform:uppercase;line-height:1;padding:5px 9px;border-radius:var(--radius-chip,8px);background:{{ en.aGrad }};color:#fff;white-space:nowrap">{{ en.aLabel }}</span><span style="font-size:14px;font-weight:700;color:#344767;overflow-wrap:anywhere">{{ en.lbl }}</span><span style="font-size:13px">{{ en.sub }}</span></div>
+                              <sc-if value="{{ en.isM }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px">
+                                <sc-for list="{{ en.diffs }}" as="df" hint-placeholder-count="2"><div style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 6px;font-size:13px;min-width:0"><span style="color:#344767;font-weight:600">{{ df.label }}</span>
+                                  <sc-if value="{{ df.mask }}" hint-placeholder-val="{{ false }}"><span style="font-style:italic">modifié, valeur masquée</span></sc-if>
+                                  <sc-if value="{{ df.vis }}" hint-placeholder-val="{{ true }}"><span style="display:inline-block;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:2px 8px;border-radius:6px;background:#fdeaea;color:#8a1c1c;text-decoration:{{ df.otd }};font-style:{{ df.ofs }}">{{ df.o }}</span><i class="fa-solid fa-arrow-right-long" style="font-size:12px;color:#67748E"></i><span style="display:inline-block;max-width:170px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:2px 8px;border-radius:6px;background:#e6f6ea;color:#14632a;font-weight:700;font-style:{{ df.nfs }}">{{ df.n }}</span></sc-if></div></sc-for>
+                                <sc-if value="{{ en.more }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;font-weight:600;color:#cb0c9f">{{ en.moreTxt }}</span></sc-if>
+                              </div></sc-if>
+                              <sc-if value="{{ en.notM }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px">{{ en.sum }}</span></sc-if>
+                              <sc-if value="{{ en.hasCtx }}" hint-placeholder-val="{{ false }}"><div style="font-size:12.5px;font-style:italic;line-height:1.4">{{ en.ctx }}</div></sc-if>
+                            </div>
+                            <i class="{{ en.chev }}" style="flex:none;font-size:12px;color:#67748E;margin-top:12px"></i>
+                          </div>
+                          <sc-if value="{{ en.open }}" hint-placeholder-val="{{ false }}"><div style="padding:0 16px 16px;display:flex;flex-direction:column;gap:12px">
+                            <div style="border:1px solid #e9ecef;border-radius:12px;overflow:hidden">
+                              <table class="dt" style="width:100%;border-collapse:collapse;font-size:14px;table-layout:fixed">
+                                <thead><tr style="font-size:12px;text-transform:uppercase;background:#f8f9fa"><th style="width:25%;opacity:.8">Champ</th><th style="width:37.5%;color:#a31515"><i class="fa-solid fa-circle-minus" style="margin-right:6px"></i>As is · avant</th><th style="width:37.5%;color:#14632a"><i class="fa-solid fa-circle-plus" style="margin-right:6px"></i>To be · après</th></tr></thead>
+                                <tbody>
+                                  <sc-for list="{{ en.rows }}" as="fc" hint-placeholder-count="4">
+                                    <tr>
+                                      <td style="color:#344767;overflow-wrap:anywhere"><div style="font-weight:700">{{ fc.l }}</div><div data-i18n-skip="1" style="font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:11.5px;color:#67748E;font-weight:400">{{ fc.k }}</div></td>
+                                      <sc-if value="{{ fc.same }}" hint-placeholder-val="{{ false }}"><td colspan="2" style="line-height:1.5;overflow-wrap:anywhere"><span style="color:#67748E">{{ fc.val }}</span> <span style="font-size:12px;font-style:italic;margin-left:6px">inchangé</span></td></sc-if>
+                                      <sc-if value="{{ fc.chg }}" hint-placeholder-val="{{ true }}">
+                                        <td data-l="As is · avant" style="background:{{ fc.oBg }};color:{{ fc.oFg }};line-height:1.5;overflow-wrap:anywhere"><sc-for list="{{ fc.oSegs }}" as="sg" hint-placeholder-count="1"><span style="background:{{ sg.bg }};text-decoration:{{ sg.td }};font-weight:{{ sg.fw }};font-style:{{ sg.fs }};border-radius:3px">{{ sg.t }}</span></sc-for></td>
+                                        <td data-l="To be · après" style="background:{{ fc.nBg }};color:{{ fc.nFg }};line-height:1.5;overflow-wrap:anywhere"><sc-for list="{{ fc.nSegs }}" as="sg" hint-placeholder-count="1"><span style="background:{{ sg.bg }};text-decoration:{{ sg.td }};font-weight:{{ sg.fw }};font-style:{{ sg.fs }};border-radius:3px">{{ sg.t }}</span></sc-for></td>
+                                      </sc-if>
+                                    </tr>
+                                  </sc-for>
+                                </tbody>
+                              </table>
+                            </div>
+                            <sc-if value="{{ en.canHist }}" hint-placeholder-val="{{ true }}"><div><button onClick="{{ en.hist }}" style="border:0;cursor:pointer;padding:9px 16px;border-radius:8px;font-weight:700;font-size:12px;text-transform:uppercase;white-space:nowrap;background:#e9ecef;color:#344767"><i class="fa-solid fa-clock-rotate-left" style="margin-right:8px"></i>Historique de cet enregistrement</button></div></sc-if>
+                          </div></sc-if>
+                        </div>
+                      </sc-for>
+                    </div>
+                    </div>
+                  </sc-for>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}"><div style="padding:32px 24px;text-align:center;font-size:14px;border:1px dashed #D2D6DA;border-radius:12px">Aucune opération ne correspond à ces critères.</div></sc-if>
+            <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px"><span>{{ rangeTxt }}</span>
+              <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ false }}"><button onClick="{{ showMore }}" style="border:0;cursor:pointer;padding:10px 18px;border-radius:8px;font-weight:700;font-size:12px;text-transform:uppercase;white-space:nowrap;background:linear-gradient(310deg,#7928ca,#ff0080);color:#fff;box-shadow:0 3px 5px rgba(0,0,0,.15)">{{ moreTxt }}</button></sc-if>
+            </div>
+            </div>
+            </sc-if>
+            <sc-if value="{{ showPrompt }}" hint-placeholder-val="{{ false }}"><div style="padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center"><span style="width:56px;height:56px;border-radius:50%;background:#eef1f6;color:#344767;display:flex;align-items:center;justify-content:center;font-size:22px"><i class="fa-solid fa-clock-rotate-left"></i></span><div style="font-size:15px;line-height:1.5;max-width:420px">{{ promptTxt }}</div></div></sc-if>
+          </div>
+        </div>
+        </sc-if>
+      </div>
+      <sc-if value="{{ showWz }}" hint-placeholder-val="{{ false }}">
+    <div style="position:sticky;bottom:16px;z-index:20;display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;background:#fff;border-radius:12px;box-shadow:0 8px 30px rgba(52,71,103,.22);padding:12px 16px">
+      <button onClick="{{ wzReset }}" style="border:1px solid #D2D6DA;cursor:pointer;padding:10px 18px;border-radius:8px;font-weight:700;font-size:13px;text-transform:uppercase;white-space:nowrap;background:#fff;color:#344767"><i class="fa-solid fa-rotate-left" style="margin-right:8px"></i>Réinitialiser</button>
+      <div style="display:flex;gap:8px"><sc-if value="{{ wBack }}" hint-placeholder-val="{{ false }}"><button onClick="{{ wPrev }}" style="border:0;cursor:pointer;padding:11px 18px;border-radius:8px;font-weight:700;font-size:13px;text-transform:uppercase;white-space:nowrap;background:#e9ecef;color:#344767"><i class="fa-solid fa-arrow-left" style="margin-right:8px"></i>Précédent</button></sc-if><sc-if value="{{ wNext }}" hint-placeholder-val="{{ true }}"><button onClick="{{ wNextGo }}" style="border:0;cursor:pointer;padding:11px 18px;border-radius:8px;font-weight:700;font-size:13px;text-transform:uppercase;white-space:nowrap;background:linear-gradient(310deg,#7928ca,#ff0080);color:#fff">Suivant<i class="fa-solid fa-arrow-right" style="margin-left:8px"></i></button></sc-if><sc-if value="{{ wLast }}" hint-placeholder-val="{{ false }}"><button onClick="{{ wValidate }}" style="border:0;cursor:pointer;padding:11px 18px;border-radius:8px;font-weight:700;font-size:13px;text-transform:uppercase;white-space:nowrap;background:linear-gradient(310deg,#7928ca,#ff0080);color:#fff"><i class="fa-solid fa-timeline" style="margin-right:8px"></i>Afficher le fil conducteur</button></sc-if></div>
+    </div>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{ locked }}" hint-placeholder-val="{{ false }}">
+      <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);padding:48px 24px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;max-width:560px;align-self:center;width:100%;box-sizing:border-box">
+        <span style="width:56px;height:56px;border-radius:50%;background:#eef1f6;color:#344767;display:flex;align-items:center;justify-content:center;font-size:22px"><i class="fa-solid fa-lock"></i></span>
+        <div style="font-size:19px;font-weight:700;color:#344767">Accès non autorisé</div>
+        <div style="font-size:15px;line-height:1.5">{{ lockMsg }}</div>
+      </div>
+    </sc-if>
+  </main>
+
+  </div>
+
+<sc-if value="{{ hasDP }}" hint-placeholder-val="{{ false }}">
+  <div onClick="{{ closeDP }}" style="position:fixed;inset:0;z-index:300;background:rgba(52,71,103,.25);display:flex;align-items:center;justify-content:center;padding:16px">
+    <div onClick="{{ stop }}" style="background:#fff;border-radius:12px;box-shadow:0 20px 27px rgba(0,0,0,.25);padding:16px;width:296px;box-sizing:border-box;display:flex;flex-direction:column;gap:10px">
+      <div style="display:flex;justify-content:space-between;align-items:center"><button onClick="{{ dpPrev }}" aria-label="Mois précédent" style="border:0;background:#f1f3f5;border-radius:8px;width:32px;height:32px;cursor:pointer;color:#344767"><i class="fa-solid fa-chevron-left"></i></button><b style="color:#344767;font-size:15px;text-transform:capitalize">{{ dpLabel }}</b><button onClick="{{ dpNext }}" aria-label="Mois suivant" style="border:0;background:#f1f3f5;border-radius:8px;width:32px;height:32px;cursor:pointer;color:#344767"><i class="fa-solid fa-chevron-right"></i></button></div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px;text-align:center;font-size:12px;font-weight:700;color:#8392AB;text-transform:uppercase"><span>L</span><span>M</span><span>M</span><span>J</span><span>V</span><span>S</span><span>D</span></div>
+      <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:2px">
+        <sc-for list="{{ dpDays }}" as="d" hint-placeholder-count="35"><div onClick="{{ d.pick }}" style="height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;cursor:{{ d.cur }};background:{{ d.bg }};color:{{ d.fg }};font-weight:{{ d.fw }}">{{ d.n }}</div></sc-for>
+      </div>
+      <div style="display:flex;justify-content:space-between"><button onClick="{{ dpToday }}" style="border:0;background:transparent;cursor:pointer;color:#cb0c9f;font-weight:700;font-size:13px;text-transform:uppercase;font-family:'Open Sans',sans-serif">Aujourd’hui</button><button onClick="{{ closeDP }}" style="border:0;cursor:pointer;padding:8px 14px;border-radius:8px;background:linear-gradient(310deg,#7928ca,#ff0080);color:#fff;font-weight:700;font-size:13px;text-transform:uppercase;font-family:'Open Sans',sans-serif">Fermer</button></div>
+    </div>
+  </div>
+</sc-if>
+
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;pageSize&quot;:{&quot;editor&quot;:&quot;range&quot;,&quot;default&quot;:10,&quot;min&quot;:5,&quot;max&quot;:20,&quot;step&quot;:1,&quot;tsType&quot;:&quot;number&quot;,&quot;section&quot;:&quot;Liste&quot;},&quot;showUnchanged&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:false,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Détail d’une modification&quot;}}">
+class Component extends DCLogic {
+  state = { dp: null, gen: '', ax: 'u', su: '', sc: '', q: '', fa: 'all', f1: '', f2: '', asc: false, more: 0, ex: {}, rec: null, wz: { step: 0, d1: '', d2: '', us: [], cs: [], done: false, desc: false, err: '' }, role: this.initRole(), sbOpen: false };
+  initRole() { try { return { Admin: 'admin', Gestionnaire: 'gest', Locataire: 'tenant', Consultant: 'cons' }[localStorage.getItem('gg_role')] || 'admin'; } catch (e) { return 'admin'; } }
+  norm(s) { return String(s == null ? '' : s).normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase(); }
+  pd(v) { const m = /^(\d\d)\/(\d\d)\/(\d{4})$/.exec(v || ''); if (!m) return ''; const d = +m[1], mo = +m[2], y = +m[3], dt = new Date(Date.UTC(y, mo - 1, d)); return dt.getUTCFullYear() === y && dt.getUTCMonth() === mo - 1 && dt.getUTCDate() === d ? m[3] + '-' + m[2] + '-' + m[1] : ''; }
+  TB() {
+    return {
+      GARAGE: { l: 'Garage', ic: 'fa-solid fa-warehouse', f: [['numero', 'Numéro'], ['adresse', 'Adresse'], ['nb_cles_total', 'Clés (total)'], ['nb_cles_reserve', 'Clés en réserve'], ['statut', 'Statut']] },
+      LOYER_GARAGE: { l: 'Loyer', ic: 'fa-solid fa-coins', f: [['garage_id', 'Garage'], ['montant', 'Montant mensuel'], ['date_debut', 'Début'], ['date_fin', 'Fin']] },
+      LOCATAIRE: { l: 'Locataire', ic: 'fa-solid fa-user', f: [['civilite', 'Civilité'], ['nom', 'Nom'], ['prenom', 'Prénom'], ['rue', 'Rue'], ['numero_rue', 'N°'], ['code_postal', 'Code postal'], ['localite', 'Localité'], ['tel1', 'Téléphone 1'], ['tel2', 'Téléphone 2'], ['email', 'E-mail']] },
+      LOCATION: { l: 'Location', ic: 'fa-solid fa-file-signature', f: [['garage_id', 'Garage'], ['locataire_id', 'Locataire'], ['date_debut', 'Début'], ['date_fin', 'Fin'], ['nb_cles_remises', 'Clés remises']] },
+      ECHEANCE: { l: 'Échéance', ic: 'fa-regular fa-calendar-check', f: [['location_id', 'Location'], ['periode', 'Période'], ['montant_du', 'Montant dû']] },
+      VERSEMENT: { l: 'Versement', ic: 'fa-solid fa-euro-sign', f: [['echeance_id', 'Échéance'], ['montant', 'Montant'], ['mode_paiement', 'Mode de paiement'], ['date_paiement', 'Date de paiement']] },
+      REMARQUE: { l: 'Remarque', ic: 'fa-regular fa-comment', f: [['garage_id', 'Garage'], ['locataire_id', 'Locataire'], ['date_creation', 'Créée le'], ['type', 'Type'], ['texte', 'Texte'], ['resolu', 'Résolu'], ['date_resolution', 'Résolu le']] },
+      UTILISATEUR: { l: 'Utilisateur', ic: 'fa-solid fa-users-gear', f: [['login', 'Login'], ['email', 'E-mail'], ['role', 'Profil'], ['actif', 'Actif'], ['mot_de_passe_hash', 'Mot de passe']] },
+      PARAMETRE: { l: 'Paramètre', ic: 'fa-solid fa-sliders', f: [['categorie', 'Catégorie'], ['cle', 'Clé'], ['libelle', 'Libellé'], ['valeur', 'Valeur']] }
+    };
+  }
+  USERS() {
+    return {
+      sdelmotte: { n: 'Delmotte Sophie', p: 'admin' }, emartin: { n: 'Martin Élodie', p: 'admin' },
+      jrenard: { n: 'Renard Julien', p: 'gest' }, clambert: { n: 'Lambert Camille', p: 'gest' }, lgarcia: { n: 'Garcia Léa', p: 'gest' }, npetit: { n: 'Petit Nicolas', p: 'gest' }
+    };
+  }
+  seed() {
+    if (this._seed) return this._seed;
+    const MK = '\u0001', TB = this.TB(), US = this.USERS();
+    const R = [
+      ['2026-04-30 12:10:21', 'sdelmotte', 'M', 'UTILISATEUR', 8, 'Durand Antoine (adurand)', { login: 'adurand', email: 'antoine.durand@gestion-garages.be', role: 'Gestionnaire', actif: 'Non', mot_de_passe_hash: MK }, { actif: 'Oui' }, 'Désactivation du compte : l’utilisateur ne peut plus se connecter.'],
+      ['2026-08-03 10:12:40', 'lgarcia', 'C', 'LOCATAIRE', 99, 'Vandamme Louis', { civilite: 'M.', nom: 'Vandamme', prenom: 'Louis', rue: 'rue des Fleurs', numero_rue: '8', code_postal: '5000', localite: 'Namur', tel1: '06 77 88 99 00', tel2: null, email: 'l.vandamme@mail.fr' }],
+      ['2026-08-03 10:31:05', 'lgarcia', 'C', 'LOCATION', 31, 'G09 · Vandamme Louis', { garage_id: 'G09', locataire_id: 'Vandamme Louis', date_debut: '01/09/2026', date_fin: null, nb_cles_remises: '2' }],
+      ['2026-08-14 16:05:33', 'npetit', 'M', 'GARAGE', 10, 'Garage G10', { numero: 'G10', adresse: '40 av. Royale, 1000 Bruxelles', nb_cles_total: '4', nb_cles_reserve: '1', statut: 'Libre' }, { nb_cles_total: '3' }],
+      ['2026-09-05 13:12:30', 'emartin', 'M', 'PARAMETRE', 21, 'Avis de loyer · Texte', { categorie: 'Modèles de messages', cle: 'modele_avis_texte', libelle: 'Avis de loyer · Texte', valeur: 'Bonjour {civilite} {nom}, nous vous informons que le loyer de votre garage {garage} passera de {ancien_loyer} à {nouveau_loyer} le {date_effet}.' }, { valeur: 'Bonjour {civilite} {nom}, le loyer de votre garage {garage} passera de {ancien_loyer} à {nouveau_loyer} à partir du {date_effet}.' }],
+      ['2026-09-12 10:22:07', 'jrenard', 'C', 'ECHEANCE', 388, 'G09 · échéance 09/2026', { location_id: 'G09 · Vandamme Louis', periode: '01/09/2026', montant_du: '40,00 €' }],
+      ['2026-09-12 10:22:08', 'jrenard', 'C', 'VERSEMENT', 520, 'G09 · versement de 40,00 €', { echeance_id: 'G09 · 09/2026', montant: '40,00 €', mode_paiement: 'Espèces', date_paiement: '12/09/2026' }],
+      ['2026-09-15 08:55:49', 'lgarcia', 'M', 'LOCATAIRE', 11, 'Meunier Yanis', { civilite: 'M.', nom: 'Meunier', prenom: 'Yanis', rue: 'rue des Tilleuls', numero_rue: '8', code_postal: '4000', localite: 'Liège', tel1: '06 33 44 55 66', tel2: null, email: 'y.meunier@mail.fr' }, { rue: 'rue du Moulin', numero_rue: '12', code_postal: '4020' }],
+      ['2026-09-20 14:10:26', 'jrenard', 'C', 'REMARQUE', 11, 'Garage G05 · Problème', { garage_id: 'G05', date_creation: '20/09/2026 14:10', type: 'Problème', texte: 'Fuite au plafond près de la porte, à signaler au syndic.', resolu: 'Non', date_resolution: null }],
+      ['2026-09-26 10:30:12', 'jrenard', 'C', 'GARAGE', 15, 'Garage G15', { numero: 'G15', adresse: null, nb_cles_total: '2', nb_cles_reserve: '1', statut: 'Libre' }],
+      ['2026-09-26 10:30:12', 'jrenard', 'C', 'LOYER_GARAGE', 61, 'G15 · loyer du 01/10/2026', { garage_id: 'G15', montant: '85,00 €', date_debut: '01/10/2026', date_fin: null }, null, 'Premier loyer créé avec le garage.'],
+      ['2026-09-26 11:02:48', 'sdelmotte', 'S', 'GARAGE', 15, 'Garage G15', { numero: 'G15', adresse: null, nb_cles_total: '2', nb_cles_reserve: '1', statut: 'Libre' }, null, 'Garage rattaché à aucune location : suppression définitive.'],
+      ['2026-09-26 11:02:48', 'sdelmotte', 'S', 'LOYER_GARAGE', 61, 'G15 · loyer du 01/10/2026', { garage_id: 'G15', montant: '85,00 €', date_debut: '01/10/2026', date_fin: null }, null, 'Suppression en cascade : le garage G15 a été supprimé.'],
+      ['2026-09-28 09:20:15', 'jrenard', 'C', 'GARAGE', 14, 'Garage G14', { numero: 'G14', adresse: null, nb_cles_total: '3', nb_cles_reserve: '1', statut: 'Libre' }],
+      ['2026-09-28 09:20:15', 'jrenard', 'C', 'LOYER_GARAGE', 62, 'G14 · loyer du 01/10/2026', { garage_id: 'G14', montant: '110,00 €', date_debut: '01/10/2026', date_fin: null }, null, 'Premier loyer créé avec le garage.'],
+      ['2026-09-29 15:44:30', 'lgarcia', 'C', 'LOCATION', 32, 'G12 · Aubry Chloé', { garage_id: 'G12', locataire_id: 'Aubry Chloé', date_debut: '01/11/2026', date_fin: null, nb_cles_remises: '1' }],
+      ['2026-09-30 10:12:03', 'clambert', 'M', 'GARAGE', 5, 'Garage G05', { numero: 'G05', adresse: '22 rue du Pont, 5000 Namur', nb_cles_total: '2', nb_cles_reserve: '0', statut: 'Indisponible' }, { statut: 'Libre' }],
+      ['2026-10-01 15:22:36', 'lgarcia', 'M', 'REMARQUE', 9, 'Dupuis Marc · Problème', { locataire_id: 'Dupuis Marc', date_creation: '17/09/2026 09:05', type: 'Problème', texte: 'Demande de double des clés, en attente de la réponse du serrurier.', resolu: 'Oui', date_resolution: '01/10/2026' }, { resolu: 'Non', date_resolution: null }],
+      ['2026-10-02 11:48:19', 'emartin', 'S', 'LOCATION', 32, 'G12 · Aubry Chloé', { garage_id: 'G12', locataire_id: 'Aubry Chloé', date_debut: '01/11/2026', date_fin: null, nb_cles_remises: '1' }, null, 'Location à venir supprimée.'],
+      ['2026-10-05 16:22:40', 'clambert', 'C', 'LOYER_GARAGE', 57, 'G08 · loyer du 01/12/2026', { garage_id: 'G08', montant: '90,00 €', date_debut: '01/12/2026', date_fin: null }],
+      ['2026-10-05 16:22:40', 'clambert', 'M', 'LOYER_GARAGE', 49, 'G08 · loyer du 01/03/2025', { garage_id: 'G08', montant: '80,00 €', date_debut: '01/03/2025', date_fin: '30/11/2026' }, { date_fin: null }, 'Clôture automatique de la période précédente : fin = veille du nouveau loyer.'],
+      ['2026-10-06 10:05:27', 'sdelmotte', 'M', 'UTILISATEUR', 6, 'Petit Nicolas (npetit)', { login: 'npetit', email: 'nicolas.petit@gestion-garages.be', role: 'Gestionnaire', actif: 'Oui', mot_de_passe_hash: MK }, { mot_de_passe_hash: MK }, 'Réinitialisation du mot de passe : un mot de passe temporaire a été généré.'],
+      ['2026-10-06 11:30:52', 'jrenard', 'M', 'LOYER_GARAGE', 57, 'G08 · loyer du 01/12/2026', { garage_id: 'G08', montant: '95,00 €', date_debut: '01/12/2026', date_fin: null }, { montant: '90,00 €' }],
+      ['2026-10-06 14:38:09', 'sdelmotte', 'C', 'UTILISATEUR', 9, 'Simon Laura (lsimon)', { login: 'lsimon', email: 'laura.simon@gmail.com', role: 'Locataire', actif: 'Oui', mot_de_passe_hash: MK }],
+      ['2026-10-07 11:26:44', 'sdelmotte', 'M', 'UTILISATEUR', 7, 'Lefèvre Marie (mlefevre)', { login: 'mlefevre', email: 'marie.lefevre@gestion-garages.be', role: 'Consultant', actif: 'Oui', mot_de_passe_hash: MK }, { role: 'Locataire' }],
+      ['2026-10-07 15:03:58', 'clambert', 'M', 'LOCATAIRE', 6, 'Haddad Karim', { civilite: 'M.', nom: 'Haddad', prenom: 'Karim', rue: 'rue Large', numero_rue: '18', code_postal: '6000', localite: 'Charleroi', tel1: '06 67 89 02 31', tel2: null, email: 'k.haddad@mail.fr' }, { tel1: '06 67 89 01 23', email: null }],
+      ['2026-10-07 16:40:21', 'jrenard', 'C', 'REMARQUE', 15, 'Fournier Camille · Information', { locataire_id: 'Fournier Camille', date_creation: '07/10/2026 16:40', type: 'Information', texte: 'Locataire relancé par téléphone le 07/10/2026. Impayé total : 90,00 €, garage G01, période 09/2026.', resolu: null, date_resolution: null }, null, 'Remarque créée automatiquement par la relance d’impayé.'],
+      ['2026-10-07 17:15:02', 'jrenard', 'M', 'LOCATION', 18, 'G06 · Roche Julien', { garage_id: 'G06', locataire_id: 'Roche Julien', date_debut: '01/02/2025', date_fin: '31/12/2026', nb_cles_remises: '2' }, { date_fin: null }],
+      ['2026-10-08 08:42:15', 'sdelmotte', 'M', 'PARAMETRE', 14, 'Jour limite de paiement', { categorie: 'Paiements et impayés', cle: 'jour_limite_paiement', libelle: 'Jour limite de paiement', valeur: '10' }, { valeur: '31' }],
+      ['2026-10-08 08:51:33', 'sdelmotte', 'S', 'VERSEMENT', 520, 'G09 · versement de 40,00 €', { echeance_id: 'G09 · 09/2026', montant: '40,00 €', mode_paiement: 'Espèces', date_paiement: '12/09/2026' }, null, 'Annulation d’un versement (réservée à l’Admin).'],
+      ['2026-10-08 09:14:21', 'jrenard', 'C', 'ECHEANCE', 412, 'G04 · échéance 10/2026', { location_id: 'G04 · Martin Léa', periode: '01/10/2026', montant_du: '75,00 €' }],
+      ['2026-10-08 09:14:22', 'jrenard', 'C', 'VERSEMENT', 531, 'G04 · versement de 45,00 €', { echeance_id: 'G04 · 10/2026', montant: '45,00 €', mode_paiement: 'Virement', date_paiement: '08/10/2026' }, null, 'Paiement partiel : reste dû 30,00 €.']
+    ];
+    this._seed = R.slice().sort((a, b) => (a[0] < b[0] ? -1 : a[0] > b[0] ? 1 : 0)).map((r, i) => {
+      const [t, u, a, tb, rid, lbl, rec, ch, ctx] = r, ch2 = ch || {};
+      const vals = Object.values(rec).concat(Object.values(ch2)).filter(v => v != null && v !== MK);
+      return { id: 1001 + i, t, u, a, tb, rid, lbl, rec, ch: ch2, ctx: ctx || '', MK, hay: this.norm([lbl, TB[tb].l, tb, rid, US[u].n, u].concat(vals).join(' ')) };
+    });
+    return this._seed;
+  }
+  wd(a, b) {
+    const A = a.split(/(\s+)/).filter(x => x !== ''), B = b.split(/(\s+)/).filter(x => x !== ''), n = A.length, m = B.length, L = [];
+    for (let i = 0; i <= n; i++) L.push(new Array(m + 1).fill(0));
+    for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = A[i] === B[j] ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+    const o = [], w = [], push = (arr, t, k) => { const l = arr[arr.length - 1]; if (l && l.k === k) l.t += t; else arr.push({ t, k }); };
+    let i = 0, j = 0;
+    while (i < n && j < m) { if (A[i] === B[j]) { push(o, A[i], 's'); push(w, B[j], 's'); i++; j++; } else if (L[i + 1][j] >= L[i][j + 1]) { push(o, A[i], 'd'); i++; } else { push(w, B[j], 'a'); j++; } }
+    while (i < n) push(o, A[i++], 'd'); while (j < m) push(w, B[j++], 'a');
+    return [o, w];
+  }
+  seg(t, o) { return { t, bg: 'transparent', td: 'none', fw: 400, fs: 'normal', ...(o || {}) }; }
+  rowsOf(e) {
+    const T = this.TB()[e.tb], MK = e.MK, MT = '•••••••• (masqué)', fields = T.f.filter(([k]) => k in e.rec), out = [];
+    const txt = (k, v) => (v === MK ? MT : v == null || v === '' ? '(vide)' : String(v));
+    fields.forEach(([k, l]) => {
+      const nv = e.rec[k], has = k in e.ch, ov = e.ch[k];
+      const base = { k, l, same: false, chg: false, val: '', oSegs: [], nSegs: [], oBg: '', oFg: '', nBg: '', nFg: '', mask: nv === MK, nonEmpty: nv != null && nv !== '' };
+      if (e.a === 'C') {
+        out.push({ ...base, kind: 'add', chg: true, oBg: '#f8f9fa', oFg: '#8392AB', nBg: '#ecf8ef', nFg: '#14391f', oSegs: [this.seg('—')], nSegs: [this.seg(txt(k, nv), nv == null || nv === '' ? { fs: 'italic' } : { fw: 600 })] });
+      } else if (e.a === 'S') {
+        out.push({ ...base, kind: 'del', chg: true, oBg: '#fdeeee', oFg: '#6b1d1d', nBg: '#f8f9fa', nFg: '#8392AB', oSegs: [this.seg(txt(k, nv), nv == null || nv === '' ? { fs: 'italic' } : { fw: 600 })], nSegs: [this.seg('—')] });
+      } else if (has) {
+        const so = txt(k, ov), sn = txt(k, nv), ge = v => v == null || v === '';
+        let oS, nS;
+        if (nv === MK) { oS = [this.seg(MT, { fs: 'italic' })]; nS = [this.seg(MT, { fs: 'italic' })]; }
+        else if (!ge(ov) && !ge(nv) && so.length > 30 && sn.length > 30 && /\s/.test(so)) {
+          const [wo, ww] = this.wd(so, sn);
+          oS = wo.map(x => this.seg(x.t, x.k === 'd' ? { bg: '#f7bcbc', td: 'line-through' } : {}));
+          nS = ww.map(x => this.seg(x.t, x.k === 'a' ? { bg: '#a9e2bb', fw: 700 } : {}));
+        } else {
+          oS = [this.seg(so, ge(ov) ? { fs: 'italic' } : { td: 'line-through' })];
+          nS = [this.seg(sn, ge(nv) ? { fs: 'italic' } : { fw: 700 })];
+        }
+        out.push({ ...base, kind: 'chg', chg: true, so, sn, oEmpty: ge(ov), nEmpty: ge(nv), oBg: '#fdeeee', oFg: '#6b1d1d', nBg: '#ecf8ef', nFg: '#14391f', oSegs: oS, nSegs: nS });
+      } else {
+        out.push({ ...base, kind: 'same', same: true, val: txt(k, nv) });
+      }
+    });
+    return out;
+  }
+  componentDidMount() {
+    const dv = () => (window.GGDroits && window.GGDroits.dev ? window.GGDroits.dev.detect() : 'desktop'); this._dv = dv();
+    this._rz = () => { const d = dv(); if (d !== this._dv) { this._dv = d; this.forceUpdate(); } };
+    window.addEventListener('resize', this._rz);
+    if (!window.GGDroits) this._ld = setTimeout(() => this.forceUpdate(), 400);
+  }
+  componentWillUnmount() { window.removeEventListener('resize', this._rz); clearTimeout(this._ld); }
+  renderVals() {
+    const { ax, su, sc, q, fa, f1, f2, asc, more, ex, rec, role, sbOpen, wz } = this.state;
+    const pf1 = this.pd(f1), pf2 = this.pd(f2);
+    const TB = this.TB(), US = this.USERS(), all = this.seed(), norm = s => this.norm(s);
+    const ps = Math.max(3, Math.min(50, parseInt(this.props.pageSize) || 10)), showSame = !!this.props.showUnchanged;
+    const TODAY = '2026-10-08', ic = c => React.createElement('i', { className: c });
+    const ACT = { C: { l: 'Création', g: 'var(--gradient-success)' }, M: { l: 'Modification', g: 'var(--gradient-info)' }, S: { l: 'Suppression', g: 'var(--gradient-danger)' } };
+    const PG = { admin: 'var(--gradient-primary)', gest: 'var(--gradient-info)' }, PL = { admin: 'Admin', gest: 'Gestionnaire' };
+    const P = { admin: 'Admin', gest: 'Gestionnaire', tenant: 'Locataire', cons: 'Consultant' };
+    const MO = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'août', 'septembre', 'octobre', 'novembre', 'décembre'];
+    const dd = t => Math.round((Date.UTC(+TODAY.slice(0, 4), +TODAY.slice(5, 7) - 1, +TODAY.slice(8, 10)) - Date.UTC(+t.slice(0, 4), +t.slice(5, 7) - 1, +t.slice(8, 10))) / 864e5);
+    const rel = t => { const n = dd(t); return n <= 0 ? 'Aujourd’hui' : n === 1 ? 'Hier' : n < 31 ? 'il y a ' + n + ' jours' : 'il y a ' + Math.floor(n / 30) + ' mois'; };
+    const dl = t => (+t.slice(8, 10) === 1 ? '1er' : +t.slice(8, 10)) + ' ' + MO[+t.slice(5, 7) - 1] + ' ' + t.slice(0, 4);
+    const ini = n => n.split(' ').map(x => x[0]).join('').slice(0, 2).toUpperCase();
+        const wzOn = ax === 'w', nq = norm(q), selK = ax === 'u' ? su : ax === 'c' ? sc : '', ascOn = rec ? true : wzOn ? !wz.desc : asc;
+    const wi1 = this.pd(wz.d1), wi2 = this.pd(wz.d2), inP = e => (!wi1 || e.t.slice(0, 10) >= wi1) && (!wi2 || e.t.slice(0, 10) <= wi2), inU = e => !wz.us.length || wz.us.includes(e.u), inC = e => !wz.cs.length || wz.cs.includes(e.tb);
+    const base = rec ? all.filter(e => e.tb === rec.tb && e.rid === rec.rid) : wzOn ? (wz.done ? all.filter(e => inP(e) && inU(e) && inC(e)) : []) : all.filter(e => (!pf1 || e.t.slice(0, 10) >= pf1) && (!pf2 || e.t.slice(0, 10) <= pf2) && (fa === 'all' || e.a === fa) && (!nq || e.hay.includes(nq)));
+    const byU = {}, byC = {}; base.forEach(e => { byU[e.u] = (byU[e.u] || 0) + 1; byC[e.tb] = (byC[e.tb] || 0) + 1; });
+    const leave = () => ({ more: 0, rec: null, asc: rec ? !!rec.pa : asc });
+    const mkNav = (k, label, n, extra) => { const on = !rec && selK === k; return { label, n, op: 1, bg: on ? 'linear-gradient(310deg,#7928ca,#ff0080)' : 'transparent', fg: on ? '#fff' : '#344767', sh: on ? '0 3px 8px rgba(121,40,202,.35)' : 'none', cntBg: on ? 'rgba(255,255,255,.25)' : '#e9ecef', icBg: on ? 'rgba(255,255,255,.25)' : '#eef1f6', icFg: on ? '#fff' : '#344767', isU: false, isI: false, go: () => this.setState({ ...(ax === 'u' ? { su: k } : { sc: k }), ...leave() }), ...extra }; };
+    const nav = wzOn ? [] : [mkNav('', 'Toute l’activité', base.length, { isI: true, icon: 'fa-solid fa-list' })].concat(ax === 'u'
+      ? Object.keys(US).filter(k => all.some(e => e.u === k)).sort((a, b) => norm(US[a].n).localeCompare(norm(US[b].n))).map(k => mkNav(k, US[k].n, byU[k] || 0, { isU: true, ini: ini(US[k].n), grad: PG[US[k].p] }))
+      : Object.keys(TB).filter(k => all.some(e => e.tb === k)).map(k => mkNav(k, TB[k].l, byC[k] || 0, { isI: true, icon: TB[k].ic })));
+    const list = base.filter(e => rec || !selK || (ax === 'u' ? e.u === selK : e.tb === selK));
+    const dir = ascOn ? 1 : -1;
+    const sorted = list.slice().sort((a, b) => ((a.t < b.t ? -1 : a.t > b.t ? 1 : 0) || a.id - b.id) * dir);
+    const G = []; sorted.forEach(e => { const g = G[G.length - 1]; if (g && g.u === e.u && g.t === e.t) g.es.push(e); else G.push({ u: e.u, t: e.t, es: [e] }); });
+    const vis = G.slice(0, ps * (1 + more)), shown = vis.reduce((n, g) => n + g.es.length, 0), left = list.length - shown;
+    const entry = e => {
+      const T = TB[e.tb], A = ACT[e.a], open = !!ex[e.id], rs = this.rowsOf(e), chg = rs.filter(r => r.kind === 'chg'), n = rs.filter(r => r.nonEmpty).length;
+      return {
+        icon: T.ic, aLabel: A.l, aGrad: A.g, lbl: e.lbl, sub: T.l + ' · n° ' + e.rid,
+        isM: e.a === 'M', notM: e.a !== 'M', sum: e.a === 'C' ? n + (n > 1 ? ' valeurs enregistrées' : ' valeur enregistrée') : n + (n > 1 ? ' valeurs supprimées' : ' valeur supprimée'),
+        diffs: chg.slice(0, 2).map(r => ({ label: r.l, mask: r.mask, vis: !r.mask, o: r.so, n: r.sn, otd: r.oEmpty ? 'none' : 'line-through', ofs: r.oEmpty ? 'italic' : 'normal', nfs: r.nEmpty ? 'italic' : 'normal' })),
+        more: chg.length > 2, moreTxt: '+ ' + (chg.length - 2) + (chg.length - 2 > 1 ? ' autres champs' : ' autre champ'),
+        hasCtx: !!e.ctx, ctx: e.ctx, open, chev: open ? 'fa-solid fa-chevron-up' : 'fa-solid fa-chevron-down',
+        toggle: () => this.setState(s => ({ ex: { ...s.ex, [e.id]: !s.ex[e.id] } })),
+        rows: open ? rs.filter(r => showSame || r.kind !== 'same') : [],
+        canHist: !rec, hist: () => this.setState({ rec: { tb: e.tb, rid: e.rid, pa: asc }, more: 0, ex: {} })
+      };
+    };
+    const group = g => { const us = US[g.u], multi = g.es.length > 1; return { time: g.t.slice(11), uname: us.n, login: g.u, ini: ini(us.n), avBg: PG[us.p], showUser: !(ax === 'u' && su && !rec), multi, multiTxt: g.es.length + ' enregistrements liés', dot: ACT[g.es[0].a].g, es: g.es.map(entry) }; };
+    const daysL = []; vis.forEach(g => { const d = g.t.slice(0, 10), l = daysL[daysL.length - 1]; if (l && l.d === d) l.gs.push(group(g)); else daysL.push({ d, label: dl(d), rel: rel(d), gs: [group(g)] }); });
+    const faOpts = [['all', 'Toutes les actions'], ['C', 'Créations'], ['M', 'Modifications'], ['S', 'Suppressions']].map(([v, l]) => ({ v, l }));
+    const hasFilters = !!(q || fa !== 'all' || f1 || f2);
+    const sel0 = rec && sorted[0] ? sorted[0] : null;
+    const wzUs = wz.us.length ? (wz.us.length > 1 ? wz.us.length + ' utilisateurs' : US[wz.us[0]].n) : 'Tous les utilisateurs', wzCs = wz.cs.length ? (wz.cs.length > 1 ? wz.cs.length + ' concepts' : TB[wz.cs[0]].l) : 'Tous les concepts', wzPer = wz.d1 || wz.d2 ? 'Du ' + (wz.d1 || '…') + ' au ' + (wz.d2 || '…') : 'Toute la période';
+    const pTitle = rec ? (TB[rec.tb].l + ' · ' + (sel0 ? sel0.lbl : 'n° ' + rec.rid)) : wzOn ? 'Fil conducteur de l’audit' : !selK ? 'Toute l’activité' : ax === 'u' ? US[su].n : TB[sc].l;
+    const pSub = rec ? 'Enregistrement n° ' + rec.rid + ', du plus ancien au plus récent' : wzOn ? [wzPer, wzUs, wzCs].join(' · ') : !selK ? (ax === 'u' ? 'Tous les utilisateurs' : 'Tous les concepts') : ax === 'u' ? PL[US[su].p] + ' · ' + su : 'Table ' + sc;
+
+    const setWz = p => this.setState(s => ({ wz: { ...s.wz, ...p } })), step = wz.step;
+    const sig = [ax, su, sc, q, fa, pf1, pf2].join('|'), gen = this.state.gen, stale = !!gen && gen !== sig && !rec && !wzOn;
+    const dp = this.state.dp, p2 = n => String(n).padStart(2, '0');
+    const dv = n => (n === 'f1' || n === 'f2' ? this.state[n] : wz[n]);
+    const openDP = name => { const b = this.pd(dv(name)) || TODAY, [y, m] = b.split('-'); this.setState({ dp: { name, y: +y, m: +m - 1 } }); };
+    const pickDP = iso => { const n = this.state.dp.name, v = iso.split('-').reverse().join('/'); if (n === 'f1' || n === 'f2') this.setState({ [n]: v, more: 0, dp: null }); else { setWz({ [n]: v, err: '' }); this.setState({ dp: null }); } };
+    const dpDays = (() => { if (!dp) return []; const sel = this.pd(dv(dp.name)), lead = (new Date(dp.y, dp.m, 1).getDay() + 6) % 7, nd = new Date(dp.y, dp.m + 1, 0).getDate(), out = []; for (let i = 0; i < lead; i++) out.push({ n: '', bg: 'transparent', fg: '#344767', fw: 400, cur: 'default', pick: () => {} }); for (let d = 1; d <= nd; d++) { const iso = dp.y + '-' + p2(dp.m + 1) + '-' + p2(d), on = iso === sel, td = iso === TODAY; out.push({ n: d, bg: on ? 'linear-gradient(310deg,#7928ca,#ff0080)' : td ? '#f3e8ff' : 'transparent', fg: on ? '#fff' : '#344767', fw: on || td ? 700 : 400, cur: 'pointer', pick: () => pickDP(iso) }); } return out; })();
+    const frD = s => s.split('-').reverse().join('/'), isoN = n => new Date(Date.UTC(2026, 9, 8 - n)).toISOString().slice(0, 10);
+    const cntU = {}, cntC = {}; all.forEach(e => { if (inP(e)) { cntU[e.u] = (cntU[e.u] || 0) + 1; if (inU(e)) cntC[e.tb] = (cntC[e.tb] || 0) + 1; } });
+    const tgl = (key, v) => () => setWz({ [key]: wz[key].includes(v) ? wz[key].filter(x => x !== v) : wz[key].concat(v), err: '' });
+    const oc = (on, key, v, label, sub, extra) => ({ label, sub, on, bd: on ? '#cb0c9f' : '#e9ecef', bgc: on ? '#fcf4fa' : '#fff', chkBd: on ? 'transparent' : '#D2D6DA', chkBg: on ? 'linear-gradient(310deg,#7928ca,#ff0080)' : '#fff', chkD: on ? 'inline' : 'none', go: tgl(key, v), ...extra });
+    const wUsers = Object.keys(US).filter(k => all.some(e => e.u === k)).sort((a, b) => norm(US[a].n).localeCompare(norm(US[b].n))).map(k => { const n = cntU[k] || 0; return oc(wz.us.includes(k), 'us', k, US[k].n, PL[US[k].p], { ini: ini(US[k].n), grad: PG[US[k].p] }); });
+    const wConcepts = Object.keys(TB).filter(k => all.some(e => e.tb === k)).map(k => { const n = cntC[k] || 0; return oc(wz.cs.includes(k), 'cs', k, TB[k].l, '', { icon: TB[k].ic }); });
+    const presets = [['7 jours', 7], ['30 jours', 30], ['90 jours', 90], ['Toute la période', 0]].map(([label, n]) => { const a = n ? frD(isoN(n)) : '', b = n ? frD(TODAY) : '', on = wz.d1 === a && wz.d2 === b; return { label, bd: on ? '#cb0c9f' : '#e9ecef', bg: on ? '#fcf4fa' : '#fff', fg: on ? '#cb0c9f' : '#344767', go: () => setWz({ d1: a, d2: b, err: '' }) }; });
+    const dErr = () => { if ((wz.d1 && !wi1) || (wz.d2 && !wi2)) return 'Saisissez des dates valides (jj/mm/aaaa).'; if (wi1 && wi2 && wi1 > wi2) return 'La date de début doit précéder la date de fin.'; return ''; };
+    const wzTotal = all.filter(e => inP(e) && inU(e) && inC(e)).length, labs = ['Période', 'Par qui', 'Sur quoi', 'Validation'];
+    const wzv = {
+      showWz: wzOn && !wz.done, showMain: !wzOn || wz.done, showNav: !wzOn, wzEditShow: wzOn && wz.done && !rec, wzEdit: () => setWz({ done: false, step: 3, err: '' }),
+      wz, wUsers, wConcepts, presets, wS0: step === 0, wS1: step === 1, wS2: step === 2, wS3: step === 3, wBack: step > 0, wNext: step < 3, wLast: step === 3,
+      wPct: (step / 3 * 100) + '%', wSteps: labs.map((label, i) => { const done = i < step, cur = i === step; return { n: i + 1, label, go: () => setWz({ step: i, err: '' }), bg: cur ? 'linear-gradient(310deg,#7928ca,#ff0080)' : done ? '#fff' : '#e9ecef', fg: cur ? '#fff' : done ? '#cb0c9f' : '#67748E', bd: cur ? 'transparent' : done ? '#cb0c9f' : '#e9ecef', sh: cur ? '0 3px 8px rgba(121,40,202,.35)' : 'none', tr: cur ? 'scale(1.12)' : 'none', lc: cur || done ? '#344767' : '#8392AB', chk: done ? 'inline' : 'none', num: done ? 'none' : 'inline' }; }),
+      wPrev: () => setWz({ step: Math.max(0, step - 1), err: '' }), wNextGo: () => { const e = step === 0 ? dErr() : ''; if (e) return setWz({ err: e }); setWz({ step: step + 1, err: '' }); },
+      wValidate: () => { const e = dErr(); if (e) return setWz({ step: 0, err: e }); setWz({ done: true, err: '' }); this.setState({ more: 0, ex: {} }); },
+      wzReset: () => setWz({ step: 0, d1: '', d2: '', us: [], cs: [], done: false, desc: false, err: '' }),
+      rcP: wzPer, rcU: wz.us.length ? wz.us.map(k => US[k].n).join(', ') : 'Tous les utilisateurs', rcC: wz.cs.length ? wz.cs.map(k => TB[k].l).join(', ') : 'Tous les concepts', showWzCnt: wzOn && wz.done && !rec, rcNum: wzTotal, rcNl: wzTotal > 1 ? 'opérations correspondent à ces critères' : 'opération correspond à ces critères',
+      wzHasErr: !!wz.err, wzErr: wz.err,
+      setD: ev => { const n = ev.target.name; let v = ev.target.value.replace(/\D/g, '').slice(0, 8); if (v.length > 4) v = v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4); else if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2); setWz({ [n]: v, err: '' }); },
+      blurD: ev => { const n = ev.target.name, v = ev.target.value; if (v && !this.pd(v)) setWz({ [n]: '' }); },
+      openD1: () => openDP('d1'), openD2: () => openDP('d2'), hasDP: !!dp, dpLabel: dp ? MO[dp.m] + ' ' + dp.y : '', dpDays, closeDP: () => this.setState({ dp: null }),
+      dpPrev: () => this.setState(st => ({ dp: st.dp.m === 0 ? { ...st.dp, y: st.dp.y - 1, m: 11 } : { ...st.dp, m: st.dp.m - 1 } })),
+      dpNext: () => this.setState(st => ({ dp: st.dp.m === 11 ? { ...st.dp, y: st.dp.y + 1, m: 0 } : { ...st.dp, m: st.dp.m + 1 } })),
+      dpToday: () => pickDP(TODAY),
+    };
+    const GD = window.GGDroits, DV = GD && GD.dev, devNow = DV ? DV.detect() : 'desktop', devOk = !DV || DV.ok('aud', devNow);
+    const sections0 = [{ items: [{ label: 'Tableau de bord', icon: 'fa-solid fa-gauge' }, { label: 'Garages', icon: 'fa-solid fa-warehouse', open: true, children: ['Liste des garages', 'Historique des loyers', 'Historique des locations'] }, { label: 'Locataires', icon: 'fa-solid fa-users', open: true, children: ['Liste des locataires', 'Chronologie'] }, { label: 'Locations', icon: 'fa-solid fa-file-signature' }, { label: 'Paiements', icon: 'fa-solid fa-euro-sign' }, { label: 'Envoi de messages', icon: 'fa-solid fa-envelope-open-text', open: true, children: ['Avis de loyer', 'Relances d’impayés', 'Message libre'] }, { label: 'Statistiques', icon: 'fa-solid fa-chart-column', open: true, children: ['Loyers encaissés', 'Taux d’occupation', 'Répartition par statut', 'Remarques par type'] }, { label: 'Configuration', icon: 'fa-solid fa-gear', open: true, children: ['Paramètres', 'Modèles de messages', 'Utilisateurs', 'Droits d’accès'].concat(role === 'admin' ? ['Journal d’audit', 'Maintenance'] : []) }] }];
+    const sections = DV ? DV.filterSecs(sections0, devNow) : sections0;
+    const lockMsg = role !== 'admin' ? 'Le journal d’audit est réservé au profil Admin. Le profil ' + (P[role] || 'Admin') + ' n’y a pas accès.' : 'Le journal d’audit n’est pas disponible sur ' + ({ tablet: 'tablette', phone: 'smartphone' }[devNow] || 'cet appareil') + '. Ce réglage se trouve dans « Droits d’accès », section « Accès selon l’appareil ».';
+    return {
+      ...wzv,
+      sbOpenS: sbOpen ? '1' : '0', toggleSb: () => this.setState(st => ({ sbOpen: !st.sbOpen })), stop: ev => ev.stopPropagation(), sections,
+      go: l => {
+        if (l === 'Journal d’audit') { this.setState({ sbOpen: false }); return; }
+        if (l === 'Utilisateurs' || l === 'Droits d’accès' || l === 'Maintenance') { try { localStorage.setItem('gg_view', l === 'Droits d’accès' ? 'rights' : l === 'Maintenance' ? 'maint' : 'users'); } catch (e) {} window.location.href = 'Gestion des utilisateurs.dc.html'; return; }
+        try { localStorage.setItem('gg-page', l === 'Liste des garages' ? 'Garages' : l === 'Liste des locataires' ? 'Locataires' : l); } catch (e) {} window.location.href = 'Gestion Garages.dc.html';
+      },
+      roleLabel: P[role] || 'Admin', roleIsA: role === 'admin', roleIsG: role === 'gest', roleIsT: role === 'tenant', roleIsC: role === 'cons',
+      setRole: ev => { const v = ev.target.value; try { localStorage.setItem('gg_role', { admin: 'Admin', gest: 'Gestionnaire', tenant: 'Locataire', cons: 'Consultant' }[v]); } catch (e2) {} this.setState({ role: v }); },
+      allowed: role === 'admin' && devOk, locked: !(role === 'admin' && devOk), lockMsg,
+      axTabs: [['u', 'Par utilisateur', 'fa-solid fa-user'], ['c', 'Par concept', 'fa-solid fa-layer-group'], ['w', 'Par wizard', 'fa-solid fa-wand-magic-sparkles']].map(([k, label, icon]) => { const on = ax === k; return { label, icon, go: () => this.setState({ ax: k, gen: '', ...leave() }), bg: on ? 'linear-gradient(310deg,#7928ca,#ff0080)' : 'transparent', fg: on ? '#fff' : '#67748E', sh: on ? '0 3px 8px rgba(121,40,202,.35)' : 'none' }; }),
+      nav, pTitle, pSub, showGen: !rec && !wzOn && (!gen || stale), genTxt: stale ? 'Régénérer l’historique' : 'Générer l’historique', genGo: () => this.setState({ gen: sig, more: 0, ex: {} }), showList: !!rec || wzOn || !!gen, showPrompt: !rec && !wzOn && !gen, isStale: stale, listOp: stale ? 0.35 : 1, listFx: stale ? 'blur(2px) grayscale(.4)' : 'none', listPe: stale ? 'none' : 'auto', promptTxt: ax === 'u' ? 'Choisissez un utilisateur et une période, puis générez l’historique.' : 'Choisissez un concept et une période, puis générez l’historique.', hasRec: !!rec, clearRec: () => this.setState({ rec: null, asc: rec ? !!rec.pa : asc, more: 0 }), showCtl: !rec && !wzOn,
+      q, setQ: ev => this.setState({ q: ev.target.value, more: 0 }), searchIcon: ic('fa-solid fa-magnifying-glass'),
+      fa, faOpts, setFa: ev => this.setState({ fa: ev.target.value, more: 0 }), f1, f2, setF: ev => { const n = ev.target.name; let v = ev.target.value.replace(/\D/g, '').slice(0, 8); if (v.length > 4) v = v.slice(0, 2) + '/' + v.slice(2, 4) + '/' + v.slice(4); else if (v.length > 2) v = v.slice(0, 2) + '/' + v.slice(2); this.setState({ [n]: v, more: 0 }); }, blurF: ev => { const n = ev.target.name, v = ev.target.value; if (v && !this.pd(v)) this.setState({ [n]: '', more: 0 }); }, openF1: () => openDP('f1'), openF2: () => openDP('f2'),
+      orderTxt: ascOn ? 'Plus anciennes d’abord' : 'Plus récentes d’abord', orderIcon: ascOn ? 'fa-solid fa-arrow-up-wide-short' : 'fa-solid fa-arrow-down-wide-short', toggleOrder: () => (wzOn ? this.setState({ wz: { ...wz, desc: !wz.desc }, more: 0 }) : this.setState({ asc: !asc, more: 0 })),
+      hasFilters, resetAll: () => this.setState({ q: '', fa: 'all', f1: '', f2: '', more: 0 }),
+      daysL, isEmpty: list.length === 0, rangeTxt: list.length ? shown + ' sur ' + list.length + (list.length > 1 ? ' opérations' : ' opération') : '', hasMore: left > 0, moreTxt: 'Afficher la suite (' + left + ')', showMore: () => this.setState({ more: more + 1 })
+    };
+  }
+}
+
+</script>
+</body>
+</html>

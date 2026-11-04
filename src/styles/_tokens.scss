@@ -82,8 +82,11 @@
   // Valeurs de la maquette (≠ design system)
   --gradient-danger: linear-gradient(to top left, #d40505, #f2566f);
   --gradient-success: linear-gradient(to top left, #0c7a25, #62bd1d);
-  // Ancien locataire
-  --gradient-ancien: linear-gradient(to top left, #5c6672, #8a949f);
+  // Ancien locataire (v2 : olive) et sa version claire
+  --gradient-ancien: linear-gradient(to top left, #626753, #7f846f);
+  --gradient-ancien-light: linear-gradient(to top left, #8f9482, #a9ae9a);
+  // Maintenance
+  --gradient-maintenance: linear-gradient(310deg, #f5a623, #fb8c00);
 
   // --- Couleurs sémantiques ------------------------------------------------
   --solid-primary: var(--fuchsia-500);
@@ -167,6 +170,9 @@
   --bp-lg: 992px;
   --bp-xl: 1200px;
   --bp-2xl: 1400px;
+  // Appareils (RG-APP-01) : smartphone ≤ 640 px, tablette 641 à 1024 px, ordinateur au-delà
+  --bp-smartphone: 640px;
+  --bp-tablette: 1024px;
 
   // --- Typographie ---------------------------------------------------------
   --font-sans: 'Open Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica,

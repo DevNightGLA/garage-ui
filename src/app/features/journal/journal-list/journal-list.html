@@ -1,0 +1,89 @@
+@for (day of days(); track day.date) {
+  <section class="jl__day">
+    <h3 class="jl__day-head"><span>{{ day.label }}</span><span class="jl__rel">{{ day.relative }}</span></h3>
+    <div class="jl__groups">
+      @for (group of day.groups; track group.revisionId) {
+        <div class="card jl__group">
+          <div class="jl__group-head">
+            <span class="jl__time">{{ group.time }}</span>
+            @if (!hideUser()) {
+              <span class="jl__user">
+                <span class="jl__avatar" aria-hidden="true">{{ group.initials }}</span>
+                <b>{{ group.user }}</b>
+                @if (group.login) {
+                  <span>{{ group.login }}</span>
+                }
+              </span>
+            }
+            @if (group.operations.length > 1) {
+              <span class="jl__linked">
+                <i class="fa-solid fa-link" aria-hidden="true"></i>
+                {{ 'journal.lies' | translate: { n: group.operations.length } }}
+              </span>
+            }
+          </div>
+
+          @for (op of group.operations; track key(op)) {
+            @let opened = open().has(key(op));
+            <div class="jl__entry">
+              <button type="button" class="jl__entry-head" [attr.aria-expanded]="opened" (click)="toggle(op)">
+                <span class="jl__icon" aria-hidden="true"><i [class]="conceptIcon(op.concept)"></i></span>
+                <span class="jl__text">
+                  <span class="jl__line">
+                    <span class="jl__action" [attr.data-action]="op.action">{{ actionLabel(op) | translate }}</span>
+                    <b class="jl__label">{{ op.libelle }}</b>
+                    <span class="jl__sub">{{ 'journal.concept.' + op.concept | translate }} · {{ 'journal.numero' | translate: { id: op.enregistrementId } }}</span>
+                  </span>
+                  @if (op.contexte) {
+                    <span class="jl__ctx">{{ op.contexte }}</span>
+                  }
+                </span>
+                <i class="fa-solid jl__chev" [class.fa-chevron-up]="opened" [class.fa-chevron-down]="!opened" aria-hidden="true"></i>
+              </button>
+
+              @if (opened) {
+                <div class="jl__detail">
+                  @if (detail(op); as d) {
+                    <app-diff-table [rows]="rows(d)" [showUnchanged]="showUnchanged() || op.action !== 'M'" />
+                    <div class="jl__detail-actions">
+                      @if (op.action === 'M') {
+                        <label class="jl__check">
+                          <input type="checkbox" [checked]="showUnchanged()" (change)="showUnchanged.set($any($event.target).checked)" />
+                          {{ 'journal.afficherInchanges' | translate }}
+                        </label>
+                      }
+                      @if (!recordMode()) {
+                        <button type="button" class="btn btn--secondary" (click)="history.emit(op)">
+                          <i class="fa-solid fa-clock-rotate-left" aria-hidden="true"></i> {{ 'journal.historique' | translate }}
+                        </button>
+                      }
+                    </div>
+                  } @else if (detailError(op); as message) {
+                    <p class="message-error" role="alert">{{ message }}</p>
+                  } @else {
+                    <p class="jl__loading">{{ 'commun.chargement' | translate }}</p>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </div>
+      }
+    </div>
+  </section>
+} @empty {
+  @if (!loading()) {
+    <p class="card jl__empty">{{ 'journal.vide' | translate }}</p>
+  }
+}
+
+@if (operations().length > 0) {
+  <div class="jl__foot">
+    <span>{{ 'journal.affichees.' + (total() > 1 ? 'n' : 'un') | translate: { n: operations().length, total: total() } }}</span>
+    @if (hasMore()) {
+      <button type="button" class="btn btn--primary" [disabled]="loading()" (click)="more.emit()">
+        {{ (loading() ? 'commun.chargement' : 'commun.afficherPlus') | translate }}
+      </button>
+    }
+  </div>
+}

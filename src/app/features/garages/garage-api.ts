@@ -43,6 +43,10 @@ export class GarageApi {
     return this.http.put<GarageDTO>(`${GARAGES_URL}/${id}`, body);
   }
 
+  get(id: number): Observable<GarageDTO> {
+    return this.http.get<GarageDTO>(`${GARAGES_URL}/${id}`);
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${GARAGES_URL}/${id}`);
   }

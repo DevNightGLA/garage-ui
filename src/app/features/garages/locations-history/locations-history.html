@@ -1,8 +1,4 @@
-<app-modal
-  [title]="'locations.historique.titre' | translate: { numero: garage().numero }"
-  [width]="760"
-  (closed)="closed.emit()"
->
+<ng-template #body>
   <div class="lh__scroll">
     <table class="lh">
       <thead>
@@ -69,13 +65,32 @@
   <app-pagination
     class="lh__pager"
     [page]="page()"
-    [size]="pageSize"
+    [size]="pageSize()"
     [total]="total()"
     [noun]="'locations.nom' | translate"
     (pageChange)="page.set($event)"
   />
+</ng-template>
+
+@if (embedded()) {
+  <section class="card panel">
+    <div class="panel__head">
+      <span class="panel__icon" aria-hidden="true"><i class="fa-solid fa-clock-rotate-left"></i></span>
+      <h2 class="panel__title">{{ 'nav.historiqueLocations' | translate }}</h2>
+    </div>
+    <ng-container [ngTemplateOutlet]="body" />
+  </section>
+} @else {
+<app-modal
+  [title]="'locations.historique.titre' | translate: { numero: garage().numero }"
+  [width]="760"
+  (closed)="closed.emit()"
+>
+  <ng-container [ngTemplateOutlet]="body" />
 
   <div modalFooter>
     <button type="button" class="btn btn--primary" (click)="closed.emit()">{{ 'commun.fermer' | translate }}</button>
   </div>
 </app-modal>
+}
+

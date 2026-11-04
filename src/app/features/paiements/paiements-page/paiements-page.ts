@@ -5,7 +5,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { SortSpec } from '../../../core/api/list-params';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { TODAY } from '../../../core/today';
 import { DataTable, DataTableColumn } from '../../../shared/data-table/data-table';
 import { DataTableCell } from '../../../shared/data-table/data-table-cell';
@@ -20,8 +20,7 @@ import { PaiementForm } from '../paiement-form/paiement-form';
 import { PaiementApi } from '../paiement-api';
 import { PaiementDTO, PaiementFilter, TypePaiement } from '../paiement.models';
 import { VersementsModal } from '../versements-detail/versements-detail';
-
-export const PAIEMENTS_PAGE_SIZE = 10;
+import { SettingsService } from '../../../core/settings-service';
 
 /** Colonnes triables : les clés sont les propriétés de tri acceptées par l'API (`sort=`). */
 const COLUMNS: readonly DataTableColumn[] = [
@@ -55,11 +54,12 @@ const COLUMNS: readonly DataTableColumn[] = [
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaiementsPage {
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('PAI');
   private readonly api = inject(PaiementApi);
   private readonly errors = inject(ErrorMessageService);
 
-  protected readonly pageSize = PAIEMENTS_PAGE_SIZE;
+  /** Lignes par page : paramètre `lignes_liste` (RG-PAR-09). */
+  protected readonly pageSize = inject(SettingsService).lignesListe;
   /** Mois affiché, `yyyy-MM` : le mois courant par défaut (RG-PAI-01). */
   protected readonly month = signal(monthOf(inject(TODAY)()));
   protected readonly filter = signal<PaiementFilter>('TOUS');
@@ -82,7 +82,7 @@ export class PaiementsPage {
     stream: ({ params }) =>
       this.api.list({
         page: params.page,
-        size: PAIEMENTS_PAGE_SIZE,
+        size: this.pageSize(),
         sort: params.sort,
         q: params.q,
         filters: { mois: params.mois, statut: params.statut === 'TOUS' ? null : params.statut },
@@ -135,7 +135,7 @@ export class PaiementsPage {
 
   /** Les boutons de paiement n'apparaissent que sur une ligne non soldée, hors Lecture seule (RG-PAI-20). */
   protected canPay(paiement: PaiementDTO): boolean {
-    return this.roles.canWrite() && paiement.statut !== 'PAYE';
+    return this.droits.canAdd() && paiement.statut !== 'PAYE';
   }
 
   /** « Marie Dupont » → « MD ». */

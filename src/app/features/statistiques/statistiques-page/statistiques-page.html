@@ -1,0 +1,78 @@
+<section class="card st-card">
+  <div class="st-card__head">
+    <div class="st-card__pill">
+      <i class="fa-solid" [class]="icon" aria-hidden="true"></i>
+      @switch (view) {
+        @case ('repartition') {
+          <span>{{ 'statistiques.repartition.titre' | translate }}</span>
+          @if (data(); as d) {
+            <span class="st-card__date">{{ 'statistiques.repartition.au' | translate: { date: date(d.repartition.date) } }}</span>
+          }
+        }
+        @case ('remarques') {
+          <span>{{ 'statistiques.remarques.titre' | translate: { annee: year() } }}</span>
+        }
+        @default {
+          <span>{{ 'statistiques.' + view + '.titre' | translate }}</span>
+        }
+      }
+    </div>
+    <div class="st-card__year">
+      <span class="st-card__year-label">{{ 'statistiques.annee' | translate }}</span>
+      <app-year-picker [value]="year()" [min]="minYear()" [max]="maxYear()" (valueChange)="setYear($event)" />
+    </div>
+  </div>
+
+  @if (loadError(); as message) {
+    <p class="st-card__state st-card__state--error" role="alert">
+      {{ message }}
+      <button type="button" class="link-muted" (click)="stats.reload()">{{ 'commun.reessayer' | translate }}</button>
+    </p>
+  } @else if (data(); as d) {
+    @switch (view) {
+      @case ('repartition') {
+        <app-pie-chart
+          [slices]="statusSlices()"
+          [caption]="'statistiques.repartition.total' | translate: { n: d.repartition.total }"
+        />
+      }
+      @case ('remarques') {
+        @if (remarkTotal() === 0) {
+          <p class="st-card__state">{{ 'statistiques.remarques.aucune' | translate }}</p>
+        } @else {
+          <app-pie-chart
+            [slices]="remarkSlices()"
+            [caption]="'statistiques.remarques.total' | translate: { n: remarkTotal() }"
+          >
+            <div class="st-rate">
+              <div class="st-rate__head">
+                <span class="st-rate__label">{{ 'statistiques.remarques.taux' | translate }}</span>
+                <b class="st-rate__value">{{ d.remarques.tauxResolution ?? 0 }} %</b>
+              </div>
+              <div class="st-rate__bar" aria-hidden="true">
+                <div class="st-rate__fill" [style.width.%]="d.remarques.tauxResolution ?? 0"></div>
+              </div>
+              <div class="st-rate__text">
+                @if (d.remarques.probleme > 0) {
+                  {{ 'statistiques.remarques.resolus' | translate: { n: d.remarques.problemesResolus, total: d.remarques.probleme } }}
+                } @else {
+                  {{ 'statistiques.remarques.aucunProbleme' | translate }}
+                }
+              </div>
+            </div>
+          </app-pie-chart>
+        }
+      }
+      @default {
+        @if (chart(); as c) {
+          <div class="st-card__chart">
+            <app-bar-chart [labels]="c.labels" [values]="c.values" [format]="c.format" [caption]="c.caption" />
+          </div>
+          <p class="st-card__caption">{{ c.caption }}</p>
+        }
+      }
+    }
+  } @else {
+    <p class="st-card__state">{{ 'commun.chargement' | translate }}</p>
+  }
+</section>

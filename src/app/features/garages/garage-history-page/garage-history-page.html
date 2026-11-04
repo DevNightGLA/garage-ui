@@ -1,0 +1,65 @@
+<div class="master-detail">
+  <app-pick-list [title]="'garages.historique.liste' | translate">
+    @for (garage of items(); track garage.id) {
+      <button
+        type="button"
+        class="pick"
+        role="listitem"
+        [class.is-selected]="garage.id === selected()?.id"
+        [attr.aria-current]="garage.id === selected()?.id ? 'true' : null"
+        (click)="choose(garage)"
+      >
+        <span class="pick__badge">{{ garage.numero }}</span>
+        <span class="pick__text">
+          <span class="pick__title">{{
+            rent(garage) ? ('garages.historique.parMois' | translate: { montant: rent(garage) }) : ('garages.historique.aucunLoyer' | translate)
+          }}</span>
+          <span class="pick__sub">
+            <span class="pick__dot" [style.background]="dots[garage.statut]"></span>
+            {{ 'garages.statut.' + garage.statut | translate }}
+          </span>
+        </span>
+      </button>
+    } @empty {
+      @if (garages.isLoading()) {
+        <p class="gh__state">{{ 'commun.chargement' | translate }}</p>
+      } @else if (loadError(); as message) {
+        <p class="gh__state gh__state--error" role="alert">
+          {{ message }}
+          <button type="button" class="link-muted" (click)="garages.reload()">{{ 'commun.reessayer' | translate }}</button>
+        </p>
+      } @else {
+        <p class="gh__state">{{ 'garages.historique.aucunGarage' | translate }}</p>
+      }
+    }
+  </app-pick-list>
+
+  @if (selected(); as garage) {
+    <div class="master-detail__main">
+      <section class="card panel">
+        <div class="panel__head gh__head">
+          <span class="panel__icon" aria-hidden="true"><i class="fa-solid fa-warehouse"></i></span>
+          <div class="gh__who">
+            <div class="panel__kicker">{{ 'garages.fiche.garage' | translate }}</div>
+            <div class="gh__numero">
+              {{ garage.numero }}
+              @if (garage.adresse) {
+                <span class="gh__adresse"> · {{ garage.adresse }}</span>
+              }
+            </div>
+          </div>
+          <span class="gh__statut" [style.background]="gradients[garage.statut]">{{
+            'garages.statut.' + garage.statut | translate
+          }}</span>
+        </div>
+        <app-stat-tiles [tiles]="tiles()" />
+      </section>
+
+      @if (view === 'loyers') {
+        <app-loyers-history [garage]="garage" [embedded]="true" (changed)="refresh()" />
+      } @else {
+        <app-locations-history [garage]="garage" [embedded]="true" />
+      }
+    </div>
+  }
+</div>

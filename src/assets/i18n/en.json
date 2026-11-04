@@ -17,22 +17,51 @@
       "listeNumerotee": "Numbered list",
       "listePuces": "Bulleted list",
       "lien": "Link"
-    }
+    },
+    "enregistrement": "Saving…",
+    "deplier": "Expand",
+    "replier": "Collapse",
+    "voirPlus": "Show more",
+    "voirMoins": "Show less",
+    "aVenir": "Upcoming",
+    "afficherPlus": "Show more ({{n}})"
   },
   "nav": {
     "pages": "Pages /",
     "tableauDeBord": "Dashboard",
     "garages": "Garages",
+    "listeGarages": "Garage list",
+    "historiqueLoyers": "Rent history",
+    "historiqueLocations": "Rental history",
     "locataires": "Tenants",
-    "locations": "Leases",
+    "listeLocataires": "Tenant list",
+    "chronologie": "Timeline",
+    "locations": "Rentals",
     "paiements": "Payments",
+    "envoiMessages": "Messages",
+    "avisLoyer": "Rent notices",
+    "relances": "Payment reminders",
+    "messageLibre": "Free message",
+    "statistiques": "Statistics",
+    "statLoyers": "Rent collected",
+    "statOccupation": "Occupancy rate",
+    "statRepartition": "Breakdown by status",
+    "statRemarques": "Remarks by type",
+    "configuration": "Settings",
+    "parametres": "Parameters",
+    "modelesMessages": "Message templates",
+    "utilisateurs": "Users",
+    "droitsAcces": "Access rights",
+    "journalAudit": "Audit log",
+    "maintenance": "Maintenance",
     "afficherMasquerMenu": "Show / hide menu",
     "principale": "Main navigation"
   },
   "role": {
     "ADMIN": "Admin",
     "GESTIONNAIRE": "Manager",
-    "LECTURE_SEULE": "Read-only"
+    "LOCATAIRE": "Tenant",
+    "CONSULTANT": "Viewer"
   },
   "langue": {
     "francais": "Français",
@@ -56,7 +85,11 @@
     "moisSuivant": "Next month",
     "choisirMois": "Pick a month",
     "anneePrecedente": "Previous year",
-    "anneeSuivante": "Next year"
+    "anneeSuivante": "Next year",
+    "choisirAnnee": "Choose the year",
+    "periodePrecedente": "Previous period",
+    "periodeSuivante": "Next period",
+    "anneeEnCours": "This year"
   },
   "auth": {
     "connexion": {
@@ -72,12 +105,12 @@
     },
     "oubli": {
       "titre": "Forgot password",
-      "aide": "Enter your e-mail address to receive a reset link.",
-      "email": "E-mail address",
+      "aide": "Enter your username to receive a reset link.",
       "envoyer": "Send link",
       "retour": "Back to sign in",
       "envoyeTitre": "Check your inbox",
-      "envoye": "If an account matches this address, a reset link has just been sent."
+      "envoye": "If an account matches this username, a reset link has just been sent.",
+      "identifiant": "Username"
     },
     "reinit": {
       "titre": "New password",
@@ -91,12 +124,18 @@
       "confirmer": "Confirm new password",
       "differents": "The two passwords do not match.",
       "afficher": "Show password",
-      "masquer": "Hide password"
+      "masquer": "Hide password",
+      "minimum": "Minimum {{n}} characters"
     },
     "deconnexion": {
       "bouton": "Log out",
       "titre": "Log out?",
       "message": "Your session will be closed."
+    },
+    "temporaire": {
+      "titre": "Choose a new password",
+      "aide": "Your password is temporary: choose a new one to continue.",
+      "actuel": "Temporary password"
     }
   },
   "garages": {
@@ -155,6 +194,12 @@
       "locataireActuel": "Current tenant",
       "cles": "Keys / reserve",
       "loyerActuel": "Current rent"
+    },
+    "historique": {
+      "liste": "Garages",
+      "parMois": "{{montant}}/month",
+      "aucunLoyer": "No rent",
+      "aucunGarage": "No garage."
     }
   },
   "loyers": {
@@ -424,18 +469,6 @@
         "note": "{{n}} unavailable"
       }
     },
-    "graphique": {
-      "loyers": {
-        "titre": "Rents collected",
-        "legende": "Last 12 months, in euros"
-      },
-      "occupation": {
-        "titre": "Occupancy rate",
-        "legende": "Rented garages, last 12 months, in %"
-      },
-      "precedent": "Previous chart",
-      "suivant": "Next chart"
-    },
     "impayes": {
       "titre": "Unpaid to follow up ({{n}})",
       "vide": "No unpaid payments to follow up.",
@@ -444,7 +477,31 @@
         "PARTIEL": "Partial"
       },
       "recu": "Received {{recu}} of {{du}}",
-      "compteur": "{{from}}–{{to}} of {{total}}"
+      "nom": "unpaid",
+      "email": "E-mail",
+      "emailTitre": "Send a reminder e-mail",
+      "relance": "Reminded",
+      "relanceTitre": "Mark as reminded (phone, mail or in person)",
+      "relanceSansEmail": "No e-mail: mark as reminded (phone, mail, in person)"
+    },
+    "remarques": {
+      "titre": "Remarks to handle ({{n}})",
+      "nom": "remarks",
+      "vide": "No remark to handle.",
+      "garage": "Garage {{numero}}",
+      "aujourdhui": "today",
+      "depuis": "for {{n}} d",
+      "ouvrir": "Open"
+    },
+    "avis": {
+      "titre": "Rent notices to send ({{n}})",
+      "vide": "No rent notice to send.",
+      "des": "from {{date}}",
+      "envoyer": "Send the e-mail",
+      "envoyerTitre": "Prepare the e-mail",
+      "informe": "Mark informed",
+      "informeTitre": "Mark as informed",
+      "autres": "{{n}} more notice(s)"
     }
   },
   "messagesBack": {
@@ -518,7 +575,14 @@
     "telephoneTropLong": "The phone number cannot exceed 30 characters.",
     "resoudreImpossible": "Only an issue can be marked as resolved.",
     "rouvrirImpossible": "Only an issue can be reopened.",
-    "resolutionFuture": "The resolution date cannot be in the future."
+    "resolutionFuture": "The resolution date cannot be in the future.",
+    "loyerDebutAvantLocation": "The start date must be after the end of the last rental ({{date}}).",
+    "locationEnCoursLoyer": "Cannot modify: a rental has been ongoing since the start date of this rent",
+    "locationDemarreeLoyer": "Cannot modify: a rental took place after the start date of this rent",
+    "evtLocationDebut": "Garage {{garage}}, {{n}} key(s) handed over.",
+    "evtLocationFin": "Garage {{garage}}.",
+    "evtPaiement": "Rent for {{mois}}, garage {{garage}}.",
+    "dureeMinimale": "The minimum duration of a rental is {{n}} month(s)."
   },
   "erreur": {
     "generique": "An error occurred.",
@@ -557,7 +621,7 @@
     "GAR_RESERVE_INVALIDE": "The reserve must be between 0 and the number of keys.",
     "GAR_SUPPRESSION_REFUSEE": "This garage cannot be deleted.",
     "GAR_INTROUVABLE": "Garage not found.",
-    "LOY_LOCATION_DEMARREE": "A lease has started since the start date of this rent",
+    "LOY_LOCATION_DEMARREE": "Cannot modify: a rental took place after the start date of this rent",
     "LOY_NON_DERNIER": "Only the latest rent can be edited or deleted.",
     "LOY_SUPPRESSION_REFUSEE": "Only the latest rent, if upcoming, can be deleted.",
     "LOY_UNIQUE": "The first rent of a garage cannot be deleted.",
@@ -565,6 +629,843 @@
     "UTIL_INTROUVABLE": "User not found.",
     "UTIL_LOGIN_EXISTE": "This username already exists.",
     "UTIL_EMAIL_EXISTE": "This e-mail already exists.",
-    "UTIL_DERNIER_ADMIN": "At least one active administrator must always remain."
+    "UTIL_DERNIER_ADMIN": "At least one active administrator must always remain.",
+    "MAINTENANCE": "The site is under maintenance.",
+    "MOT_DE_PASSE_TEMPORAIRE": "You must choose a new password before continuing.",
+    "GAR_MAX_ATTEINT": "The maximum number of 20 garages has been reached.",
+    "LOY_LOCATION_EN_COURS": "Cannot modify: a rental has been ongoing since the start date of this rent",
+    "LOC_CHEVAUCHEMENT": "This rental overlaps another rental of the garage."
+  },
+  "maintenance": {
+    "site": {
+      "titre": "Site under maintenance",
+      "texte": "The application is temporarily unavailable during a maintenance operation. Your data is kept and access will be restored as soon as possible.",
+      "toujours": "The site is still under maintenance. Please try again in a moment.",
+      "reessayer": "Try again",
+      "verification": "Checking…",
+      "accesAdmin": "Administrator access",
+      "quitterApercu": "Leave preview"
+    },
+    "admin": {
+      "titreOn": "The site is under maintenance",
+      "titreOff": "The site is online",
+      "sousOn": "Only the Admin can sign in. Other profiles see the maintenance page.",
+      "sousOff": "All profiles can sign in.",
+      "activer": "Put the site under maintenance",
+      "reactiver": "Bring the site back online",
+      "pageAffichee": "Page shown to users during maintenance.",
+      "previsualiser": "Preview",
+      "intervalle": "The page checks the site status every {{n}} seconds.",
+      "reglage": "Set it in Settings > Security",
+      "acces": "Profile access during maintenance",
+      "comptes": {
+        "un": "{{n}} active account",
+        "n": "{{n}} active accounts"
+      },
+      "maintenu": "Access kept",
+      "bloque": "Sign-in blocked",
+      "note": "Accounts are not deactivated: their status does not change, and every user regains access as soon as the site is back online.",
+      "confirmerTitre": "Put the site under maintenance?",
+      "confirmerTexte": "The Manager, Tenant and Consultant profiles will be signed out immediately and will see the maintenance page. Accounts and data stay unchanged. You remain signed in as Admin.",
+      "confirmerBouton": "Start maintenance",
+      "activee": "Site under maintenance: the Manager, Tenant and Consultant profiles are signed out",
+      "desactivee": "Site back online: users can sign in again"
+    }
+  },
+  "acces": {
+    "titre": "Access denied",
+    "titreAppareil": "Screen not available",
+    "refuse": "The {{profil}} profile has no access to this screen. This right is set in “Access rights”.",
+    "indisponible": "This screen is not available on {{appareil}}. This setting is in “Access rights”, section “Access by device”.",
+    "appareil": {
+      "ORDINATEUR": "a computer",
+      "TABLETTE": "a tablet",
+      "SMARTPHONE": "a smartphone"
+    }
+  },
+  "chronologie": {
+    "actifs": "Active",
+    "tous": "All",
+    "recherche": "Search a tenant…",
+    "aucunLocataire": "No tenant found.",
+    "aucunEvenement": "No event.",
+    "garage": "Garage {{garages}}",
+    "filtre": {
+      "TOUS": "All",
+      "LOCATIONS": "Rentals",
+      "REMARQUES": "Remarks",
+      "PAIEMENTS": "Payments"
+    },
+    "stat": {
+      "locations": "Rentals",
+      "totalVerse": "Total paid",
+      "remarquesOuvertes": "Open remarks"
+    },
+    "type": {
+      "LOCATION_DEBUT": "Rental start",
+      "LOCATION_A_VENIR": "Upcoming rental",
+      "LOCATION_FIN": "Rental end",
+      "LOCATION_FIN_PREVUE": "Planned rental end",
+      "PAIEMENT": "Payment received",
+      "REMARQUE": "Remark created",
+      "REMARQUE_RESOLUE": "Remark resolved"
+    },
+    "mode": {
+      "VIREMENT": "Transfer",
+      "ESPECES": "Cash"
+    }
+  },
+  "messages": {
+    "contact": {
+      "titre": {
+        "informe": "Mark as informed",
+        "relance": "Mark as reminded"
+      },
+      "intro": {
+        "informe": "This tenant has no e-mail: inform them by phone, by post or in person, then record the contact. A remark will be added to their record.",
+        "relance": "Remind the tenant by phone, by post or in person, then record the contact. A remark will be added to their record."
+      },
+      "moyen": "Contact method",
+      "date": "Contact date"
+    },
+    "moyen": {
+      "EMAIL": "E-mail",
+      "TELEPHONE": "Phone",
+      "COURRIER": "Post",
+      "ORAL": "In person"
+    },
+    "col": {
+      "locataire": "Tenant",
+      "garage": "Garage",
+      "loyer": "Rent",
+      "resteDu": "Amount due",
+      "aPartirDu": "From",
+      "periode": "Period",
+      "action": "Action"
+    },
+    "recherche": "Search for a tenant…",
+    "toutSelectionner": "Select all",
+    "selectionner": "Select {{nom}}",
+    "sansEmail": "No e-mail",
+    "sansEmailCase": "No e-mail: cannot send",
+    "renseignerEmail": "Enter the tenant’s e-mail",
+    "fait": "{{moyen}} · on {{date}}",
+    "moyenPar": {
+      "EMAIL": "by e-mail",
+      "TELEPHONE": "by phone",
+      "COURRIER": "by mail",
+      "ORAL": "verbally"
+    },
+    "envoi": {
+      "cocher": "Tick at least one tenant",
+      "bouton": "Send ({{n}})",
+      "explication": "An e-mail will be sent to each selected tenant. An “Information” remark with its content will be added to the tenant record.",
+      "envoyer": "Send",
+      "enCours": "Sending…"
+    },
+    "apercu": {
+      "titre": "E-mail preview",
+      "de": "From",
+      "reponseA": "Reply to",
+      "cci": "Bcc",
+      "a": "To",
+      "objet": "Subject",
+      "bouton": "Preview"
+    },
+    "avis": {
+      "intro": "Current tenants whose rent changes on a future date. Each send adds an “Information” remark to the tenant record, with the e-mail text. Tenants without e-mail are to be informed by phone, mail or verbally from the dashboard.",
+      "nom": "notices",
+      "onglet": {
+        "A_FAIRE": "To send",
+        "FAITS": "Sent"
+      },
+      "vide": {
+        "A_FAIRE": "No notices to send.",
+        "FAITS": "No notices sent."
+      },
+      "confirmer": {
+        "un": "Send 1 rent change notice?",
+        "n": "Send {{n}} rent change notices?"
+      },
+      "autres": "{{n}} more notices",
+      "envoyes": {
+        "un": "1 notice sent successfully",
+        "n": "{{n}} notices sent successfully"
+      },
+      "contactTitre": "Mark as informed",
+      "contactEnregistre": "Contact saved successfully"
+    },
+    "relances": {
+      "intro": "Unsettled rents to follow up. The message suits the case: full unpaid or partial payment. Each reminder adds an “Information” remark to the tenant record. For a reminder by phone, by post or verbally, use the row icon.",
+      "nom": "unpaid",
+      "onglet": {
+        "A_FAIRE": "To remind",
+        "FAITS": "Reminded"
+      },
+      "vide": {
+        "A_FAIRE": "No overdue payments to remind.",
+        "FAITS": "No reminders sent yet."
+      },
+      "confirmer": {
+        "un": "Send 1 overdue reminder?",
+        "n": "Send {{n}} overdue reminders?"
+      },
+      "autres": "{{n}} more reminders",
+      "envoyes": {
+        "un": "1 reminder sent successfully",
+        "n": "{{n}} reminders sent successfully"
+      },
+      "aucunVersement": "No payment received",
+      "contactTitre": "Mark as reminded (phone, mail, verbal)",
+      "contactEnregistre": "Reminder saved successfully"
+    },
+    "libre": {
+      "intro": "E-mail message sent to one tenant or to all current tenants. Each send adds an “Information” remark to the tenant record, with the e-mail text.",
+      "destinataires": "Recipients",
+      "un": "One tenant",
+      "tous": "All current tenants ({{n}})",
+      "locataire": "Tenant",
+      "choisir": "Choose a tenant",
+      "ancien": "(former)",
+      "sansEmail": {
+        "un": "1 tenant without e-mail will not receive the message.",
+        "n": "{{n}} tenants without e-mail will not receive the message."
+      },
+      "objet": "Subject",
+      "message": "Message",
+      "aucunDestinataire": "No recipient with an e-mail",
+      "confirmer": {
+        "un": "Send the message to 1 tenant?",
+        "n": "Send the message to {{n}} tenants?"
+      },
+      "autres": "{{n}} more recipients",
+      "envoyes": {
+        "un": "1 message sent successfully",
+        "n": "{{n}} messages sent successfully"
+      },
+      "apercuPremier": "For the first recipient",
+      "erreurDestinataires": "The tenant list could not be loaded."
+    }
+  },
+  "statistiques": {
+    "annee": "Year",
+    "loyers": {
+      "titre": "Rent collected",
+      "legende": "Rent by month of payment, in euros · total {{total}}"
+    },
+    "occupation": {
+      "titre": "Occupancy rate",
+      "legende": "Garages rented at month end, in %"
+    },
+    "repartition": {
+      "titre": "Garages by status",
+      "au": "on {{date}}",
+      "total": "{{n}} garages in total"
+    },
+    "remarques": {
+      "titre": "Remarks created in {{annee}}",
+      "total": "{{n}} remark(s) created",
+      "aucune": "No remark created that year.",
+      "taux": "Problem resolution rate",
+      "resolus": "{{n}} resolved out of {{total}} problem(s)",
+      "aucunProbleme": "No problem reported"
+    }
+  },
+  "variables": {
+    "titre": "Available variables",
+    "aide": "Click to insert at the cursor.",
+    "groupe": {
+      "locataire": "Tenant",
+      "garage": "Garage",
+      "loyer": "Rent",
+      "impaye": "Unpaid",
+      "expediteur": "Sender",
+      "organisation": "Organisation",
+      "autre": "Other"
+    },
+    "civilite": "Title (Mr / Ms)",
+    "nom": "Tenant’s last name",
+    "prenom": "Tenant’s first name",
+    "garage": "Garage number",
+    "ancien_loyer": "Current rent",
+    "nouveau_loyer": "New rent",
+    "date_effet": "Effective date of the new rent",
+    "periode": "Month of the rent concerned",
+    "montant_du": "Amount due for the month",
+    "montant_recu": "Amount already received",
+    "reste_du": "Amount still due",
+    "expediteur": "Sender name",
+    "entreprise": "Company or landlord name",
+    "coordonnees": "Postal address and phone (address · phone)",
+    "iban": "Account number (IBAN)"
+  },
+  "parametres": {
+    "categories": "Categories",
+    "enregistres": "Settings saved successfully",
+    "nature": {
+      "METIER": {
+        "titre": "Business settings",
+        "description": "Business rules and activity data."
+      },
+      "APPLICATION": {
+        "titre": "Application settings",
+        "description": "Messaging, display and security of the application."
+      }
+    },
+    "categorie": {
+      "expediteur": {
+        "titre": "Sender",
+        "description": "Identity used when sending e-mails to tenants."
+      },
+      "organisation": {
+        "titre": "Organisation",
+        "description": "Landlord details, available as variables in messages."
+      },
+      "garages_loyers_locations": {
+        "titre": "Garages, rents and leases",
+        "description": "Formats and checks applied when entering garages and leases."
+      },
+      "paiements_impayes": {
+        "titre": "Payments and unpaid rent",
+        "description": "How payment delays are calculated."
+      },
+      "affichage": {
+        "titre": "Display",
+        "description": "Lists, menu and language."
+      },
+      "securite": {
+        "titre": "Security",
+        "description": "Sign-in, passwords and maintenance."
+      }
+    },
+    "cle": {
+      "expediteur_nom": {
+        "libelle": "Sender name",
+        "aide": "Replaces the {expediteur} variable in messages and is shown as the sender name."
+      },
+      "expediteur_email": {
+        "libelle": "Sending e-mail address",
+        "aide": "Address from which e-mails are sent to tenants."
+      },
+      "reponse_email": {
+        "libelle": "Reply-to address",
+        "aide": "Optional. Receives tenants’ replies; otherwise the sending address."
+      },
+      "cci_email": {
+        "libelle": "Blind copy (Bcc)",
+        "aide": "Optional. Receives a copy of every e-mail sent."
+      },
+      "org_nom": {
+        "libelle": "Company or landlord name",
+        "aide": "Optional. {entreprise} variable in messages."
+      },
+      "org_adresse": {
+        "libelle": "Postal address",
+        "aide": "Optional. Included in the {coordonnees} variable in messages."
+      },
+      "org_tel": {
+        "libelle": "Phone",
+        "aide": "Optional. Included in the {coordonnees} variable in messages."
+      },
+      "org_iban": {
+        "libelle": "Account number (IBAN)",
+        "aide": "Optional. {iban} variable in messages, useful for payment reminders."
+      },
+      "garage_prefixe": {
+        "libelle": "Garage number prefix",
+        "aide": "Suggested when creating a garage (e.g. G05)."
+      },
+      "garage_chiffres": {
+        "libelle": "Number of digits in the garage number",
+        "aide": "Padded with zeros (2: G05)."
+      },
+      "location_duree_min": {
+        "libelle": "Minimum lease duration",
+        "aide": "In calendar months. Checked when entering the end date."
+      },
+      "jour_limite": {
+        "libelle": "Payment deadline day in the month",
+        "aide": "After this day, the current month’s instalment becomes “Late”. 31: late only the following month."
+      },
+      "lignes_liste": {
+        "libelle": "Rows per page (lists)",
+        "aide": "Garages, tenants, leases, payments and messages."
+      },
+      "lignes_hist": {
+        "libelle": "Rows per page (histories and cards)",
+        "aide": "Histories, dashboard cards and tenant picker."
+      },
+      "graph_mois": {
+        "libelle": "Number of months in charts",
+        "aide": "Dashboard and statistics."
+      },
+      "langue_defaut": {
+        "libelle": "Default language",
+        "aide": "Used until the user chooses a language."
+      },
+      "menu_replie": {
+        "libelle": "Side menu collapsed by default",
+        "aide": "When the application opens."
+      },
+      "inactivite_min": {
+        "libelle": "Sign-out after inactivity",
+        "aide": "In minutes. 0: disabled."
+      },
+      "mdp_min": {
+        "libelle": "Minimum password length",
+        "aide": "In characters, when the password is changed."
+      },
+      "maintenance_verif_sec": {
+        "libelle": "Maintenance page check",
+        "aide": "In seconds, 5 to 300. Interval between two automatic checks on the “Site under maintenance” page."
+      }
+    },
+    "choix": {
+      "langue_defaut": {
+        "fr": "Français",
+        "en": "English"
+      },
+      "menu_replie": {
+        "non": "No",
+        "oui": "Yes"
+      }
+    }
+  },
+  "modeles": {
+    "intro": "Subject and text of the e-mails sent from “Messages”.",
+    "objetLigne": "Subject: {{objet}}",
+    "modifier": "Edit",
+    "visualiser": "View",
+    "objet": "Subject",
+    "message": "Message",
+    "enregistre": "Message template saved successfully",
+    "signatureEnregistree": "Signature saved successfully",
+    "avis": {
+      "libelle": "Rent notice",
+      "titre": "Template · Rent notice"
+    },
+    "total": {
+      "libelle": "Reminder · Fully unpaid",
+      "titre": "Template · Fully unpaid"
+    },
+    "partiel": {
+      "libelle": "Reminder · Partial payment",
+      "titre": "Template · Partial payment"
+    },
+    "signature": {
+      "libelle": "Closing and signature",
+      "titre": "Closing and signature",
+      "description": "Added automatically at the bottom of every message sent. Do not repeat them in the templates."
+    }
+  },
+  "utilisateurs": {
+    "nom": "users",
+    "vide": "No user matches these criteria.",
+    "recherche": "Filter by name, login or e-mail",
+    "nouveau": "New user",
+    "vous": "You",
+    "actif": "Active",
+    "desactive_": "Deactivated",
+    "statut": {
+      "ACTIFS": "Active",
+      "DESACTIVES": "Deactivated",
+      "TOUS": "All"
+    },
+    "comptes": {
+      "un": "{{n}} account",
+      "n": "{{n}} accounts"
+    },
+    "col": {
+      "utilisateur": "User",
+      "login": "Login",
+      "derniereConnexion": "Last sign-in",
+      "profil": "Profile",
+      "statut": "Status",
+      "actions": "Actions"
+    },
+    "connexion": {
+      "aujourdhui": "Today",
+      "hier": "Yesterday",
+      "jours": "{{n}} days ago",
+      "mois": "{{n}} months ago",
+      "jamais": "Never signed in"
+    },
+    "profilDesc": {
+      "ADMIN": "All rights: deletions, cancelling payments and managing accounts.",
+      "GESTIONNAIRE": "Like the Admin, without the Configuration menu.",
+      "LOCATAIRE": "Sees only their own garages, leases, rents and payments.",
+      "CONSULTANT": "Same screens as the Manager, without changing anything."
+    },
+    "action": {
+      "modifier": "Edit",
+      "visualiser": "View",
+      "reinitialiser": "Reset the password",
+      "desactiver": "Deactivate the account",
+      "reactiver": "Reactivate the account",
+      "supprimer": "Delete the account"
+    },
+    "refus": {
+      "reinitSoi": "For your own account, use “Change password” in the menu.",
+      "reinitDesactive": "Deactivated account: reset not possible.",
+      "desactiverSoi": "You cannot deactivate your own account.",
+      "dernierAdmin": "Last active administrator: cannot be deactivated.",
+      "supprimerSoi": "You cannot delete your own account."
+    },
+    "confirmer": {
+      "reset": {
+        "titre": "Reset the password?",
+        "message": "A temporary password will be generated for {{nom}}. The old password will stop working and the user will have to choose a new one at their next sign-in.",
+        "bouton": "Reset"
+      },
+      "deactivate": {
+        "titre": "Deactivate the account?",
+        "message": "{{nom}} will no longer be able to sign in. The account and its data are kept, and it can be reactivated at any time.",
+        "bouton": "Deactivate"
+      },
+      "delete": {
+        "titre": "Delete the account?",
+        "message": "The account of {{nom}} will be permanently deleted. An account with recorded activity cannot be deleted: deactivate it instead.",
+        "bouton": "Delete"
+      }
+    },
+    "enregistre": "User saved successfully",
+    "desactive": "Account of {{nom}} deactivated",
+    "reactive": "Account of {{nom}} reactivated",
+    "supprime": "Account of {{nom}} deleted",
+    "mdp": {
+      "cree": "Account created",
+      "reinitialise": "Password reset",
+      "de": "Temporary password for {{nom}}:",
+      "copier": "Copy",
+      "copie": "Copied",
+      "note": "It will not be shown again once this window is closed. The user will have to replace it at their next sign-in."
+    },
+    "etape": {
+      "identite": "Identity",
+      "connexion": "Sign-in",
+      "profil": "Profile",
+      "recapitulatif": "Summary"
+    },
+    "form": {
+      "nouveau": "New user",
+      "modifier": "Edit user",
+      "visualiser": "View user",
+      "nom": "Last name",
+      "prenom": "First name",
+      "email": "E-mail",
+      "login": "Login",
+      "loginAide": "3 to 30 characters: letters, digits, dot, hyphen or underscore.",
+      "loginFige": "The login cannot be changed.",
+      "profil": "Profile",
+      "propreProfil": "You cannot change your own profile.",
+      "fiche": "Tenant record",
+      "ficheAide": "The Tenant account sees the data of this record.",
+      "ficheActuelle": "Current record: {{nom}}",
+      "changer": "Edit",
+      "mdpNote": "A temporary password will be generated and shown only once. The user will have to replace it at their first sign-in.",
+      "precedent": "Previous",
+      "suivant": "Next",
+      "creer": "Create user"
+    }
+  },
+  "droits": {
+    "onglet": {
+      "ecrans": "Screen access",
+      "actions": "Allowed actions",
+      "appareils": "Access by device"
+    },
+    "profil": "Profile",
+    "sections": "Sections",
+    "nbEcrans": "{{n}} of {{total}} screens",
+    "sesDonnees": "Own data only",
+    "noteProfil": {
+      "GESTIONNAIRE": "The Manager has the same rights as the Admin, except the Configuration menu.",
+      "LOCATAIRE": "The Tenant only sees their own garages, leases, rents and payments.",
+      "CONSULTANT": "The Consultant sees the same screens as the Manager, without adding, editing or deleting."
+    },
+    "action": {
+      "v": "Access",
+      "a": "Add",
+      "m": "Edit",
+      "d": "Delete"
+    },
+    "consulterEcran": "View the screen",
+    "consulterDonnees": "View own data",
+    "nonPropose": "Action not offered",
+    "autoriserAcces": "Allow access",
+    "retirerAcces": "Remove access",
+    "autoriser": "Allow:",
+    "retirer": "Remove:",
+    "verrou": {
+      "admin": "Admin: all rights, cannot be changed.",
+      "reserve": "Admin only: cannot be changed.",
+      "accesRequis": "Screen access required.",
+      "ordinateur": "Computer: always available.",
+      "droitsToujours": "Access rights stays available on every device."
+    },
+    "appareil": {
+      "ORDINATEUR": "Computer",
+      "TABLETTE": "Tablet",
+      "SMARTPHONE": "Smartphone"
+    },
+    "appareilTaille": {
+      "ORDINATEUR": "Over 1024 px",
+      "TABLETTE": "641 to 1024 px",
+      "SMARTPHONE": "Up to 640 px"
+    },
+    "brouillon": "Pending changes",
+    "modifications": {
+      "un": "1 unsaved change",
+      "n": "{{n}} unsaved changes"
+    },
+    "aucuneModification": "No changes",
+    "enregistres": "Access rights saved successfully",
+    "section": {
+      "Pilotage": "Overview",
+      "Garages": "Garages",
+      "Locataires": "Tenants",
+      "Locations et paiements": "Leases and payments",
+      "Remarques": "Remarks",
+      "Envoi de messages": "Messages",
+      "Configuration": "Configuration"
+    },
+    "ecran": {
+      "DASH": "Dashboard",
+      "STA": "Statistics",
+      "GAR": "Garage list",
+      "LOY": "Rent history",
+      "HLOC": "Lease history",
+      "TEN": "Tenant list",
+      "CHR": "Timeline",
+      "LOC": "Leases",
+      "PAI": "Payments",
+      "REM": "Garage and tenant records",
+      "AVI": "Rent notices",
+      "REL": "Overdue reminders",
+      "LIB": "Free message",
+      "PAR": "Settings",
+      "TPL": "Message templates",
+      "USR": "Users",
+      "DRO": "Access rights",
+      "AUD": "Audit log",
+      "MNT": "Maintenance"
+    },
+    "libelleAction": {
+      "GAR": {
+        "a": "Create a garage",
+        "m": "Edit a garage",
+        "d": "Delete a garage"
+      },
+      "LOY": {
+        "a": "Create a rent",
+        "m": "Edit the latest rent",
+        "d": "Delete an upcoming rent"
+      },
+      "TEN": {
+        "a": "Create a tenant",
+        "m": "Edit a tenant",
+        "d": "Delete a tenant"
+      },
+      "LOC": {
+        "a": "Create a lease",
+        "m": "Edit or close",
+        "d": "Delete a lease"
+      },
+      "PAI": {
+        "a": "Record a payment",
+        "m": "—",
+        "d": "Cancel a payment"
+      },
+      "REM": {
+        "a": "Create a remark",
+        "m": "Edit, resolve or reopen",
+        "d": "Delete a remark"
+      },
+      "AVI": {
+        "a": "Send or mark as informed"
+      },
+      "REL": {
+        "a": "Send or mark as reminded"
+      },
+      "LIB": {
+        "a": "Send a message"
+      },
+      "PAR": {
+        "m": "Edit settings"
+      },
+      "TPL": {
+        "m": "Edit templates and signature"
+      },
+      "USR": {
+        "a": "Create a user",
+        "m": "Edit, reset, deactivate",
+        "d": "Delete an account"
+      },
+      "DRO": {
+        "m": "Edit rights"
+      }
+    }
+  },
+  "journal": {
+    "mode": {
+      "utilisateur": "By user",
+      "concept": "By concept",
+      "criteres": "By criteria"
+    },
+    "navigation": "Log navigation",
+    "toute": "All activity",
+    "unUtilisateur": "Operations by this user",
+    "table": "Table {{table}}",
+    "filTitre": "Audit trail",
+    "filSous": "Record no. {{id}}, oldest first",
+    "retour": "Back to the log",
+    "modifierCriteres": "Edit criteria",
+    "generer": "Generate history",
+    "regenerer": "Regenerate history",
+    "perime": "The criteria have changed: the history shown is out of date. Click “Regenerate history” to update it.",
+    "invite": {
+      "utilisateur": "Choose a user and a period, then generate the history.",
+      "concept": "Choose a concept and a period, then generate the history."
+    },
+    "typeAction": "Action type",
+    "filtre": {
+      "toutes": "All actions",
+      "C": "Creations",
+      "M": "Changes",
+      "S": "Deletions"
+    },
+    "du": "From",
+    "au": "to",
+    "recherche": "Search (label, identifier, user, value)…",
+    "reinitialiser": "Reset",
+    "ordre": {
+      "desc": "Newest first",
+      "asc": "Oldest first"
+    },
+    "action": {
+      "C": "Creation",
+      "M": "Change",
+      "S": "Deletion"
+    },
+    "concept": {
+      "GARAGE": "Garage",
+      "LOYER_GARAGE": "Rent",
+      "LOCATAIRE": "Tenant",
+      "LOCATION": "Lease",
+      "ECHEANCE": "Instalment",
+      "VERSEMENT": "Payment",
+      "REMARQUE": "Remark",
+      "UTILISATEUR": "User",
+      "PARAMETRE": "Setting"
+    },
+    "numero": "no. {{id}}",
+    "lies": "{{n}} linked records",
+    "vide": "No operation matches these criteria.",
+    "affichees": {
+      "un": "{{n}} of {{total}} operation",
+      "n": "{{n}} of {{total}} operations"
+    },
+    "afficherInchanges": "Show unchanged fields",
+    "historique": "History of this record",
+    "etape": {
+      "periode": "Period",
+      "qui": "By whom",
+      "quoi": "On what",
+      "validation": "Confirm"
+    },
+    "periodeTitre": "Period to audit",
+    "periodeAide": "Optional dates: without a date, the whole period.",
+    "raccourcis": "Period shortcuts",
+    "preset": {
+      "jours": "{{n}} days",
+      "tout": "Whole period"
+    },
+    "quiTitre": "By whom?",
+    "quiAide": "No selection: all users.",
+    "quoiTitre": "On which concepts?",
+    "quoiAide": "No selection: all concepts.",
+    "criteres": "Audit criteria",
+    "afficherFil": "Show the audit trail",
+    "recap": {
+      "duAu": "From {{du}} to {{au}}",
+      "toutePeriode": "Whole period",
+      "tousUtilisateurs": "All users",
+      "nUtilisateurs": "{{n}} users",
+      "tousConcepts": "All concepts",
+      "nConcepts": "{{n}} concepts"
+    },
+    "correspondent": {
+      "un": "operation matches these criteria",
+      "n": "operations match these criteria"
+    },
+    "erreur": {
+      "ordre": "The start date must be before the end date."
+    },
+    "champ": {
+      "commun": {
+        "numero": "Number",
+        "adresse": "Address",
+        "statut": "Status",
+        "garage_id": "Garage",
+        "locataire_id": "Tenant",
+        "location_id": "Lease",
+        "echeance_id": "Instalment",
+        "montant": "Amount",
+        "date_debut": "Start",
+        "date_fin": "End",
+        "civilite": "Title",
+        "nom": "Last name",
+        "prenom": "First name",
+        "rue": "Street",
+        "numero_rue": "No.",
+        "code_postal": "Postcode",
+        "localite": "Town",
+        "tel1": "Phone 1",
+        "tel2": "Phone 2",
+        "email": "E-mail",
+        "nb_cles_total": "Keys (total)",
+        "nb_cles_reserve": "Spare keys",
+        "nb_cles_remises": "Keys handed over",
+        "periode": "Period",
+        "montant_du": "Amount due",
+        "mode_paiement": "Payment method",
+        "date_paiement": "Payment date",
+        "date_creation": "Created on",
+        "type": "Type",
+        "texte": "Text",
+        "resolu": "Resolved",
+        "date_resolution": "Resolved on",
+        "login": "Login",
+        "role": "Profile",
+        "actif": "Active",
+        "mot_de_passe": "Password",
+        "mot_de_passe_temporaire": "Temporary password",
+        "nature": "Nature",
+        "categorie": "Category",
+        "cle": "Key",
+        "libelle": "Label",
+        "valeur": "Value",
+        "obligatoire": "Required",
+        "ordre": "Order"
+      },
+      "LOYER_GARAGE": {
+        "montant": "Monthly rent"
+      },
+      "UTILISATEUR": {
+        "date_creation": "Created on"
+      },
+      "LOCATAIRE": {
+        "date_creation": "Created on"
+      }
+    }
+  },
+  "diff": {
+    "champ": "Field",
+    "avant": "As is · before",
+    "apres": "To be · after",
+    "vide": "(empty)",
+    "inchange": "unchanged",
+    "masque": "(hidden)",
+    "modifieMasque": "changed, value hidden"
   }
 }

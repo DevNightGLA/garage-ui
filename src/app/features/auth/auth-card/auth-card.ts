@@ -1,5 +1,5 @@
 import { ChangeDetectionStrategy, Component, input } from '@angular/core';
-import { LanguageSwitch } from '../../../core/layout/language-switch';
+import { LanguageSwitch } from '../../../layout/language-switch';
 
 /**
  * Carte centrée des écrans publics (connexion, déconnexion, mot de passe oublié,

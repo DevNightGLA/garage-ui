@@ -10,7 +10,10 @@ import {
   signal,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { NgTemplateOutlet } from '@angular/common';
 import { AbstractControl, FormGroupDirective, NgControl, Validators } from '@angular/forms';
+
+let nextId = 0;
 
 function isEmpty(value: unknown): boolean {
   return (
@@ -30,6 +33,7 @@ function isEmpty(value: unknown): boolean {
  */
 @Component({
   selector: 'app-form-field',
+  imports: [NgTemplateOutlet],
   templateUrl: './form-field.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
   host: { '[class.is-invalid]': 'invalid()' },
@@ -41,6 +45,11 @@ export class FormField implements AfterContentInit {
   readonly error = input<string | null>(null);
   /** Astérisque rouge sur un champ obligatoire (désactivable, comme sur l'écran de connexion). */
   readonly requiredMark = input(true);
+  /** Aide affichée sous le champ, déjà traduite (« Minimum 8 caractères »). */
+  readonly hint = input<string | null>(null);
+  /** Champ composé (éditeur riche, groupe de boutons) : libellé relié par `aria-labelledby` au lieu d'un `<label>`. */
+  readonly group = input(false);
+  protected readonly labelId = `ff-label-${++nextId}`;
 
   private readonly ngControl = contentChild(NgControl);
   private readonly form = inject(FormGroupDirective, { optional: true });

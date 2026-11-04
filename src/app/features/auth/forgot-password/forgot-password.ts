@@ -20,7 +20,7 @@ export class ForgotPassword {
   private readonly errors = inject(ErrorMessageService);
 
   protected readonly form = inject(NonNullableFormBuilder).group({
-    email: ['', Validators.required],
+    identifiant: ['', Validators.required],
   });
   protected readonly pending = signal(false);
   protected readonly sent = signal(false);
@@ -35,7 +35,7 @@ export class ForgotPassword {
     }
     this.pending.set(true);
     this.auth
-      .forgotPassword(this.form.getRawValue().email.trim())
+      .forgotPassword(this.form.getRawValue().identifiant.trim())
       .pipe(finalize(() => this.pending.set(false)))
       .subscribe({
         next: () => this.sent.set(true),

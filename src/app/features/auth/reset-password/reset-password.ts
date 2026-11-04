@@ -6,6 +6,7 @@ import { finalize } from 'rxjs';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { AuthService } from '../../../core/auth/auth-service';
+import { SettingsService } from '../../../core/settings-service';
 import { FormField } from '../../../shared/form-field/form-field';
 import { PasswordInput } from '../../../shared/password-input/password-input';
 import { AuthCard } from '../auth-card/auth-card';
@@ -19,6 +20,7 @@ import { AuthCard } from '../auth-card/auth-card';
 })
 export class ResetPassword {
   private readonly auth = inject(AuthService);
+  protected readonly settings = inject(SettingsService);
   private readonly router = inject(Router);
   private readonly errors = inject(ErrorMessageService);
   private readonly translate = inject(TranslateService);

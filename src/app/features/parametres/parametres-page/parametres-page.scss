@@ -1,0 +1,61 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.pp__intro {
+  margin: 0;
+  font-size: 14px;
+}
+
+.pp__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+  max-width: 820px;
+  padding: var(--space-6);
+}
+
+.pp__head {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.pp__title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.pp__desc {
+  margin: 0;
+  font-size: 14px;
+}
+
+.pp__fields {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+
+.pp__number {
+  max-width: 160px;
+}
+
+.pp__actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+@media (max-width: 640px) {
+  .pp__card {
+    padding: var(--space-4);
+  }
+
+  .pp__actions .btn {
+    flex: 1;
+  }
+}

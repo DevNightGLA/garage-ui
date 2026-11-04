@@ -11,9 +11,10 @@ export class LanguageService {
 
   readonly lang = signal<Lang>('fr');
 
-  init(): void {
+  /** Langue mémorisée par le navigateur, sinon la langue par défaut du paramètre `langue_defaut` (RG-NAV-03). */
+  init(defaultLang: Lang = 'fr'): void {
     const stored = this.storage.local.get(STORAGE_KEYS.langue);
-    this.apply(stored === 'en' ? 'en' : 'fr');
+    this.apply(stored === 'en' || stored === 'fr' ? stored : defaultLang);
   }
 
   use(lang: Lang): void {

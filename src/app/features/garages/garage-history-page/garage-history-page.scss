@@ -1,0 +1,52 @@
+.gh__head {
+  flex-wrap: nowrap;
+}
+
+.gh__who {
+  min-width: 0;
+}
+
+.gh__numero {
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.gh__adresse {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--text-body);
+}
+
+.gh__statut {
+  flex: none;
+  margin-left: auto;
+  padding: var(--space-2) var(--space-4);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.gh__state {
+  margin: 0;
+  padding: var(--space-2);
+  font-size: 14px;
+  color: var(--text-body);
+
+  &--error {
+    color: var(--color-danger);
+  }
+}
+
+@media (max-width: 640px) {
+  .gh__head {
+    flex-wrap: wrap;
+  }
+
+  .gh__adresse {
+    display: block;
+  }
+}

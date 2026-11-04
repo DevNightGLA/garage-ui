@@ -1,0 +1,32 @@
+<app-modal
+  [title]="'modeles.' + modele().key + '.titre' | translate"
+  [width]="640"
+  [error]="error()"
+  (closed)="closed.emit()"
+>
+  <form id="modele-form" class="modal-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    @if (modele().objet) {
+      <app-form-field [label]="'modeles.objet' | translate" [error]="fieldError(modele().objet)">
+        <input class="input" type="text" formControlName="objet" maxlength="200" />
+      </app-form-field>
+    }
+    <app-form-field [label]="'modeles.message' | translate" [error]="fieldError(modele().texte)" [group]="true">
+      <app-rich-text formControlName="texte" [ariaLabel]="'modeles.message' | translate" />
+    </app-form-field>
+    @if (!readOnly()) {
+      <app-variable-chips [variables]="modele().variables" (insert)="insertVariable($event)" />
+    }
+  </form>
+
+  <div modalFooter>
+    <button type="button" class="btn btn--secondary" [disabled]="pending()" (click)="closed.emit()">
+      {{ (readOnly() ? 'commun.fermer' : 'commun.annuler') | translate }}
+    </button>
+    @if (!readOnly()) {
+      <button type="submit" form="modele-form" class="btn btn--primary" [disabled]="pending()" [attr.aria-busy]="pending()">
+        <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+        {{ (pending() ? 'commun.enregistrement' : 'commun.enregistrer') | translate }}
+      </button>
+    }
+  </div>
+</app-modal>

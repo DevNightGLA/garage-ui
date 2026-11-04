@@ -1,3 +1,5 @@
+import { provideHttpClient } from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { TestBed } from '@angular/core/testing';
 import {
   ActivatedRouteSnapshot,
@@ -7,9 +9,13 @@ import {
   UrlTree,
   provideRouter,
 } from '@angular/router';
-import { authGuard, guestGuard, roleGuard, safeReturnUrl } from './auth-guard';
+import { Observable, firstValueFrom } from 'rxjs';
+import { defaultDroits, signInAs, testUser } from '../../../testing/rights';
+import { DeviceService } from '../device-service';
+import { RightsService } from '../rights/rights-service';
+import { homeGuard, screenGuard } from '../rights/screen-guard';
+import { authGuard, guestGuard, safeReturnUrl, temporaryPasswordGuard } from './auth-guard';
 import { AuthService } from './auth-service';
-import { Role } from './auth.models';
 
 describe('guards', () => {
   let auth: AuthService;
@@ -17,25 +23,48 @@ describe('guards', () => {
 
   const run = (guard: CanActivateFn, url = '/garages') =>
     TestBed.runInInjectionContext(() => guard({} as ActivatedRouteSnapshot, { url } as RouterStateSnapshot));
-
-  const signIn = (role: Role) => auth.user.set({ id: 1, login: 'u', email: 'u@example.com', role, actif: true });
+  const url = (result: unknown) => router.serializeUrl(result as UrlTree);
 
   beforeEach(() => {
     sessionStorage.clear();
-    TestBed.configureTestingModule({ providers: [provideRouter([])] });
+    localStorage.clear();
+    TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()] });
     auth = TestBed.inject(AuthService);
     router = TestBed.inject(Router);
   });
 
   describe('authGuard', () => {
-    it('laisse passer un utilisateur connecté', () => {
-      signIn('LECTURE_SEULE');
+    it('laisse passer un utilisateur connecté dont les droits sont chargés', () => {
+      signInAs('CONSULTANT');
       expect(run(authGuard)).toBe(true);
     });
 
+    it('charge les droits avant la première page', async () => {
+      auth.user.set(testUser('GESTIONNAIRE'));
+      const result = run(authGuard) as Observable<boolean>;
+      const done = firstValueFrom(result);
+      TestBed.inject(HttpTestingController).expectOne('/api/droits/moi').flush(defaultDroits('GESTIONNAIRE'));
+      expect(await done).toBe(true);
+      expect(TestBed.inject(RightsService).can('GAR', 'd')).toBe(true);
+    });
+
     it('renvoie à la connexion en mémorisant la page demandée', () => {
-      const result = run(authGuard, '/locations?statut=ACTIVE') as UrlTree;
-      expect(router.serializeUrl(result)).toBe('/connexion?retour=%2Flocations%3Fstatut%3DACTIVE');
+      expect(url(run(authGuard, '/locations?statut=ACTIVE'))).toBe('/connexion?retour=%2Flocations%3Fstatut%3DACTIVE');
+    });
+
+    it('impose le changement d\'un mot de passe temporaire avant tout écran (RG-AUT-05)', () => {
+      signInAs('CONSULTANT', { motDePasseTemporaire: true });
+      expect(url(run(authGuard))).toBe('/mot-de-passe-temporaire');
+    });
+  });
+
+  describe('temporaryPasswordGuard', () => {
+    it('n\'ouvre l\'écran qu\'à un compte au mot de passe temporaire', () => {
+      expect(url(run(temporaryPasswordGuard))).toBe('/connexion');
+      signInAs('ADMIN');
+      expect(url(run(temporaryPasswordGuard))).toBe('/');
+      signInAs('ADMIN', { motDePasseTemporaire: true });
+      expect(run(temporaryPasswordGuard)).toBe(true);
     });
   });
 
@@ -45,24 +74,54 @@ describe('guards', () => {
     });
 
     it('renvoie un utilisateur connecté à l\'application', () => {
-      signIn('ADMIN');
-      expect(router.serializeUrl(run(guestGuard) as UrlTree)).toBe('/');
+      signInAs('ADMIN');
+      expect(url(run(guestGuard))).toBe('/');
     });
   });
 
-  describe('roleGuard', () => {
-    it('autorise les rôles demandés', () => {
-      signIn('ADMIN');
-      expect(run(roleGuard('ADMIN'))).toBe(true);
-      expect(run(roleGuard('ADMIN', 'GESTIONNAIRE'))).toBe(true);
+  describe('screenGuard', () => {
+    it('ouvre un écran au droit « voir »', () => {
+      signInAs('CONSULTANT');
+      expect(run(screenGuard('GAR'))).toBe(true);
     });
 
-    it('refuse un autre rôle ou une absence de session', () => {
-      signIn('GESTIONNAIRE');
-      expect(router.serializeUrl(run(roleGuard('ADMIN')) as UrlTree)).toBe('/');
-      auth.logout();
-      expect(router.serializeUrl(run(roleGuard('ADMIN', 'GESTIONNAIRE')) as UrlTree)).toBe('/');
+    it('sans droit « voir », redirige vers le premier écran autorisé (RG-NAV-01)', () => {
+      signInAs('LOCATAIRE');
+      expect(url(run(screenGuard('DASH')))).toBe('/garages');
+      signInAs('GESTIONNAIRE');
+      expect(url(run(screenGuard('USR')))).toBe('/tableau-de-bord');
     });
+
+    it('écran retiré pour cet appareil : page d\'explication (RG-APP-04)', () => {
+      signInAs('ADMIN');
+      TestBed.inject(DeviceService).mode.set('SMARTPHONE');
+      expect(url(run(screenGuard('USR')))).toBe('/ecran-indisponible?ecran=USR');
+      expect(run(screenGuard('DRO'))).toBe(true);
+      expect(run(screenGuard('GAR'))).toBe(true);
+    });
+  });
+});
+
+describe('homeGuard', () => {
+  beforeEach(() => {
+    localStorage.clear();
+    TestBed.configureTestingModule({ providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting()] });
+  });
+
+  const run = () => TestBed.runInInjectionContext(() => homeGuard({} as ActivatedRouteSnapshot, { url: '/' } as RouterStateSnapshot));
+
+  it('attend les droits avant de choisir la page d\'accueil (pas d\'« Accès refusé » à la connexion)', async () => {
+    TestBed.inject(AuthService).user.set(testUser('LOCATAIRE'));
+    const done = firstValueFrom(run() as Observable<UrlTree>);
+    TestBed.inject(HttpTestingController).expectOne('/api/droits/moi').flush(defaultDroits('LOCATAIRE'));
+    expect(TestBed.inject(Router).serializeUrl(await done)).toBe('/garages');
+  });
+
+  it('reprend la dernière page visitée, y compris une sous-page', async () => {
+    signInAs('ADMIN');
+    localStorage.setItem('gg-page', 'statistiques/repartition');
+    const url = await firstValueFrom(run() as Observable<UrlTree>);
+    expect(TestBed.inject(Router).serializeUrl(url)).toBe('/statistiques/repartition');
   });
 });
 

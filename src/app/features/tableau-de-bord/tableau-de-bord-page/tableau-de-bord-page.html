@@ -22,105 +22,172 @@
   }
 </div>
 
-<div class="bas">
-  <section class="card graphique" [attr.aria-label]="'tableauDeBord.graphique.' + chart() + '.titre' | translate">
-    <div class="graphique__tete">
-      <div class="graphique__textes">
-        <h2 class="graphique__titre">{{ 'tableauDeBord.graphique.' + chart() + '.titre' | translate }}</h2>
-        <div class="graphique__legende">
-          <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
-          {{ 'tableauDeBord.graphique.' + chart() + '.legende' | translate }}
+<div class="cartes">
+  <app-task-card
+    [title]="'tableauDeBord.impayes.titre' | translate: { n: unpaidTotal() }"
+    [total]="unpaidTotal()"
+    [page]="late()"
+    [size]="pageSize()"
+    [noun]="'tableauDeBord.impayes.nom' | translate"
+    [loading]="unpaid.isLoading()"
+    [error]="unpaidError()"
+    [empty]="'tableauDeBord.impayes.vide' | translate"
+    (pageChange)="late.set($event)"
+    (retry)="unpaid.reload()"
+  >
+    @for (unpaid of unpaidRows(); track unpaid.garage.id + '|' + unpaid.periode) {
+      <div class="task-row" role="listitem">
+        <div class="impaye__qui">
+          <span class="avatar-rond avatar-rond--petit" aria-hidden="true">{{ tenantInitials(unpaid) }}</span>
+          <div class="impaye__textes">
+            <b>{{ tenant(unpaid) }}</b>
+            <span>{{ period(unpaid) }}</span>
+          </div>
         </div>
-      </div>
-      <div class="graphique__nav">
-        <span class="graphique__numero">{{ chartNumber() }}/{{ chartCount }}</span>
-        <button
-          type="button"
-          class="graphique__fleche"
-          [appTooltip]="'tableauDeBord.graphique.precedent' | translate"
-          (click)="shiftChart(-1)"
+        <span
+          class="montant-pill"
+          [appTooltip]="received(unpaid)"
+          [attr.tabindex]="received(unpaid) ? 0 : null"
         >
-          <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-        </button>
-        <button
-          type="button"
-          class="graphique__fleche"
-          [appTooltip]="'tableauDeBord.graphique.suivant' | translate"
-          (click)="shiftChart(1)"
-        >
-          <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-        </button>
-      </div>
-    </div>
-    @if (chartView(); as view) {
-      <app-bar-chart
-        [labels]="view.labels"
-        [values]="view.values"
-        [format]="view.format"
-        [caption]="'tableauDeBord.graphique.' + chart() + '.legende' | translate"
-      />
-    } @else {
-      <div class="td__etat">{{ 'commun.chargement' | translate }}</div>
-    }
-  </section>
-
-  <section class="card impayes" [attr.aria-label]="'tableauDeBord.impayes.titre' | translate: { n: unpaidTotal() }">
-    <h2 class="impayes__titre">{{ 'tableauDeBord.impayes.titre' | translate: { n: unpaidTotal() } }}</h2>
-
-    @if (unpaidError(); as message) {
-      <div class="td__etat td__etat--erreur">
-        {{ message }}
-        <button type="button" class="link-muted" (click)="unpaid.reload()">{{ 'commun.reessayer' | translate }}</button>
-      </div>
-    } @else if (unpaid.isLoading() && unpaidRows().length === 0) {
-      <div class="td__etat">{{ 'commun.chargement' | translate }}</div>
-    } @else if (unpaidRows().length === 0) {
-      <div class="td__etat">{{ 'tableauDeBord.impayes.vide' | translate }}</div>
-    } @else {
-      <ul class="impayes__liste">
-        @for (unpaid of unpaidRows(); track unpaid.garage.id + '|' + unpaid.periode) {
-          <li class="impaye">
-            <div class="impaye__haut">
-              <span class="impaye__locataire">{{ tenant(unpaid) }}</span>
-              <span class="impaye__montant">{{ unpaid.resteDu | currency: 'EUR' : 'symbol' : '1.2-2' : 'fr' }}</span>
-            </div>
-            <div class="impaye__bas">
-              <span class="impaye__periode">{{ period(unpaid) }}</span>
-              <span class="impaye__badge" [appTooltip]="received(unpaid)" [attr.tabindex]="received(unpaid) ? 0 : null">
-                <app-status-badge [tone]="tone(unpaid)" [block]="true" [width]="84">{{
-                  'tableauDeBord.impayes.type.' + unpaid.type | translate
-                }}</app-status-badge>
-              </span>
-            </div>
-          </li>
+          <span class="montant-pill__type" [class.is-total]="unpaid.type === 'TOTAL'" [class.is-partiel]="unpaid.type === 'PARTIEL'">{{
+            'tableauDeBord.impayes.type.' + unpaid.type | translate
+          }}</span>
+          <span class="montant-pill__valeur" [class.is-total]="unpaid.type === 'TOTAL'" [class.is-partiel]="unpaid.type === 'PARTIEL'">{{
+            eur(unpaid.resteDu)
+          }}</span>
+        </span>
+        @if (canRemind() && reminder(unpaid); as relance) {
+          <div class="actions-pile">
+            @if (relance.email) {
+              <button
+                type="button"
+                class="btn btn--primary btn--mini"
+                [appTooltip]="'tableauDeBord.impayes.emailTitre' | translate"
+                (click)="remindByMail(relance)"
+              >
+                <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> {{ 'tableauDeBord.impayes.email' | translate }}
+              </button>
+            }
+            <button
+              type="button"
+              class="btn btn--primary btn--mini"
+              [appTooltip]="(relance.email ? 'tableauDeBord.impayes.relanceTitre' : 'tableauDeBord.impayes.relanceSansEmail') | translate"
+              (click)="remindManually(unpaid, relance)"
+            >
+              <i class="fa-solid fa-comments" aria-hidden="true"></i> {{ 'tableauDeBord.impayes.relance' | translate }}
+            </button>
+          </div>
         }
-      </ul>
-    }
-
-    @if (unpaidTotal() > pageSize) {
-      <div class="impayes__pied">
-        <span>{{ 'tableauDeBord.impayes.compteur' | translate: { from: unpaidFrom(), to: unpaidTo(), total: unpaidTotal() } }}</span>
-        <div class="impayes__pages">
-          <button
-            type="button"
-            class="impayes__page"
-            [disabled]="!hasPrevious()"
-            [attr.aria-label]="'liste.precedent' | translate"
-            (click)="shiftLate(-1)"
-          >
-            <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
-          </button>
-          <button
-            type="button"
-            class="impayes__page"
-            [disabled]="!hasNext()"
-            [attr.aria-label]="'liste.suivant' | translate"
-            (click)="shiftLate(1)"
-          >
-            <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
-          </button>
-        </div>
       </div>
     }
-  </section>
+  </app-task-card>
+
+  <app-task-card
+    [title]="'tableauDeBord.remarques.titre' | translate: { n: todoTotal() }"
+    [total]="todoTotal()"
+    [page]="todoPage()"
+    [size]="pageSize()"
+    [noun]="'tableauDeBord.remarques.nom' | translate"
+    [loading]="todo.isLoading()"
+    [error]="todoError()"
+    [empty]="'tableauDeBord.remarques.vide' | translate"
+    (pageChange)="todoPage.set($event)"
+    (retry)="todo.reload()"
+  >
+    @for (remarque of todoRows(); track remarque.id) {
+      <div class="task-row" role="listitem">
+        <span [class]="remarque.garage ? 'avatar-carre' : 'avatar-rond'" aria-hidden="true">{{ todoAvatar(remarque) }}</span>
+        <div class="todo__texte">
+          <b>{{ todoWho(remarque) }}</b>
+          <p>{{ plain(remarque.texte) }}</p>
+        </div>
+        <div class="todo__meta"><span>{{ since(remarque) }}</span></div>
+        @if (canOpen(remarque)) {
+          <button
+            type="button"
+            class="todo__ouvrir"
+            [attr.aria-label]="'tableauDeBord.remarques.ouvrir' | translate"
+            [appTooltip]="'tableauDeBord.remarques.ouvrir' | translate"
+            (click)="openRemark(remarque)"
+          >
+            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+          </button>
+        }
+      </div>
+    }
+  </app-task-card>
+
+  <app-task-card
+    class="cartes__large"
+    [title]="'tableauDeBord.avis.titre' | translate: { n: allNotices().length }"
+    [total]="allNotices().length"
+    [pageable]="false"
+    [loading]="notices.isLoading()"
+    [error]="noticesError()"
+    [empty]="'tableauDeBord.avis.vide' | translate"
+    (retry)="notices.reload()"
+  >
+    @for (avis of shownNotices(); track avis.locationId + '|' + avis.loyerGarageId) {
+      <div class="task-row" role="listitem">
+        <span class="avatar-rond" aria-hidden="true">{{ noticeInitials(avis) }}</span>
+        <div class="avis__milieu">
+          <div class="avis__nom">
+            <b>{{ noticeName(avis) }}</b>
+            <div class="avis__infos">
+              <span><i class="fa-solid fa-warehouse" aria-hidden="true"></i>{{ avis.garage }}</span>
+              <span><i class="fa-regular fa-calendar" aria-hidden="true"></i>{{ noticeDate(avis) }}</span>
+              @if (avis.email) {
+                <span><i class="fa-regular fa-envelope" aria-hidden="true"></i>{{ avis.email }}</span>
+              } @else {
+                <span><i class="fa-solid fa-phone" aria-hidden="true"></i>{{ avis.telephone }}</span>
+              }
+            </div>
+          </div>
+          <div class="avis__loyer">
+            <s>{{ eur(avis.ancienMontant) }}</s>
+            <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+            <b>{{ eur(avis.nouveauMontant) }}</b>
+            <span class="avis__ecart" [class.is-hausse]="delta(avis).up">{{ delta(avis).text }}</span>
+          </div>
+        </div>
+        @if (canNotify()) {
+          @if (avis.email) {
+            <button
+              type="button"
+              class="btn btn--primary avis__action"
+              [appTooltip]="'tableauDeBord.avis.envoyerTitre' | translate"
+              (click)="sendNotice()"
+            >
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i> {{ 'tableauDeBord.avis.envoyer' | translate }}
+            </button>
+          } @else {
+            <button
+              type="button"
+              class="btn btn--primary avis__action"
+              [appTooltip]="'tableauDeBord.avis.informeTitre' | translate"
+              (click)="notifyManually(avis)"
+            >
+              <i class="fa-solid fa-comments" aria-hidden="true"></i> {{ 'tableauDeBord.avis.informe' | translate }}
+            </button>
+          }
+        }
+      </div>
+    }
+    @if (otherNotices() > 0) {
+      <button taskFoot type="button" class="link-muted avis__autres" (click)="sendNotice()">
+        {{ 'tableauDeBord.avis.autres' | translate: { n: otherNotices() } }}
+      </button>
+    }
+  </app-task-card>
 </div>
+
+@if (contact(); as target) {
+  <app-contact-dialog
+    [kind]="target.kind"
+    [name]="target.name"
+    [contact]="target.contact"
+    [save]="target.save"
+    (saved)="contactSaved()"
+    (closed)="contact.set(null)"
+  />
+}

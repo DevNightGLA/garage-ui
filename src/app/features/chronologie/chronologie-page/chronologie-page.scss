@@ -1,0 +1,96 @@
+.ch__tools {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+}
+
+.ch__head {
+  flex-wrap: nowrap;
+}
+
+.ch__avatar {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-circle);
+  background: var(--gradient-dark);
+  font-size: 19px;
+  font-weight: 700;
+  color: var(--white);
+
+  &.is-ancien {
+    background: var(--gradient-ancien-light);
+  }
+}
+
+.ch__who {
+  min-width: 0;
+}
+
+.ch__line {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.ch__name {
+  font-size: 21px;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.ch__garages {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: var(--space-1) 10px;
+  border-radius: var(--radius-md);
+  background: #f6f8fb;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-heading);
+  white-space: nowrap;
+
+  i {
+    font-size: 13px;
+  }
+}
+
+.ch__address {
+  margin-top: 2px;
+  font-size: 14px;
+  color: var(--text-body);
+}
+
+.ch__solde {
+  flex: none;
+  margin-left: auto;
+  padding: var(--space-2) var(--space-4);
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--white);
+}
+
+.ch__state {
+  margin: 0;
+  padding: var(--space-2);
+  font-size: 14px;
+  color: var(--text-body);
+
+  &--error {
+    color: var(--color-danger);
+  }
+}
+
+@media (max-width: 640px) {
+  .ch__head {
+    flex-wrap: wrap;
+  }
+}

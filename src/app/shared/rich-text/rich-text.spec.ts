@@ -90,6 +90,21 @@ describe('RichText', () => {
     expect(control.hasError('required')).toBe(true);
   });
 
+  it('insère une variable à la fin du texte, puis à la position du curseur', async () => {
+    // jsdom n'a pas la géométrie des plages de texte, que Quill lit pour faire défiler jusqu'au curseur.
+    Range.prototype.getBoundingClientRect ??= () => new DOMRect();
+    Range.prototype.getClientRects ??= () => [] as unknown as DOMRectList;
+    const richText = fixture.debugElement.query((el) => el.componentInstance instanceof RichText).componentInstance as RichText;
+    const html = () => control.value.replaceAll('&nbsp;', ' '); // jsdom
+    richText.insertText('{nom}');
+    await settle();
+    expect(html()).toBe('<p>Porte <strong>difficile</strong>.{nom}</p>');
+
+    richText.insertText(' et {prenom}');
+    await settle();
+    expect(html()).toBe('<p>Porte <strong>difficile</strong>.{nom} et {prenom}</p>');
+  });
+
   it('s\'ouvre en consultation, sans barre d\'outils, quand le champ est désactivé', async () => {
     const readOnly = TestBed.createComponent(ReadOnlyHost);
     await readOnly.whenStable();

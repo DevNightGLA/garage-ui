@@ -1,10 +1,11 @@
+import { NgTemplateOutlet } from '@angular/common';
 import { CurrencyPipe } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, input, output, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { isoToDisplay } from '../../../shared/date-input/date-utils';
 import { Modal } from '../../../shared/modal/modal';
 import { Pagination } from '../../../shared/pagination/pagination';
@@ -13,8 +14,7 @@ import { Tooltip } from '../../../shared/tooltip/tooltip';
 import { GarageApi } from '../garage-api';
 import { GarageDTO, LoyerDTO, LoyerEtat } from '../garage.models';
 import { LoyerForm } from '../loyer-form/loyer-form';
-
-export const LOYERS_PAGE_SIZE = 5;
+import { SettingsService } from '../../../core/settings-service';
 
 const ETAT_TONE: Record<LoyerEtat, BadgeTone> = {
   A_VENIR: 'info',
@@ -29,30 +29,33 @@ const ETAT_TONE: Record<LoyerEtat, BadgeTone> = {
  */
 @Component({
   selector: 'app-loyers-history',
-  imports: [CurrencyPipe, TranslatePipe, Modal, Pagination, StatusBadge, Tooltip, LoyerForm],
+  imports: [NgTemplateOutlet, CurrencyPipe, TranslatePipe, Modal, Pagination, StatusBadge, Tooltip, LoyerForm],
   templateUrl: './loyers-history.html',
   styleUrl: './loyers-history.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LoyersHistory {
   readonly garage = input.required<GarageDTO>();
+  /** Contenu dans une carte de page (« Historique des … » du menu) au lieu d'une fenêtre. */
+  readonly embedded = input(false);
   readonly closed = output<void>();
   /** Un loyer a été créé, modifié ou supprimé : le loyer courant du garage a pu changer. */
   readonly changed = output<void>();
 
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('LOY');
   private readonly api = inject(GarageApi);
   private readonly errors = inject(ErrorMessageService);
   private readonly translate = inject(TranslateService);
 
-  protected readonly pageSize = LOYERS_PAGE_SIZE;
+  /** Lignes par page : paramètre `lignes_hist` (RG-PAR-09). */
+  protected readonly pageSize = inject(SettingsService).lignesHist;
   protected readonly page = signal(0);
   protected readonly form = signal<{ loyer: LoyerDTO | null } | null>(null);
   protected readonly deleteError = signal<string | null>(null);
 
   protected readonly list = rxResource({
     params: () => ({ id: this.garage().id, page: this.page() }),
-    stream: ({ params }) => this.api.loyers(params.id, params.page, LOYERS_PAGE_SIZE),
+    stream: ({ params }) => this.api.loyers(params.id, params.page, this.pageSize()),
   });
   protected readonly rows = computed(() => (this.list.hasValue() ? this.list.value().content : []));
   protected readonly total = computed(() => (this.list.hasValue() ? this.list.value().totalElements : 0));
@@ -75,11 +78,11 @@ export class LoyersHistory {
   }
 
   protected canDelete(loyer: LoyerDTO, index: number): boolean {
-    return this.roles.canWrite() && this.hasActions(index) && loyer.etat === 'A_VENIR';
+    return this.droits.canDelete() && this.hasActions(index) && loyer.etat === 'A_VENIR';
   }
 
   protected editTooltip(loyer: LoyerDTO): string {
-    if (this.roles.isReadOnly()) {
+    if (this.droits.isReadOnly()) {
       return this.translate.instant('loyers.visualiser');
     }
     return loyer.modifiable ? this.translate.instant('loyers.modifier') : (loyer.motifModification ?? '');
@@ -94,7 +97,7 @@ export class LoyersHistory {
   }
 
   protected openEdit(loyer: LoyerDTO): void {
-    if (this.roles.isReadOnly() || loyer.modifiable) {
+    if (this.droits.isReadOnly() || loyer.modifiable) {
       this.form.set({ loyer });
     }
   }

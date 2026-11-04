@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./dc-runtime.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<meta charset="utf-8">
+<title>Site en maintenance</title>
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/fonts.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/fontawesome.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/typography.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/colors.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/tokens/foundations.css">
+<link rel="stylesheet" href="ds/soft-ui-gregory-92ffefa8-13be-41ae-8046-f1a46cb5dfba/styles.css">
+<style>
+html,body{margin:0;font-family:'Open Sans',sans-serif;color:#67748E;background:#F8F9FA}
+a{color:#cb0c9f;text-decoration:none}a:hover{color:#7928ca}
+@keyframes mSpin{to{transform:rotate(360deg)}}
+</style>
+</helmet>
+<div style="min-height:100vh;box-sizing:border-box;padding:24px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:24px">
+  <div style="background:#fff;border-radius:16px;box-shadow:0 20px 27px rgba(0,0,0,.05);width:100%;max-width:520px;box-sizing:border-box;padding:48px 32px 40px;display:flex;flex-direction:column;align-items:center;gap:16px;text-align:center">
+    <span style="width:72px;height:72px;border-radius:50%;background:linear-gradient(310deg,#f5a623,#fb8c00);color:#fff;display:flex;align-items:center;justify-content:center;font-size:30px;box-shadow:0 4px 12px rgba(251,140,0,.35)"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+    <h1 style="margin:8px 0 0;font-size:28px;font-weight:700;color:#344767;line-height:1.2">Site en maintenance</h1>
+    <p style="margin:0;font-size:16px;line-height:1.6;max-width:400px;text-wrap:pretty">L’application est temporairement indisponible pendant une opération de maintenance. Vos données sont conservées et l’accès sera rétabli dès que possible.</p>
+    <sc-if value="{{ hasMsg }}" hint-placeholder-val="{{ false }}"><div role="status" style="display:flex;gap:12px;align-items:flex-start;background:#f8f9fa;border-radius:8px;padding:12px 16px;font-size:13px;font-style:italic;line-height:1.5;text-align:left"><i class="fa-solid fa-circle-info" style="font-size:15px;margin-top:1px;flex:none"></i><span>{{ msg }}</span></div></sc-if>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;margin-top:8px">
+      <button onClick="{{ retry }}" disabled="{{ busy }}" style="border:0;cursor:pointer;padding:12px 20px;border-radius:8px;font-family:inherit;font-weight:700;font-size:13px;text-transform:uppercase;white-space:nowrap;background:linear-gradient(310deg,#7928ca,#ff0080);color:#fff;box-shadow:0 3px 5px rgba(0,0,0,.15);min-width:150px"><sc-if value="{{ busy }}" hint-placeholder-val="{{ false }}"><span style="display:inline-block;width:13px;height:13px;box-sizing:border-box;border-radius:50%;border:2px solid rgba(255,255,255,.35);border-top-color:#fff;animation:mSpin .7s linear infinite;vertical-align:-2px;margin-right:8px"></span>Vérification…</sc-if><sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}"><i class="fa-solid fa-rotate-right" style="margin-right:8px"></i>Réessayer</sc-if></button>
+      <a href="mailto:support@gestion-garages.be?subject=Maintenance%20du%20site" style="cursor:pointer;display:inline-flex;align-items:center;padding:12px 20px;border-radius:8px;font-weight:700;font-size:13px;text-transform:uppercase;white-space:nowrap;background:#e9ecef;color:#344767" style-hover="background:#dde1e6;color:#344767"><i class="fa-solid fa-envelope" style="margin-right:8px"></i>Contacter le support</a>
+    </div>
+  </div>
+  <a onClick="{{ admin }}" style="cursor:pointer;font-size:13px;font-weight:600">{{ adminTxt }}</a>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { busy: false, msg: '' };
+  preview() { try { return localStorage.getItem('gg_maint_preview') === '1'; } catch (e) { return false; } }
+  on() { if (this.preview()) return true; try { return localStorage.getItem('gg_maintenance') === '1'; } catch (e) { return true; } }
+  back() { if (this.preview()) { try { localStorage.removeItem('gg_maint_preview'); localStorage.setItem('gg_view', 'maint'); } catch (e) {} window.location.href = 'Gestion des utilisateurs.dc.html'; return; } window.location.href = 'Gestion Garages.dc.html'; }
+  componentDidMount() { this._p = setInterval(() => { if (!this.on()) this.back(); }, 2000); }
+  componentWillUnmount() { clearInterval(this._p); clearTimeout(this._t); }
+  renderVals() {
+    return {
+      adminTxt: this.preview() ? 'Quitter l’aperçu' : 'Accès administrateur', busy: this.state.busy, idle: !this.state.busy, msg: this.state.msg, hasMsg: !!this.state.msg,
+      retry: () => { if (this.state.busy) return; this.setState({ busy: true, msg: '' }); this._t = setTimeout(() => { if (!this.on()) return this.back(); this.setState({ busy: false, msg: 'Le site est toujours en maintenance. Réessayez dans quelques instants.' }); }, 700); },
+      admin: () => { if (!this.preview()) { try { localStorage.setItem('gg_role', 'Admin'); } catch (e) {} } this.back(); }
+    };
+  }
+}
+</script>
+</body>
+</html>

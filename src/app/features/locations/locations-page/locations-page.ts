@@ -6,7 +6,7 @@ import { TranslatePipe } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
 import { SortSpec } from '../../../core/api/list-params';
-import { RoleService } from '../../../core/role-service';
+import { screenRights } from '../../../core/rights/screen-rights';
 import { Confirm } from '../../../shared/confirm/confirm';
 import { DataTable, DataTableColumn } from '../../../shared/data-table/data-table';
 import { DataTableCell } from '../../../shared/data-table/data-table-cell';
@@ -18,8 +18,7 @@ import { Tooltip } from '../../../shared/tooltip/tooltip';
 import { LocationApi } from '../location-api';
 import { LocationForm } from '../location-form/location-form';
 import { LocationDTO, LocationStatut } from '../location.models';
-
-export const LOCATIONS_PAGE_SIZE = 10;
+import { SettingsService } from '../../../core/settings-service';
 
 /** Colonnes triables : les clés sont les propriétés de tri acceptées par l'API (`sort=`). */
 const COLUMNS: readonly DataTableColumn[] = [
@@ -60,11 +59,12 @@ interface Deletion {
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocationsPage {
-  protected readonly roles = inject(RoleService);
+  protected readonly droits = screenRights('LOC');
   private readonly api = inject(LocationApi);
   private readonly errors = inject(ErrorMessageService);
 
-  protected readonly pageSize = LOCATIONS_PAGE_SIZE;
+  /** Lignes par page : paramètre `lignes_liste` (RG-PAR-09). */
+  protected readonly pageSize = inject(SettingsService).lignesListe;
   protected readonly filter = signal<LocationStatut>('ACTIVE');
   protected readonly search = signal('');
   protected readonly page = signal(0);
@@ -93,7 +93,7 @@ export class LocationsPage {
     stream: ({ params }) =>
       this.api.list({
         page: params.page,
-        size: LOCATIONS_PAGE_SIZE,
+        size: this.pageSize(),
         sort: params.sort,
         q: params.q,
         filters: { statut: params.statut, finDu: params.finDu, finAu: params.finAu },

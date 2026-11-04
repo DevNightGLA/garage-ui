@@ -1,0 +1,30 @@
+<main class="mnt">
+  <div class="mnt__lang"><app-language-switch /></div>
+  <div class="mnt__card card">
+    <span class="mnt__icon" aria-hidden="true"><i class="fa-solid fa-screwdriver-wrench"></i></span>
+    <h1 class="mnt__title">{{ 'maintenance.site.titre' | translate }}</h1>
+    <p class="mnt__text">{{ 'maintenance.site.texte' | translate }}</p>
+    @if (stillActive()) {
+      <div class="mnt__msg" role="status">
+        <i class="fa-solid fa-circle-info" aria-hidden="true"></i>
+        <span>{{ 'maintenance.site.toujours' | translate }}</span>
+      </div>
+    }
+    @if (!preview) {
+      <div class="mnt__actions">
+        <button type="button" class="btn btn--primary mnt__retry" [disabled]="busy()" (click)="retry()">
+          @if (busy()) {
+            <span class="mnt__spin" aria-hidden="true"></span>{{ 'maintenance.site.verification' | translate }}
+          } @else {
+            <i class="fa-solid fa-rotate-right" aria-hidden="true"></i>{{ 'maintenance.site.reessayer' | translate }}
+          }
+        </button>
+      </div>
+    }
+  </div>
+  @if (preview) {
+    <button type="button" class="mnt__link" (click)="leavePreview()">{{ 'maintenance.site.quitterApercu' | translate }}</button>
+  } @else {
+    <button type="button" class="mnt__link" (click)="adminAccess()">{{ 'maintenance.site.accesAdmin' | translate }}</button>
+  }
+</main>

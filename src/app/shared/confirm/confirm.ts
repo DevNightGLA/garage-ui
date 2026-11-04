@@ -20,6 +20,10 @@ export class Confirm {
   readonly message = input('');
   readonly reasons = input<readonly string[]>([]);
   readonly error = input<string | null>(null);
+  /** Libellé du bouton d'action, déjà traduit (« Désactiver ») : remplace « Non / Oui » par « Annuler / … ». */
+  readonly confirmLabel = input<string | null>(null);
+  /** Action en cours : boutons désactivés. */
+  readonly pending = input(false);
   readonly confirmed = output<void>();
   readonly cancelled = output<void>();
 }

@@ -1,7 +1,19 @@
-<label class="ff">
-  <span class="ff__label">{{ label() }}@if (required && requiredMark()) {<span class="ff__star"> *</span>}</span>
-  <ng-content />
-</label>
+<ng-template #content><ng-content /></ng-template>
+@if (group()) {
+  <!-- Pas de <label> autour d'un champ composé (éditeur riche) : un clic dedans activerait son premier bouton. -->
+  <div class="ff" role="group" [attr.aria-labelledby]="labelId">
+    <span class="ff__label" [id]="labelId">{{ label() }}@if (required && requiredMark()) {<span class="ff__star"> *</span>}</span>
+    <ng-container [ngTemplateOutlet]="content" />
+  </div>
+} @else {
+  <label class="ff">
+    <span class="ff__label">{{ label() }}@if (required && requiredMark()) {<span class="ff__star"> *</span>}</span>
+    <ng-container [ngTemplateOutlet]="content" />
+  </label>
+}
+@if (hint(); as text) {
+  <div class="ff__hint">{{ text }}</div>
+}
 @if (message(); as text) {
   <div class="message-error ff__error" role="alert">{{ text }}</div>
 }

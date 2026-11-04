@@ -17,22 +17,51 @@
       "listeNumerotee": "Liste numérotée",
       "listePuces": "Liste à puces",
       "lien": "Lien"
-    }
+    },
+    "enregistrement": "Enregistrement…",
+    "deplier": "Déplier",
+    "replier": "Replier",
+    "voirPlus": "Voir plus",
+    "voirMoins": "Voir moins",
+    "aVenir": "À venir",
+    "afficherPlus": "Afficher plus ({{n}})"
   },
   "nav": {
     "pages": "Pages /",
     "tableauDeBord": "Tableau de bord",
     "garages": "Garages",
+    "listeGarages": "Liste des garages",
+    "historiqueLoyers": "Historique des loyers",
+    "historiqueLocations": "Historique des locations",
     "locataires": "Locataires",
+    "listeLocataires": "Liste des locataires",
+    "chronologie": "Chronologie",
     "locations": "Locations",
     "paiements": "Paiements",
+    "envoiMessages": "Envoi de messages",
+    "avisLoyer": "Avis de loyer",
+    "relances": "Relances d’impayés",
+    "messageLibre": "Message libre",
+    "statistiques": "Statistiques",
+    "statLoyers": "Loyers encaissés",
+    "statOccupation": "Taux d’occupation",
+    "statRepartition": "Répartition par statut",
+    "statRemarques": "Remarques par type",
+    "configuration": "Configuration",
+    "parametres": "Paramètres",
+    "modelesMessages": "Modèles de messages",
+    "utilisateurs": "Utilisateurs",
+    "droitsAcces": "Droits d’accès",
+    "journalAudit": "Journal d’audit",
+    "maintenance": "Maintenance",
     "afficherMasquerMenu": "Afficher / masquer le menu",
     "principale": "Navigation principale"
   },
   "role": {
     "ADMIN": "Admin",
     "GESTIONNAIRE": "Gestionnaire",
-    "LECTURE_SEULE": "Lecture seule"
+    "LOCATAIRE": "Locataire",
+    "CONSULTANT": "Consultant"
   },
   "langue": {
     "francais": "Français",
@@ -56,7 +85,11 @@
     "moisSuivant": "Mois suivant",
     "choisirMois": "Choisir un mois",
     "anneePrecedente": "Année précédente",
-    "anneeSuivante": "Année suivante"
+    "anneeSuivante": "Année suivante",
+    "choisirAnnee": "Choisir l’année",
+    "periodePrecedente": "Période précédente",
+    "periodeSuivante": "Période suivante",
+    "anneeEnCours": "Année en cours"
   },
   "auth": {
     "connexion": {
@@ -72,12 +105,12 @@
     },
     "oubli": {
       "titre": "Mot de passe oublié",
-      "aide": "Saisissez votre adresse e-mail pour recevoir un lien de réinitialisation.",
-      "email": "Adresse e-mail",
+      "aide": "Saisissez votre identifiant pour recevoir un lien de réinitialisation.",
       "envoyer": "Envoyer le lien",
       "retour": "Retour à la connexion",
       "envoyeTitre": "Vérifiez votre messagerie",
-      "envoye": "Si un compte correspond à cette adresse, un lien de réinitialisation vient d'être envoyé."
+      "envoye": "Si un compte correspond à cet identifiant, un lien de réinitialisation vient d'être envoyé.",
+      "identifiant": "Identifiant"
     },
     "reinit": {
       "titre": "Nouveau mot de passe",
@@ -91,12 +124,18 @@
       "confirmer": "Confirmer le nouveau mot de passe",
       "differents": "Les deux mots de passe ne sont pas identiques.",
       "afficher": "Afficher le mot de passe",
-      "masquer": "Masquer le mot de passe"
+      "masquer": "Masquer le mot de passe",
+      "minimum": "Minimum {{n}} caractères"
     },
     "deconnexion": {
       "bouton": "Se déconnecter",
       "titre": "Se déconnecter ?",
       "message": "Votre session sera fermée."
+    },
+    "temporaire": {
+      "titre": "Choisissez un nouveau mot de passe",
+      "aide": "Votre mot de passe est temporaire : choisissez-en un nouveau pour continuer.",
+      "actuel": "Mot de passe temporaire"
     }
   },
   "garages": {
@@ -155,6 +194,12 @@
       "locataireActuel": "Locataire actuel",
       "cles": "Clés / réserve",
       "loyerActuel": "Loyer actuel"
+    },
+    "historique": {
+      "liste": "Garages",
+      "parMois": "{{montant}}/mois",
+      "aucunLoyer": "Aucun loyer",
+      "aucunGarage": "Aucun garage."
     }
   },
   "loyers": {
@@ -424,18 +469,6 @@
         "note": "{{n}} indisponible"
       }
     },
-    "graphique": {
-      "loyers": {
-        "titre": "Loyers encaissés",
-        "legende": "12 derniers mois, en euros"
-      },
-      "occupation": {
-        "titre": "Taux d’occupation",
-        "legende": "Garages loués, 12 derniers mois, en %"
-      },
-      "precedent": "Graphique précédent",
-      "suivant": "Graphique suivant"
-    },
     "impayes": {
       "titre": "Impayés à relancer ({{n}})",
       "vide": "Aucun impayé à relancer.",
@@ -444,12 +477,868 @@
         "PARTIEL": "Partiel"
       },
       "recu": "Reçu {{recu}} sur {{du}}",
-      "compteur": "{{from}}–{{to}} sur {{total}}"
+      "nom": "impayés",
+      "email": "E-mail",
+      "emailTitre": "Envoyer un e-mail de relance",
+      "relance": "Relancé",
+      "relanceTitre": "Marquer comme relancé (téléphone, courrier ou oral)",
+      "relanceSansEmail": "Aucun e-mail : marquer comme relancé (téléphone, courrier, oral)"
+    },
+    "remarques": {
+      "titre": "Remarques à traiter ({{n}})",
+      "nom": "remarques",
+      "vide": "Aucune remarque à traiter.",
+      "garage": "Garage {{numero}}",
+      "aujourdhui": "aujourd’hui",
+      "depuis": "depuis {{n}} j",
+      "ouvrir": "Ouvrir"
+    },
+    "avis": {
+      "titre": "Avis de loyer à communiquer ({{n}})",
+      "vide": "Aucun avis de loyer à communiquer.",
+      "des": "dès le {{date}}",
+      "envoyer": "Envoyer l’e-mail",
+      "envoyerTitre": "Préparer l’envoi de l’e-mail",
+      "informe": "Marquer informé",
+      "informeTitre": "Marquer comme informé",
+      "autres": "{{n}} autre(s) avis"
     }
   },
   "erreur": {
     "generique": "Une erreur est survenue.",
     "RESEAU": "Impossible de joindre le serveur.",
     "ERREUR_INCONNUE": "Une erreur est survenue."
+  },
+  "maintenance": {
+    "site": {
+      "titre": "Site en maintenance",
+      "texte": "L’application est temporairement indisponible pendant une opération de maintenance. Vos données sont conservées et l’accès sera rétabli dès que possible.",
+      "toujours": "Le site est toujours en maintenance. Réessayez dans quelques instants.",
+      "reessayer": "Réessayer",
+      "verification": "Vérification…",
+      "accesAdmin": "Accès administrateur",
+      "quitterApercu": "Quitter l’aperçu"
+    },
+    "admin": {
+      "titreOn": "Le site est en maintenance",
+      "titreOff": "Le site est en ligne",
+      "sousOn": "Seul l’Admin peut se connecter. Les autres profils voient la page de maintenance.",
+      "sousOff": "Tous les profils peuvent se connecter.",
+      "activer": "Mettre le site en maintenance",
+      "reactiver": "Réactiver le site",
+      "pageAffichee": "Page affichée aux utilisateurs pendant la maintenance.",
+      "previsualiser": "Prévisualiser",
+      "intervalle": "La page vérifie l’état du site toutes les {{n}} secondes.",
+      "reglage": "Régler dans Paramètres > Sécurité",
+      "acces": "Accès des profils pendant la maintenance",
+      "comptes": {
+        "un": "{{n}} compte actif",
+        "n": "{{n}} comptes actifs"
+      },
+      "maintenu": "Accès maintenu",
+      "bloque": "Connexion bloquée",
+      "note": "Les comptes ne sont pas désactivés : leur statut ne change pas, et chaque utilisateur retrouve l’accès dès la réactivation du site.",
+      "confirmerTitre": "Mettre le site en maintenance ?",
+      "confirmerTexte": "Les profils Gestionnaire, Locataire et Consultant seront déconnectés immédiatement et verront la page de maintenance. Les comptes et les données restent inchangés. Vous restez connecté en tant qu’Admin.",
+      "confirmerBouton": "Mettre en maintenance",
+      "activee": "Site en maintenance : les profils Gestionnaire, Locataire et Consultant sont déconnectés",
+      "desactivee": "Site réactivé : les utilisateurs peuvent à nouveau se connecter"
+    }
+  },
+  "acces": {
+    "titre": "Accès refusé",
+    "titreAppareil": "Écran non disponible",
+    "refuse": "Le profil {{profil}} n'a pas accès à cet écran. Ce droit se règle dans « Droits d'accès ».",
+    "indisponible": "Cet écran n'est pas disponible sur {{appareil}}. Ce réglage se trouve dans « Droits d'accès », section « Accès selon l'appareil ».",
+    "appareil": {
+      "ORDINATEUR": "ordinateur",
+      "TABLETTE": "tablette",
+      "SMARTPHONE": "smartphone"
+    }
+  },
+  "chronologie": {
+    "actifs": "Actifs",
+    "tous": "Tous",
+    "recherche": "Rechercher un locataire…",
+    "aucunLocataire": "Aucun locataire trouvé.",
+    "aucunEvenement": "Aucun événement.",
+    "garage": "Garage {{garages}}",
+    "filtre": {
+      "TOUS": "Tous",
+      "LOCATIONS": "Locations",
+      "REMARQUES": "Remarques",
+      "PAIEMENTS": "Paiements"
+    },
+    "stat": {
+      "locations": "Locations",
+      "totalVerse": "Total versé",
+      "remarquesOuvertes": "Remarques ouvertes"
+    },
+    "type": {
+      "LOCATION_DEBUT": "Début de location",
+      "LOCATION_A_VENIR": "Location à venir",
+      "LOCATION_FIN": "Fin de location",
+      "LOCATION_FIN_PREVUE": "Fin de location prévue",
+      "PAIEMENT": "Paiement reçu",
+      "REMARQUE": "Remarque créée",
+      "REMARQUE_RESOLUE": "Remarque résolue"
+    },
+    "mode": {
+      "VIREMENT": "Virement",
+      "ESPECES": "Espèces"
+    }
+  },
+  "messages": {
+    "contact": {
+      "titre": {
+        "informe": "Marquer comme informé",
+        "relance": "Marquer comme relancé"
+      },
+      "intro": {
+        "informe": "Ce locataire n’a pas d’e-mail : informez-le par téléphone, par courrier postal ou oralement, puis enregistrez le contact. Une remarque sera ajoutée à sa fiche.",
+        "relance": "Relancez le locataire par téléphone, par courrier postal ou oralement, puis enregistrez le contact. Une remarque sera ajoutée à sa fiche."
+      },
+      "moyen": "Moyen de contact",
+      "date": "Date du contact"
+    },
+    "moyen": {
+      "EMAIL": "E-mail",
+      "TELEPHONE": "Téléphone",
+      "COURRIER": "Courrier postal",
+      "ORAL": "Oralement"
+    },
+    "col": {
+      "locataire": "Locataire",
+      "garage": "Garage",
+      "loyer": "Loyer",
+      "resteDu": "Reste dû",
+      "aPartirDu": "À partir du",
+      "periode": "Période",
+      "action": "Action"
+    },
+    "recherche": "Rechercher un locataire…",
+    "toutSelectionner": "Tout sélectionner",
+    "selectionner": "Sélectionner {{nom}}",
+    "sansEmail": "Aucun e-mail",
+    "sansEmailCase": "Aucun e-mail : envoi impossible",
+    "renseignerEmail": "Renseigner l’e-mail du locataire",
+    "fait": "{{moyen}} · le {{date}}",
+    "moyenPar": {
+      "EMAIL": "par e-mail",
+      "TELEPHONE": "par téléphone",
+      "COURRIER": "par courrier",
+      "ORAL": "oralement"
+    },
+    "envoi": {
+      "cocher": "Cochez au moins un locataire",
+      "bouton": "Envoyer ({{n}})",
+      "explication": "Un e-mail sera envoyé à chaque locataire sélectionné. Une remarque « Information » reprenant son contenu sera ajoutée à la fiche du locataire.",
+      "envoyer": "Envoyer",
+      "enCours": "Envoi…"
+    },
+    "apercu": {
+      "titre": "Aperçu de l’e-mail",
+      "de": "De",
+      "reponseA": "Répondre à",
+      "cci": "Cci",
+      "a": "À",
+      "objet": "Objet",
+      "bouton": "Aperçu"
+    },
+    "avis": {
+      "intro": "Locataires actuels dont le loyer change à une date future. Chaque envoi ajoute une remarque « Information » à la fiche du locataire, avec le contenu de l’e-mail. Les locataires sans e-mail sont à informer par téléphone, par courrier ou oralement depuis le tableau de bord.",
+      "nom": "avis",
+      "onglet": {
+        "A_FAIRE": "À envoyer",
+        "FAITS": "Envoyés"
+      },
+      "vide": {
+        "A_FAIRE": "Aucun avis à envoyer.",
+        "FAITS": "Aucun avis envoyé."
+      },
+      "confirmer": {
+        "un": "Envoyer 1 avis de changement de loyer ?",
+        "n": "Envoyer {{n}} avis de changement de loyer ?"
+      },
+      "autres": "{{n}} autres avis",
+      "envoyes": {
+        "un": "1 avis envoyé avec succès",
+        "n": "{{n}} avis envoyés avec succès"
+      },
+      "contactTitre": "Marquer comme informé",
+      "contactEnregistre": "Contact enregistré avec succès"
+    },
+    "relances": {
+      "intro": "Loyers non soldés à relancer. Le message est adapté au cas : impayé total ou paiement partiel. Chaque relance ajoute une remarque « Information » à la fiche du locataire. Pour une relance par téléphone, par courrier postal ou oralement, utilisez l’icône de la ligne.",
+      "nom": "impayés",
+      "onglet": {
+        "A_FAIRE": "À relancer",
+        "FAITS": "Relancés"
+      },
+      "vide": {
+        "A_FAIRE": "Aucun impayé à relancer.",
+        "FAITS": "Aucune relance effectuée."
+      },
+      "confirmer": {
+        "un": "Envoyer 1 relance d’impayé ?",
+        "n": "Envoyer {{n}} relances d’impayé ?"
+      },
+      "autres": "{{n}} autres relances",
+      "envoyes": {
+        "un": "1 relance envoyée avec succès",
+        "n": "{{n}} relances envoyées avec succès"
+      },
+      "aucunVersement": "Aucun versement",
+      "contactTitre": "Marquer comme relancé (téléphone, courrier, oral)",
+      "contactEnregistre": "Relance enregistrée avec succès"
+    },
+    "libre": {
+      "intro": "Message envoyé par e-mail à un locataire ou à tous les locataires actuels. Chaque envoi ajoute une remarque « Information » à la fiche du locataire, avec le contenu de l’e-mail.",
+      "destinataires": "Destinataires",
+      "un": "Un locataire",
+      "tous": "Tous les locataires actuels ({{n}})",
+      "locataire": "Locataire",
+      "choisir": "Choisir un locataire",
+      "ancien": "(ancien)",
+      "sansEmail": {
+        "un": "1 locataire sans e-mail ne recevra pas le message.",
+        "n": "{{n}} locataires sans e-mail ne recevront pas le message."
+      },
+      "objet": "Objet",
+      "message": "Message",
+      "aucunDestinataire": "Aucun destinataire avec e-mail",
+      "confirmer": {
+        "un": "Envoyer le message à 1 locataire ?",
+        "n": "Envoyer le message à {{n}} locataires ?"
+      },
+      "autres": "{{n}} autres destinataires",
+      "envoyes": {
+        "un": "1 message envoyé avec succès",
+        "n": "{{n}} messages envoyés avec succès"
+      },
+      "apercuPremier": "Pour le premier destinataire",
+      "erreurDestinataires": "La liste des locataires n’a pas pu être chargée."
+    }
+  },
+  "statistiques": {
+    "annee": "Année",
+    "loyers": {
+      "titre": "Loyers encaissés",
+      "legende": "Loyers par mois de paiement, en euros · total {{total}}"
+    },
+    "occupation": {
+      "titre": "Taux d’occupation",
+      "legende": "Garages loués en fin de mois, en %"
+    },
+    "repartition": {
+      "titre": "Répartition des garages par statut",
+      "au": "au {{date}}",
+      "total": "{{n}} garages au total"
+    },
+    "remarques": {
+      "titre": "Remarques créées en {{annee}}",
+      "total": "{{n}} remarque(s) créée(s)",
+      "aucune": "Aucune remarque créée cette année-là.",
+      "taux": "Taux de résolution des problèmes",
+      "resolus": "{{n}} résolu(s) sur {{total}} problème(s)",
+      "aucunProbleme": "Aucun problème signalé"
+    }
+  },
+  "variables": {
+    "titre": "Variables disponibles",
+    "aide": "Cliquer pour insérer à l’emplacement du curseur.",
+    "groupe": {
+      "locataire": "Locataire",
+      "garage": "Garage",
+      "loyer": "Loyer",
+      "impaye": "Impayé",
+      "expediteur": "Expéditeur",
+      "organisation": "Organisation",
+      "autre": "Autres"
+    },
+    "civilite": "Civilité (M. / Mme)",
+    "nom": "Nom du locataire",
+    "prenom": "Prénom du locataire",
+    "garage": "Numéro du garage",
+    "ancien_loyer": "Loyer actuel",
+    "nouveau_loyer": "Nouveau loyer",
+    "date_effet": "Date d’effet du nouveau loyer",
+    "periode": "Mois du loyer concerné",
+    "montant_du": "Montant dû pour le mois",
+    "montant_recu": "Montant déjà reçu",
+    "reste_du": "Reste dû",
+    "expediteur": "Nom de l’expéditeur",
+    "entreprise": "Nom de l’entreprise ou du bailleur",
+    "coordonnees": "Adresse postale et téléphone (adresse · téléphone)",
+    "iban": "Numéro de compte (IBAN)"
+  },
+  "parametres": {
+    "categories": "Catégories",
+    "enregistres": "Paramètres enregistrés avec succès",
+    "nature": {
+      "METIER": {
+        "titre": "Paramètres métier",
+        "description": "Règles de gestion et données de l’activité."
+      },
+      "APPLICATION": {
+        "titre": "Paramètres de l’application",
+        "description": "Messagerie, affichage et sécurité de l’application."
+      }
+    },
+    "categorie": {
+      "expediteur": {
+        "titre": "Expéditeur",
+        "description": "Identité utilisée pour l’envoi des e-mails aux locataires."
+      },
+      "organisation": {
+        "titre": "Organisation",
+        "description": "Coordonnées du bailleur, disponibles comme variables dans les messages."
+      },
+      "garages_loyers_locations": {
+        "titre": "Garages, loyers et locations",
+        "description": "Formats et contrôles appliqués à la saisie des garages et des locations."
+      },
+      "paiements_impayes": {
+        "titre": "Paiements et impayés",
+        "description": "Règle de calcul des retards de paiement."
+      },
+      "affichage": {
+        "titre": "Affichage",
+        "description": "Présentation des listes, du menu et de la langue."
+      },
+      "securite": {
+        "titre": "Sécurité",
+        "description": "Connexion, mots de passe et maintenance."
+      }
+    },
+    "cle": {
+      "expediteur_nom": {
+        "libelle": "Nom de l’expéditeur",
+        "aide": "Remplace la variable {expediteur} dans les messages et s’affiche comme nom d’envoi."
+      },
+      "expediteur_email": {
+        "libelle": "Adresse e-mail d’envoi",
+        "aide": "Adresse depuis laquelle les e-mails sont envoyés aux locataires."
+      },
+      "reponse_email": {
+        "libelle": "Adresse de réponse",
+        "aide": "Facultatif. Reçoit les réponses des locataires ; à défaut, l’adresse d’envoi."
+      },
+      "cci_email": {
+        "libelle": "Copie cachée (Cci)",
+        "aide": "Facultatif. Reçoit une copie de chaque e-mail envoyé."
+      },
+      "org_nom": {
+        "libelle": "Nom de l’entreprise ou du bailleur",
+        "aide": "Facultatif. Variable {entreprise} des messages."
+      },
+      "org_adresse": {
+        "libelle": "Adresse postale",
+        "aide": "Facultatif. Incluse dans la variable {coordonnees} des messages."
+      },
+      "org_tel": {
+        "libelle": "Téléphone",
+        "aide": "Facultatif. Inclus dans la variable {coordonnees} des messages."
+      },
+      "org_iban": {
+        "libelle": "Numéro de compte (IBAN)",
+        "aide": "Facultatif. Variable {iban} des messages, utile pour les relances."
+      },
+      "garage_prefixe": {
+        "libelle": "Préfixe du numéro de garage",
+        "aide": "Proposé à la création d’un garage (ex. G05)."
+      },
+      "garage_chiffres": {
+        "libelle": "Nombre de chiffres du numéro de garage",
+        "aide": "Complété par des zéros (2 : G05)."
+      },
+      "location_duree_min": {
+        "libelle": "Durée minimale d’une location",
+        "aide": "En mois calendaires. Contrôlée à la saisie de la date de fin."
+      },
+      "jour_limite": {
+        "libelle": "Jour limite de paiement dans le mois",
+        "aide": "Après ce jour, l’échéance du mois en cours passe « En retard ». 31 : en retard seulement le mois suivant."
+      },
+      "lignes_liste": {
+        "libelle": "Lignes par page (listes)",
+        "aide": "Garages, locataires, locations, paiements et messages."
+      },
+      "lignes_hist": {
+        "libelle": "Lignes par page (historiques et cartes)",
+        "aide": "Historiques, cartes du tableau de bord et choix du locataire."
+      },
+      "graph_mois": {
+        "libelle": "Nombre de mois des graphiques",
+        "aide": "Tableau de bord et statistiques."
+      },
+      "langue_defaut": {
+        "libelle": "Langue par défaut",
+        "aide": "Appliquée tant que l’utilisateur n’a pas choisi sa langue."
+      },
+      "menu_replie": {
+        "libelle": "Menu latéral replié par défaut",
+        "aide": "À l’ouverture de l’application."
+      },
+      "inactivite_min": {
+        "libelle": "Déconnexion après inactivité",
+        "aide": "En minutes. 0 : désactivée."
+      },
+      "mdp_min": {
+        "libelle": "Longueur minimale du mot de passe",
+        "aide": "En caractères, au changement du mot de passe."
+      },
+      "maintenance_verif_sec": {
+        "libelle": "Vérification du site en maintenance",
+        "aide": "En secondes, de 5 à 300. Intervalle entre deux vérifications automatiques de la page « Site en maintenance »."
+      }
+    },
+    "choix": {
+      "langue_defaut": {
+        "fr": "Français",
+        "en": "English"
+      },
+      "menu_replie": {
+        "non": "Non",
+        "oui": "Oui"
+      }
+    }
+  },
+  "modeles": {
+    "intro": "Objet et texte des e-mails envoyés depuis « Envoi de messages ».",
+    "objetLigne": "Objet : {{objet}}",
+    "modifier": "Modifier",
+    "visualiser": "Visualiser",
+    "objet": "Objet",
+    "message": "Message",
+    "enregistre": "Modèle du message enregistré avec succès",
+    "signatureEnregistree": "Signature enregistrée avec succès",
+    "avis": {
+      "libelle": "Avis de loyer",
+      "titre": "Modèle · Avis de loyer"
+    },
+    "total": {
+      "libelle": "Relance · Impayé total",
+      "titre": "Modèle · Impayé total"
+    },
+    "partiel": {
+      "libelle": "Relance · Paiement partiel",
+      "titre": "Modèle · Paiement partiel"
+    },
+    "signature": {
+      "libelle": "Formule de politesse et signature",
+      "titre": "Formule de politesse et signature",
+      "description": "Reprises automatiquement en bas de chaque message envoyé. Ne pas les répéter dans les modèles."
+    }
+  },
+  "utilisateurs": {
+    "nom": "utilisateurs",
+    "vide": "Aucun utilisateur ne correspond à ces critères.",
+    "recherche": "Filtrer par nom, login ou e-mail",
+    "nouveau": "Nouvel utilisateur",
+    "vous": "Vous",
+    "actif": "Actif",
+    "desactive_": "Désactivé",
+    "statut": {
+      "ACTIFS": "Actifs",
+      "DESACTIVES": "Désactivés",
+      "TOUS": "Tous"
+    },
+    "comptes": {
+      "un": "{{n}} compte",
+      "n": "{{n}} comptes"
+    },
+    "col": {
+      "utilisateur": "Utilisateur",
+      "login": "Login",
+      "derniereConnexion": "Dernière connexion",
+      "profil": "Profil",
+      "statut": "Statut",
+      "actions": "Actions"
+    },
+    "connexion": {
+      "aujourdhui": "Aujourd’hui",
+      "hier": "Hier",
+      "jours": "il y a {{n}} jours",
+      "mois": "il y a {{n}} mois",
+      "jamais": "Jamais connecté"
+    },
+    "profilDesc": {
+      "ADMIN": "Tous les droits : suppressions, annulation de versements et gestion des comptes.",
+      "GESTIONNAIRE": "Comme l’Admin, sans le menu Configuration.",
+      "LOCATAIRE": "Voit uniquement ses propres garages, locations, loyers et paiements.",
+      "CONSULTANT": "Mêmes écrans que le Gestionnaire, sans rien pouvoir modifier."
+    },
+    "action": {
+      "modifier": "Modifier",
+      "visualiser": "Visualiser",
+      "reinitialiser": "Réinitialiser le mot de passe",
+      "desactiver": "Désactiver le compte",
+      "reactiver": "Réactiver le compte",
+      "supprimer": "Supprimer le compte"
+    },
+    "refus": {
+      "reinitSoi": "Pour votre compte, utilisez « Modifier le mot de passe » dans le menu.",
+      "reinitDesactive": "Compte désactivé : réinitialisation impossible.",
+      "desactiverSoi": "Vous ne pouvez pas désactiver votre propre compte.",
+      "dernierAdmin": "Dernier administrateur actif : désactivation impossible.",
+      "supprimerSoi": "Vous ne pouvez pas supprimer votre propre compte."
+    },
+    "confirmer": {
+      "reset": {
+        "titre": "Réinitialiser le mot de passe ?",
+        "message": "Un mot de passe temporaire va être généré pour {{nom}}. L’ancien mot de passe ne fonctionnera plus et l’utilisateur devra en choisir un nouveau à sa prochaine connexion.",
+        "bouton": "Réinitialiser"
+      },
+      "deactivate": {
+        "titre": "Désactiver le compte ?",
+        "message": "{{nom}} ne pourra plus se connecter à l’application. Le compte et ses données sont conservés, et il peut être réactivé à tout moment.",
+        "bouton": "Désactiver"
+      },
+      "delete": {
+        "titre": "Supprimer le compte ?",
+        "message": "Le compte de {{nom}} sera supprimé définitivement. Un compte qui a une activité enregistrée ne peut pas être supprimé : désactivez-le plutôt.",
+        "bouton": "Supprimer"
+      }
+    },
+    "enregistre": "Utilisateur enregistré avec succès",
+    "desactive": "Compte de {{nom}} désactivé",
+    "reactive": "Compte de {{nom}} réactivé",
+    "supprime": "Compte de {{nom}} supprimé",
+    "mdp": {
+      "cree": "Compte créé",
+      "reinitialise": "Mot de passe réinitialisé",
+      "de": "Mot de passe temporaire de {{nom}} :",
+      "copier": "Copier",
+      "copie": "Copié",
+      "note": "Il ne sera plus affiché après la fermeture de cette fenêtre. L’utilisateur devra le remplacer à sa prochaine connexion."
+    },
+    "etape": {
+      "identite": "Identité",
+      "connexion": "Connexion",
+      "profil": "Profil",
+      "recapitulatif": "Récapitulatif"
+    },
+    "form": {
+      "nouveau": "Nouvel utilisateur",
+      "modifier": "Modifier l’utilisateur",
+      "visualiser": "Visualiser l’utilisateur",
+      "nom": "Nom",
+      "prenom": "Prénom",
+      "email": "E-mail",
+      "login": "Login",
+      "loginAide": "3 à 30 caractères : lettres, chiffres, point, tiret ou tiret bas.",
+      "loginFige": "Le login n’est pas modifiable.",
+      "profil": "Profil",
+      "propreProfil": "Vous ne pouvez pas modifier votre propre profil.",
+      "fiche": "Fiche locataire",
+      "ficheAide": "Le compte Locataire voit les données de cette fiche.",
+      "ficheActuelle": "Fiche actuelle : {{nom}}",
+      "changer": "Modifier",
+      "mdpNote": "Un mot de passe temporaire sera généré et affiché une seule fois. L’utilisateur devra le remplacer à sa première connexion.",
+      "precedent": "Précédent",
+      "suivant": "Suivant",
+      "creer": "Créer l’utilisateur"
+    }
+  },
+  "droits": {
+    "onglet": {
+      "ecrans": "Accès aux écrans",
+      "actions": "Actions autorisées",
+      "appareils": "Accès selon l’appareil"
+    },
+    "profil": "Profil",
+    "sections": "Sections",
+    "nbEcrans": "{{n}} sur {{total}} écrans",
+    "sesDonnees": "Ses propres données uniquement",
+    "noteProfil": {
+      "GESTIONNAIRE": "Le Gestionnaire a les mêmes droits que l’Admin, sauf le menu Configuration.",
+      "LOCATAIRE": "Le Locataire ne voit que ses propres garages, locations, loyers et paiements.",
+      "CONSULTANT": "Le Consultant voit les mêmes écrans que le Gestionnaire, sans droit d’ajout, de modification ni de suppression."
+    },
+    "action": {
+      "v": "Accès",
+      "a": "Ajouter",
+      "m": "Modifier",
+      "d": "Supprimer"
+    },
+    "consulterEcran": "Consulter l’écran",
+    "consulterDonnees": "Consulter ses données",
+    "nonPropose": "Action non proposée",
+    "autoriserAcces": "Autoriser l’accès",
+    "retirerAcces": "Retirer l’accès",
+    "autoriser": "Autoriser :",
+    "retirer": "Retirer :",
+    "verrou": {
+      "admin": "Admin : tous les droits, non modifiable.",
+      "reserve": "Réservé à l’Admin : non modifiable.",
+      "accesRequis": "Accès à l’écran requis.",
+      "ordinateur": "Ordinateur : toujours accessible.",
+      "droitsToujours": "Droits d’accès reste disponible sur tous les appareils."
+    },
+    "appareil": {
+      "ORDINATEUR": "Ordinateur",
+      "TABLETTE": "Tablette",
+      "SMARTPHONE": "Smartphone"
+    },
+    "appareilTaille": {
+      "ORDINATEUR": "Plus de 1024 px",
+      "TABLETTE": "641 à 1024 px",
+      "SMARTPHONE": "Jusqu’à 640 px"
+    },
+    "brouillon": "Modifications en cours",
+    "modifications": {
+      "un": "1 modification non enregistrée",
+      "n": "{{n}} modifications non enregistrées"
+    },
+    "aucuneModification": "Aucune modification",
+    "enregistres": "Droits d’accès enregistrés avec succès",
+    "section": {
+      "Pilotage": "Pilotage",
+      "Garages": "Garages",
+      "Locataires": "Locataires",
+      "Locations et paiements": "Locations et paiements",
+      "Remarques": "Remarques",
+      "Envoi de messages": "Envoi de messages",
+      "Configuration": "Configuration"
+    },
+    "ecran": {
+      "DASH": "Tableau de bord",
+      "STA": "Statistiques",
+      "GAR": "Liste des garages",
+      "LOY": "Historique des loyers",
+      "HLOC": "Historique des locations",
+      "TEN": "Liste des locataires",
+      "CHR": "Chronologie",
+      "LOC": "Locations",
+      "PAI": "Paiements",
+      "REM": "Fiches garage et locataire",
+      "AVI": "Avis de loyer",
+      "REL": "Relances d’impayés",
+      "LIB": "Message libre",
+      "PAR": "Paramètres",
+      "TPL": "Modèles de messages",
+      "USR": "Utilisateurs",
+      "DRO": "Droits d’accès",
+      "AUD": "Journal d’audit",
+      "MNT": "Maintenance"
+    },
+    "libelleAction": {
+      "GAR": {
+        "a": "Créer un garage",
+        "m": "Modifier un garage",
+        "d": "Supprimer un garage"
+      },
+      "LOY": {
+        "a": "Créer un loyer",
+        "m": "Modifier le dernier loyer",
+        "d": "Supprimer un loyer à venir"
+      },
+      "TEN": {
+        "a": "Créer un locataire",
+        "m": "Modifier un locataire",
+        "d": "Supprimer un locataire"
+      },
+      "LOC": {
+        "a": "Créer une location",
+        "m": "Modifier ou clôturer",
+        "d": "Supprimer une location"
+      },
+      "PAI": {
+        "a": "Enregistrer un paiement",
+        "m": "—",
+        "d": "Annuler un versement"
+      },
+      "REM": {
+        "a": "Créer une remarque",
+        "m": "Modifier, résoudre ou rouvrir",
+        "d": "Supprimer une remarque"
+      },
+      "AVI": {
+        "a": "Envoyer ou marquer comme informé"
+      },
+      "REL": {
+        "a": "Envoyer ou marquer comme relancé"
+      },
+      "LIB": {
+        "a": "Envoyer un message"
+      },
+      "PAR": {
+        "m": "Modifier les paramètres"
+      },
+      "TPL": {
+        "m": "Modifier les modèles et la signature"
+      },
+      "USR": {
+        "a": "Créer un utilisateur",
+        "m": "Modifier, réinitialiser, désactiver",
+        "d": "Supprimer un compte"
+      },
+      "DRO": {
+        "m": "Modifier les droits"
+      }
+    }
+  },
+  "journal": {
+    "mode": {
+      "utilisateur": "Par utilisateur",
+      "concept": "Par concept",
+      "criteres": "Par critères"
+    },
+    "navigation": "Navigation du journal",
+    "toute": "Toute l’activité",
+    "unUtilisateur": "Opérations de cet utilisateur",
+    "table": "Table {{table}}",
+    "filTitre": "Fil conducteur de l’audit",
+    "filSous": "Enregistrement n° {{id}}, du plus ancien au plus récent",
+    "retour": "Retour au journal",
+    "modifierCriteres": "Modifier les critères",
+    "generer": "Générer l’historique",
+    "regenerer": "Régénérer l’historique",
+    "perime": "Les critères ont changé : l’historique affiché n’est plus à jour. Cliquez sur « Régénérer l’historique » pour le mettre à jour.",
+    "invite": {
+      "utilisateur": "Choisissez un utilisateur et une période, puis générez l’historique.",
+      "concept": "Choisissez un concept et une période, puis générez l’historique."
+    },
+    "typeAction": "Type d’action",
+    "filtre": {
+      "toutes": "Toutes les actions",
+      "C": "Créations",
+      "M": "Modifications",
+      "S": "Suppressions"
+    },
+    "du": "Du",
+    "au": "au",
+    "recherche": "Rechercher (libellé, identifiant, utilisateur, valeur)…",
+    "reinitialiser": "Réinitialiser",
+    "ordre": {
+      "desc": "Plus récentes d’abord",
+      "asc": "Plus anciennes d’abord"
+    },
+    "action": {
+      "C": "Création",
+      "M": "Modification",
+      "S": "Suppression"
+    },
+    "concept": {
+      "GARAGE": "Garage",
+      "LOYER_GARAGE": "Loyer",
+      "LOCATAIRE": "Locataire",
+      "LOCATION": "Location",
+      "ECHEANCE": "Échéance",
+      "VERSEMENT": "Versement",
+      "REMARQUE": "Remarque",
+      "UTILISATEUR": "Utilisateur",
+      "PARAMETRE": "Paramètre"
+    },
+    "numero": "n° {{id}}",
+    "lies": "{{n}} enregistrements liés",
+    "vide": "Aucune opération ne correspond à ces critères.",
+    "affichees": {
+      "un": "{{n}} sur {{total}} opération",
+      "n": "{{n}} sur {{total}} opérations"
+    },
+    "afficherInchanges": "Afficher les champs inchangés",
+    "historique": "Historique de cet enregistrement",
+    "etape": {
+      "periode": "Période",
+      "qui": "Par qui",
+      "quoi": "Sur quoi",
+      "validation": "Validation"
+    },
+    "periodeTitre": "Période à auditer",
+    "periodeAide": "Bornes facultatives : sans date, toute la période.",
+    "raccourcis": "Raccourcis de période",
+    "preset": {
+      "jours": "{{n}} jours",
+      "tout": "Toute la période"
+    },
+    "quiTitre": "Par qui ?",
+    "quiAide": "Aucune sélection : tous les utilisateurs.",
+    "quoiTitre": "Sur quels concepts ?",
+    "quoiAide": "Aucune sélection : tous les concepts.",
+    "criteres": "Critères de l’audit",
+    "afficherFil": "Afficher le fil conducteur",
+    "recap": {
+      "duAu": "Du {{du}} au {{au}}",
+      "toutePeriode": "Toute la période",
+      "tousUtilisateurs": "Tous les utilisateurs",
+      "nUtilisateurs": "{{n}} utilisateurs",
+      "tousConcepts": "Tous les concepts",
+      "nConcepts": "{{n}} concepts"
+    },
+    "correspondent": {
+      "un": "opération correspond à ces critères",
+      "n": "opérations correspondent à ces critères"
+    },
+    "erreur": {
+      "ordre": "La date de début doit précéder la date de fin."
+    },
+    "champ": {
+      "commun": {
+        "numero": "Numéro",
+        "adresse": "Adresse",
+        "statut": "Statut",
+        "garage_id": "Garage",
+        "locataire_id": "Locataire",
+        "location_id": "Location",
+        "echeance_id": "Échéance",
+        "montant": "Montant",
+        "date_debut": "Début",
+        "date_fin": "Fin",
+        "civilite": "Civilité",
+        "nom": "Nom",
+        "prenom": "Prénom",
+        "rue": "Rue",
+        "numero_rue": "N°",
+        "code_postal": "Code postal",
+        "localite": "Localité",
+        "tel1": "Téléphone 1",
+        "tel2": "Téléphone 2",
+        "email": "E-mail",
+        "nb_cles_total": "Clés (total)",
+        "nb_cles_reserve": "Clés en réserve",
+        "nb_cles_remises": "Clés remises",
+        "periode": "Période",
+        "montant_du": "Montant dû",
+        "mode_paiement": "Mode de paiement",
+        "date_paiement": "Date de paiement",
+        "date_creation": "Créée le",
+        "type": "Type",
+        "texte": "Texte",
+        "resolu": "Résolu",
+        "date_resolution": "Résolu le",
+        "login": "Login",
+        "role": "Profil",
+        "actif": "Actif",
+        "mot_de_passe": "Mot de passe",
+        "mot_de_passe_temporaire": "Mot de passe temporaire",
+        "nature": "Nature",
+        "categorie": "Catégorie",
+        "cle": "Clé",
+        "libelle": "Libellé",
+        "valeur": "Valeur",
+        "obligatoire": "Obligatoire",
+        "ordre": "Ordre"
+      },
+      "LOYER_GARAGE": {
+        "montant": "Montant mensuel"
+      },
+      "UTILISATEUR": {
+        "date_creation": "Créé le"
+      },
+      "LOCATAIRE": {
+        "date_creation": "Créé le"
+      }
+    }
+  },
+  "diff": {
+    "champ": "Champ",
+    "avant": "As is · avant",
+    "apres": "To be · après",
+    "vide": "(vide)",
+    "inchange": "inchangé",
+    "masque": "(masqué)",
+    "modifieMasque": "modifié, valeur masquée"
   }
 }
