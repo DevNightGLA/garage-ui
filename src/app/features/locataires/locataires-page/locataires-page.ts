@@ -13,6 +13,7 @@ import { FilterButtons, FilterOption } from '../../../shared/filter-buttons/filt
 import { SearchInput } from '../../../shared/search-input/search-input';
 import { SummaryCard, SummaryField } from '../../../shared/summary-card/summary-card';
 import { BadgeTone, StatusBadge } from '../../../shared/status-badge/status-badge';
+import { LOCATAIRE_BADGE_TONE, LocataireBadgeKey, locataireBadgeKey } from '../locataire-status';
 import { Tooltip } from '../../../shared/tooltip/tooltip';
 import { RemarquesButton } from '../../remarques/remarques-button';
 import { RemarquesView } from '../../remarques/remarques-view/remarques-view';
@@ -21,18 +22,6 @@ import { LocataireApi } from '../locataire-api';
 import { LocataireForm } from '../locataire-form/locataire-form';
 import { LocataireDTO, LocataireFilter } from '../locataire.models';
 import { SettingsService } from '../../../core/settings-service';
-
-/** Clé de traduction et teinte du badge : un locataire actuel affiche son solde (RG-LOCT-10). */
-type BadgeKey = 'A_JOUR' | 'EN_RETARD' | 'ACTUEL' | 'A_VENIR' | 'ANCIEN' | 'SANS_LOCATION';
-
-const BADGE_TONE: Record<BadgeKey, BadgeTone> = {
-  A_JOUR: 'success',
-  EN_RETARD: 'danger',
-  ACTUEL: 'success',
-  A_VENIR: 'info',
-  ANCIEN: 'ancien',
-  SANS_LOCATION: 'warning',
-};
 
 /** Colonnes triables : les clés sont les propriétés de tri acceptées par l'API (`sort=`). */
 const COLUMNS: readonly DataTableColumn[] = [
@@ -147,12 +136,12 @@ export class LocatairesPage {
   /** Un ancien locataire est atténué (RG-LOCT-10). */
   protected readonly rowClass = (locataire: LocataireDTO) => (locataire.statut === 'ANCIEN' ? 'is-dimmed' : null);
 
-  protected badgeKey(locataire: LocataireDTO): BadgeKey {
-    return locataire.statut === 'ACTUEL' && locataire.solde ? locataire.solde : locataire.statut;
+  protected badgeKey(locataire: LocataireDTO): LocataireBadgeKey {
+    return locataireBadgeKey(locataire);
   }
 
   protected tone(locataire: LocataireDTO): BadgeTone {
-    return BADGE_TONE[this.badgeKey(locataire)];
+    return LOCATAIRE_BADGE_TONE[this.badgeKey(locataire)];
   }
 
   /** « Marie Dupont » → « MD ». */

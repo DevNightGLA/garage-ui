@@ -5,6 +5,10 @@
  * `messagesBack.<clé>` de `en.json`. Un groupe `mois` (« septembre 2026 ») est traduit avec la langue.
  */
 export const PARAMETERIZED_MESSAGES: readonly { pattern: RegExp; key: string }[] = [
+  // Descriptions des événements de la chronologie
+  { pattern: /^Garage (?<garage>\S+), (?<n>\d+) clé\(s\) remise\(s\)\.$/, key: 'evtLocationDebut' },
+  { pattern: /^Garage (?<garage>\S+)\.$/, key: 'evtLocationFin' },
+  { pattern: /^Loyer de (?<mois>\S+ \d{4}), garage (?<garage>\S+)\.$/, key: 'evtPaiement' },
   { pattern: /^La location active a (?<n>\d+) clé\(s\) remise\(s\) : clés moins réserve doit rester supérieur ou égal\.$/, key: 'clesLocation' },
   { pattern: /^Le nombre maximum de (?<n>\d+) garages est atteint\.$/, key: 'garagesMax' },
   { pattern: /^Le garage est actuellement loué \((?<locataire>.+)\)\.$/, key: 'garageLoue' },

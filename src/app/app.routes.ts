@@ -23,6 +23,7 @@ export const SCREENS: Partial<Record<string, () => Promise<Type<unknown>>>> = {
   paiements: () => import('./features/paiements/paiements-page/paiements-page').then((m) => m.PaiementsPage),
   'historique-loyers': garageHistory,
   'historique-locations': garageHistory,
+  chronologie: () => import('./features/chronologie/chronologie-page/chronologie-page').then((m) => m.ChronologiePage),
 };
 
 /** Données propres à certaines pages, ajoutées au titre et au groupe du fil d'Ariane. */

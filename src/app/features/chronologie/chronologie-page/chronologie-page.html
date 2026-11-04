@@ -1,0 +1,85 @@
+<div class="master-detail">
+  <app-pick-list [title]="'nav.locataires' | translate">
+    <div pickTools class="ch__tools">
+      <app-filter-buttons [options]="switchOptions()" [value]="actifs()" (valueChange)="actifs.set($event)" />
+      <app-search-input
+        [value]="search()"
+        [placeholder]="'chronologie.recherche' | translate"
+        (valueChange)="search.set($event)"
+      />
+    </div>
+    @for (locataire of items(); track locataire.id) {
+      <button
+        type="button"
+        class="pick"
+        role="listitem"
+        [class.is-selected]="locataire.id === selectedId()"
+        [attr.aria-current]="locataire.id === selectedId() ? 'true' : null"
+        (click)="choose(locataire)"
+      >
+        <span
+          class="pick__badge is-round"
+          [class.is-ancien]="locataire.statut === 'ANCIEN' || locataire.statut === 'SANS_LOCATION'"
+          aria-hidden="true"
+          >{{ initials(locataire) }}</span
+        >
+        <span class="pick__text">
+          <span class="pick__title">{{ locataire.prenom }} {{ locataire.nom }}</span>
+          <span class="pick__sub">{{ sub(locataire) }}</span>
+        </span>
+      </button>
+    } @empty {
+      <p class="ch__state">
+        {{ (tenants.isLoading() ? 'commun.chargement' : 'chronologie.aucunLocataire') | translate }}
+      </p>
+    }
+  </app-pick-list>
+
+  <div class="master-detail__main">
+    @if (loadError(); as message) {
+      <div class="card panel ch__state ch__state--error" role="alert">
+        {{ message }}
+        <button type="button" class="link-muted" (click)="chronologie.reload()">{{ 'commun.reessayer' | translate }}</button>
+      </div>
+    }
+    @if (head(); as h) {
+      <section class="card panel">
+        <div class="panel__head ch__head">
+          <span class="ch__avatar" [class.is-ancien]="h.ancien" aria-hidden="true">{{ h.initials }}</span>
+          <div class="ch__who">
+            <div class="ch__line">
+              <span class="ch__name">{{ h.name }}</span>
+              @if (h.garages) {
+                <span class="ch__garages"><i class="fa-solid fa-warehouse" aria-hidden="true"></i>{{ h.garages }}</span>
+              }
+            </div>
+            <div class="ch__address">{{ h.address1 }}, {{ h.address2 }}</div>
+          </div>
+          <span class="ch__solde" [style.background]="h.badgeGradient">{{
+            'locataires.statut.' + h.badgeKey | translate
+          }}</span>
+        </div>
+        <app-stat-tiles [tiles]="tiles()" />
+      </section>
+
+      <section class="card panel">
+        <div class="panel__head">
+          <span class="panel__icon" aria-hidden="true"><i class="fa-solid fa-timeline"></i></span>
+          <h2 class="panel__title">{{ 'nav.chronologie' | translate }}</h2>
+          <div class="panel__actions">
+            <app-filter-buttons [options]="filterOptions()" [value]="filtre()" (valueChange)="setFiltre($event)" />
+          </div>
+        </div>
+        <app-timeline
+          [items]="events()"
+          [remaining]="remaining()"
+          [loading]="chronologie.isLoading()"
+          [empty]="'chronologie.aucunEvenement' | translate"
+          (more)="more()"
+        />
+      </section>
+    } @else if (chronologie.isLoading()) {
+      <div class="card panel ch__state">{{ 'commun.chargement' | translate }}</div>
+    }
+  </div>
+</div>

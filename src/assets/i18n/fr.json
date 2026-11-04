@@ -20,7 +20,11 @@
     },
     "enregistrement": "Enregistrement…",
     "deplier": "Déplier",
-    "replier": "Replier"
+    "replier": "Replier",
+    "voirPlus": "Voir plus",
+    "voirMoins": "Voir moins",
+    "aVenir": "À venir",
+    "afficherPlus": "Afficher plus ({{n}})"
   },
   "nav": {
     "pages": "Pages /",
@@ -511,5 +515,37 @@
       "SMARTPHONE": "smartphone"
     },
     "enConstruction": "Écran en cours de construction"
+  },
+  "chronologie": {
+    "actifs": "Actifs",
+    "tous": "Tous",
+    "recherche": "Rechercher un locataire…",
+    "aucunLocataire": "Aucun locataire trouvé.",
+    "aucunEvenement": "Aucun événement.",
+    "garage": "Garage {{garages}}",
+    "filtre": {
+      "TOUS": "Tous",
+      "LOCATIONS": "Locations",
+      "REMARQUES": "Remarques",
+      "PAIEMENTS": "Paiements"
+    },
+    "stat": {
+      "locations": "Locations",
+      "totalVerse": "Total versé",
+      "remarquesOuvertes": "Remarques ouvertes"
+    },
+    "type": {
+      "LOCATION_DEBUT": "Début de location",
+      "LOCATION_A_VENIR": "Location à venir",
+      "LOCATION_FIN": "Fin de location",
+      "LOCATION_FIN_PREVUE": "Fin de location prévue",
+      "PAIEMENT": "Paiement reçu",
+      "REMARQUE": "Remarque créée",
+      "REMARQUE_RESOLUE": "Remarque résolue"
+    },
+    "mode": {
+      "VIREMENT": "Virement",
+      "ESPECES": "Espèces"
+    }
   }
 }

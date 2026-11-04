@@ -20,7 +20,11 @@
     },
     "enregistrement": "Saving…",
     "deplier": "Expand",
-    "replier": "Collapse"
+    "replier": "Collapse",
+    "voirPlus": "Show more",
+    "voirMoins": "Show less",
+    "aVenir": "Upcoming",
+    "afficherPlus": "Show more ({{n}})"
   },
   "nav": {
     "pages": "Pages /",
@@ -558,7 +562,10 @@
     "resolutionFuture": "The resolution date cannot be in the future.",
     "loyerDebutAvantLocation": "The start date must be after the end of the last rental ({{date}}).",
     "locationEnCoursLoyer": "Cannot modify: a rental has been ongoing since the start date of this rent",
-    "locationDemarreeLoyer": "Cannot modify: a rental took place after the start date of this rent"
+    "locationDemarreeLoyer": "Cannot modify: a rental took place after the start date of this rent",
+    "evtLocationDebut": "Garage {{garage}}, {{n}} key(s) handed over.",
+    "evtLocationFin": "Garage {{garage}}.",
+    "evtPaiement": "Rent for {{mois}}, garage {{garage}}."
   },
   "erreur": {
     "generique": "An error occurred.",
@@ -633,5 +640,37 @@
       "SMARTPHONE": "a smartphone"
     },
     "enConstruction": "Screen under construction"
+  },
+  "chronologie": {
+    "actifs": "Active",
+    "tous": "All",
+    "recherche": "Search a tenant…",
+    "aucunLocataire": "No tenant found.",
+    "aucunEvenement": "No event.",
+    "garage": "Garage {{garages}}",
+    "filtre": {
+      "TOUS": "All",
+      "LOCATIONS": "Rentals",
+      "REMARQUES": "Remarks",
+      "PAIEMENTS": "Payments"
+    },
+    "stat": {
+      "locations": "Rentals",
+      "totalVerse": "Total paid",
+      "remarquesOuvertes": "Open remarks"
+    },
+    "type": {
+      "LOCATION_DEBUT": "Rental start",
+      "LOCATION_A_VENIR": "Upcoming rental",
+      "LOCATION_FIN": "Rental end",
+      "LOCATION_FIN_PREVUE": "Planned rental end",
+      "PAIEMENT": "Payment received",
+      "REMARQUE": "Remark created",
+      "REMARQUE_RESOLUE": "Remark resolved"
+    },
+    "mode": {
+      "VIREMENT": "Transfer",
+      "ESPECES": "Cash"
+    }
   }
 }
