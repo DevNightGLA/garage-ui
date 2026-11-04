@@ -11,6 +11,8 @@ Angular 22 (composants standalone, signals, OnPush), TypeScript, SCSS, `@ngx-tra
 recréée en SCSS.
 
 ## Prérequis
+Pour une installation pas à pas (Docker, Java, Node, comptes par défaut), voir `INSTALLATION.md`.
+
 - Node.js et npm (versions de `package.json`).
 - Le back **garage-api** démarré sur <http://localhost:8080> (voir son README).
 
@@ -52,6 +54,7 @@ src/testing     aides de test (profils et droits, largeur d'écran, traductions)
 ## Documentation
 | Fichier | Contenu |
 | --- | --- |
+| `INSTALLATION.md` | Lancer l'application (front et back) sur son ordinateur : outils à installer, démarrage, comptes par défaut |
 | `CLAUDE.md` | Conventions du projet et décisions validées |
 | `docs/decisions-front.md` | Choix faits pendant la réalisation des écrans, validés ou à valider |
 | `docs/TASKS.md` | Plan de travail du front v2 |
