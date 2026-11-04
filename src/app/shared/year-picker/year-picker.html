@@ -1,0 +1,56 @@
+<button
+  type="button"
+  class="mp__btn yp__btn"
+  aria-haspopup="dialog"
+  [attr.aria-expanded]="open()"
+  [attr.aria-label]="('calendrier.choisirAnnee' | translate) + ' : ' + value()"
+  (click)="toggle()"
+>
+  <i class="fa-solid fa-calendar-days" aria-hidden="true"></i>
+  <span>{{ value() }}</span>
+</button>
+
+@if (open()) {
+  <div class="mp__backdrop" (click)="open.set(false)"></div>
+  <div #panel class="mp__panel" role="dialog" tabindex="-1" [attr.aria-label]="'calendrier.choisirAnnee' | translate">
+    <div class="mp__head">
+      <button
+        type="button"
+        class="mp__nav"
+        [disabled]="!canPrevious()"
+        [attr.aria-label]="'calendrier.periodePrecedente' | translate"
+        (click)="shift(-1)"
+      >
+        <i class="fa-solid fa-chevron-left" aria-hidden="true"></i>
+      </button>
+      <b class="mp__year" aria-live="polite">{{ start() }} – {{ start() + 11 }}</b>
+      <button
+        type="button"
+        class="mp__nav"
+        [disabled]="!canNext()"
+        [attr.aria-label]="'calendrier.periodeSuivante' | translate"
+        (click)="shift(1)"
+      >
+        <i class="fa-solid fa-chevron-right" aria-hidden="true"></i>
+      </button>
+    </div>
+    <div class="mp__grid">
+      @for (cell of years(); track cell.year) {
+        <button
+          type="button"
+          class="mp__month"
+          [class.is-selected]="cell.selected"
+          [disabled]="!cell.enabled"
+          [attr.aria-pressed]="cell.selected"
+          (click)="pick(cell.year)"
+        >
+          {{ cell.year }}
+        </button>
+      }
+    </div>
+    <div class="yp__foot">
+      <button type="button" class="link-muted yp__this" (click)="thisYear()">{{ 'calendrier.anneeEnCours' | translate }}</button>
+      <button type="button" class="btn btn--primary" (click)="open.set(false)">{{ 'commun.fermer' | translate }}</button>
+    </div>
+  </div>
+}

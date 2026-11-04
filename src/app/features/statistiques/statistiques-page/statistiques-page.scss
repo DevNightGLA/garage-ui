@@ -1,0 +1,125 @@
+.st-card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-6);
+  min-width: 0;
+  padding: var(--space-6);
+}
+
+.st-card__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+  padding: 0 var(--space-2);
+}
+
+// Titre en pastille grise (maquette `.gg-tp`)
+.st-card__pill {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2);
+  padding: var(--space-1) 14px;
+  border-radius: var(--radius-pill);
+  background: #f1f3f5;
+  font-size: 17px;
+  font-weight: 600;
+  line-height: 26px;
+  color: var(--text-heading);
+
+  i {
+    font-size: 14px;
+    color: var(--slate-400);
+  }
+}
+
+.st-card__year {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.st-card__year-label {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+// Histogramme plus haut que celui du tableau de bord v1 (maquette : 308 px de barres)
+.st-card__chart ::ng-deep .bc__canvas {
+  height: 320px;
+}
+
+.st-card__caption {
+  margin: 0;
+  font-size: 14px;
+  text-align: center;
+  color: var(--text-body);
+}
+
+.st-card__state {
+  margin: 0;
+  padding: var(--space-2);
+  font-size: 15px;
+  color: var(--text-body);
+
+  &--error {
+    color: var(--color-danger);
+  }
+}
+
+.st-rate {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  padding: 14px var(--space-4);
+  border-radius: var(--radius-lg);
+  background: var(--surface-page);
+}
+
+.st-rate__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--space-1) var(--space-2);
+}
+
+.st-rate__label {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.st-rate__value {
+  font-size: 19px;
+  color: var(--text-heading);
+}
+
+.st-rate__bar {
+  height: 8px;
+  overflow: hidden;
+  border-radius: var(--radius-sm);
+  background: var(--surface-border);
+}
+
+.st-rate__fill {
+  height: 100%;
+  background: linear-gradient(310deg, #0c7a25, #62bd1d);
+}
+
+.st-rate__text {
+  font-size: 13px;
+}
+
+@media (max-width: 640px) {
+  .st-card {
+    padding: var(--space-4);
+  }
+
+  .st-card__chart ::ng-deep .bc__canvas {
+    height: 240px;
+  }
+}

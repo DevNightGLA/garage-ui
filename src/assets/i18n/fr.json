@@ -85,7 +85,11 @@
     "moisSuivant": "Mois suivant",
     "choisirMois": "Choisir un mois",
     "anneePrecedente": "Année précédente",
-    "anneeSuivante": "Année suivante"
+    "anneeSuivante": "Année suivante",
+    "choisirAnnee": "Choisir l’année",
+    "periodePrecedente": "Période précédente",
+    "periodeSuivante": "Période suivante",
+    "anneeEnCours": "Année en cours"
   },
   "auth": {
     "connexion": {
@@ -578,6 +582,30 @@
       "TELEPHONE": "Téléphone",
       "COURRIER": "Courrier postal",
       "ORAL": "Oralement"
+    }
+  },
+  "statistiques": {
+    "annee": "Année",
+    "loyers": {
+      "titre": "Loyers encaissés",
+      "legende": "Loyers par mois de paiement, en euros · total {{total}}"
+    },
+    "occupation": {
+      "titre": "Taux d’occupation",
+      "legende": "Garages loués en fin de mois, en %"
+    },
+    "repartition": {
+      "titre": "Répartition des garages par statut",
+      "au": "au {{date}}",
+      "total": "{{n}} garages au total"
+    },
+    "remarques": {
+      "titre": "Remarques créées en {{annee}}",
+      "total": "{{n}} remarque(s) créée(s)",
+      "aucune": "Aucune remarque créée cette année-là.",
+      "taux": "Taux de résolution des problèmes",
+      "resolus": "{{n}} résolu(s) sur {{total}} problème(s)",
+      "aucunProbleme": "Aucun problème signalé"
     }
   }
 }

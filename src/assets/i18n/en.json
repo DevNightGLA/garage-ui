@@ -85,7 +85,11 @@
     "moisSuivant": "Next month",
     "choisirMois": "Pick a month",
     "anneePrecedente": "Previous year",
-    "anneeSuivante": "Next year"
+    "anneeSuivante": "Next year",
+    "choisirAnnee": "Choose the year",
+    "periodePrecedente": "Previous period",
+    "periodeSuivante": "Next period",
+    "anneeEnCours": "This year"
   },
   "auth": {
     "connexion": {
@@ -705,6 +709,30 @@
       "TELEPHONE": "Phone",
       "COURRIER": "Post",
       "ORAL": "In person"
+    }
+  },
+  "statistiques": {
+    "annee": "Year",
+    "loyers": {
+      "titre": "Rent collected",
+      "legende": "Rent by month of payment, in euros · total {{total}}"
+    },
+    "occupation": {
+      "titre": "Occupancy rate",
+      "legende": "Garages rented at month end, in %"
+    },
+    "repartition": {
+      "titre": "Garages by status",
+      "au": "on {{date}}",
+      "total": "{{n}} garages in total"
+    },
+    "remarques": {
+      "titre": "Remarks created in {{annee}}",
+      "total": "{{n}} remark(s) created",
+      "aucune": "No remark created that year.",
+      "taux": "Problem resolution rate",
+      "resolus": "{{n}} resolved out of {{total}} problem(s)",
+      "aucunProbleme": "No problem reported"
     }
   }
 }

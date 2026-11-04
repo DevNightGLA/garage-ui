@@ -11,6 +11,8 @@ import { Shell } from './layout/shell';
  * construction » (`ScreenPending`) jusqu'à son étape de docs/TASKS.md ; `app.routes.spec.ts` vérifie
  * qu'aucune page n'est oubliée.
  */
+const statistiques = () =>
+  import('./features/statistiques/statistiques-page/statistiques-page').then((m) => m.StatistiquesPage);
 const garageHistory = () =>
   import('./features/garages/garage-history-page/garage-history-page').then((m) => m.GarageHistoryPage);
 
@@ -23,6 +25,10 @@ export const SCREENS: Partial<Record<string, () => Promise<Type<unknown>>>> = {
   paiements: () => import('./features/paiements/paiements-page/paiements-page').then((m) => m.PaiementsPage),
   'historique-loyers': garageHistory,
   'historique-locations': garageHistory,
+  'statistiques/loyers-encaisses': statistiques,
+  'statistiques/taux-occupation': statistiques,
+  'statistiques/repartition': statistiques,
+  'statistiques/remarques': statistiques,
   chronologie: () => import('./features/chronologie/chronologie-page/chronologie-page').then((m) => m.ChronologiePage),
 };
 
@@ -30,6 +36,10 @@ export const SCREENS: Partial<Record<string, () => Promise<Type<unknown>>>> = {
 const SCREEN_DATA: Partial<Record<string, Record<string, unknown>>> = {
   'historique-loyers': { vue: 'loyers' },
   'historique-locations': { vue: 'locations' },
+  'statistiques/loyers-encaisses': { vue: 'loyers' },
+  'statistiques/taux-occupation': { vue: 'occupation' },
+  'statistiques/repartition': { vue: 'repartition' },
+  'statistiques/remarques': { vue: 'remarques' },
 };
 
 const pending = () => import('./layout/info-pages').then((m) => m.ScreenPending);
