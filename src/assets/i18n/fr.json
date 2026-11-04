@@ -618,7 +618,8 @@
       "reponseA": "Répondre à",
       "cci": "Cci",
       "a": "À",
-      "objet": "Objet"
+      "objet": "Objet",
+      "bouton": "Aperçu"
     },
     "avis": {
       "intro": "Locataires actuels dont le loyer change à une date future. Chaque envoi ajoute une remarque « Information » à la fiche du locataire, avec le contenu de l’e-mail. Les locataires sans e-mail sont à informer par téléphone, par courrier ou oralement depuis le tableau de bord.",
@@ -666,6 +667,33 @@
       "aucunVersement": "Aucun versement",
       "contactTitre": "Marquer comme relancé (téléphone, courrier, oral)",
       "contactEnregistre": "Relance enregistrée avec succès"
+    },
+    "libre": {
+      "intro": "Message envoyé par e-mail à un locataire ou à tous les locataires actuels. Chaque envoi ajoute une remarque « Information » à la fiche du locataire, avec le contenu de l’e-mail.",
+      "destinataires": "Destinataires",
+      "un": "Un locataire",
+      "tous": "Tous les locataires actuels ({{n}})",
+      "locataire": "Locataire",
+      "choisir": "Choisir un locataire",
+      "ancien": "(ancien)",
+      "sansEmail": {
+        "un": "1 locataire sans e-mail ne recevra pas le message.",
+        "n": "{{n}} locataires sans e-mail ne recevront pas le message."
+      },
+      "objet": "Objet",
+      "message": "Message",
+      "aucunDestinataire": "Aucun destinataire avec e-mail",
+      "confirmer": {
+        "un": "Envoyer le message à 1 locataire ?",
+        "n": "Envoyer le message à {{n}} locataires ?"
+      },
+      "autres": "{{n}} autres destinataires",
+      "envoyes": {
+        "un": "1 message envoyé avec succès",
+        "n": "{{n}} messages envoyés avec succès"
+      },
+      "apercuPremier": "Pour le premier destinataire",
+      "erreurDestinataires": "La liste des locataires n’a pas pu être chargée."
     }
   },
   "statistiques": {
@@ -691,5 +719,33 @@
       "resolus": "{{n}} résolu(s) sur {{total}} problème(s)",
       "aucunProbleme": "Aucun problème signalé"
     }
+  },
+  "variables": {
+    "titre": "Variables disponibles",
+    "aide": "Cliquer pour insérer à l’emplacement du curseur.",
+    "groupe": {
+      "locataire": "Locataire",
+      "garage": "Garage",
+      "loyer": "Loyer",
+      "impaye": "Impayé",
+      "expediteur": "Expéditeur",
+      "organisation": "Organisation",
+      "autre": "Autres"
+    },
+    "civilite": "Civilité (M. / Mme)",
+    "nom": "Nom du locataire",
+    "prenom": "Prénom du locataire",
+    "garage": "Numéro du garage",
+    "ancien_loyer": "Loyer actuel",
+    "nouveau_loyer": "Nouveau loyer",
+    "date_effet": "Date d’effet du nouveau loyer",
+    "periode": "Mois du loyer concerné",
+    "montant_du": "Montant dû pour le mois",
+    "montant_recu": "Montant déjà reçu",
+    "reste_du": "Reste dû",
+    "expediteur": "Nom de l’expéditeur",
+    "entreprise": "Nom de l’entreprise ou du bailleur",
+    "coordonnees": "Adresse postale et téléphone (adresse · téléphone)",
+    "iban": "Numéro de compte (IBAN)"
   }
 }

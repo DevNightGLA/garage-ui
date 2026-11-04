@@ -745,7 +745,8 @@
       "reponseA": "Reply to",
       "cci": "Bcc",
       "a": "To",
-      "objet": "Subject"
+      "objet": "Subject",
+      "bouton": "Preview"
     },
     "avis": {
       "intro": "Current tenants whose rent changes on a future date. Each send adds an “Information” remark to the tenant record, with the e-mail text. Tenants without e-mail are to be informed by phone, mail or verbally from the dashboard.",
@@ -793,6 +794,33 @@
       "aucunVersement": "No payment received",
       "contactTitre": "Mark as reminded (phone, mail, verbal)",
       "contactEnregistre": "Reminder saved successfully"
+    },
+    "libre": {
+      "intro": "E-mail message sent to one tenant or to all current tenants. Each send adds an “Information” remark to the tenant record, with the e-mail text.",
+      "destinataires": "Recipients",
+      "un": "One tenant",
+      "tous": "All current tenants ({{n}})",
+      "locataire": "Tenant",
+      "choisir": "Choose a tenant",
+      "ancien": "(former)",
+      "sansEmail": {
+        "un": "1 tenant without e-mail will not receive the message.",
+        "n": "{{n}} tenants without e-mail will not receive the message."
+      },
+      "objet": "Subject",
+      "message": "Message",
+      "aucunDestinataire": "No recipient with an e-mail",
+      "confirmer": {
+        "un": "Send the message to 1 tenant?",
+        "n": "Send the message to {{n}} tenants?"
+      },
+      "autres": "{{n}} more recipients",
+      "envoyes": {
+        "un": "1 message sent successfully",
+        "n": "{{n}} messages sent successfully"
+      },
+      "apercuPremier": "For the first recipient",
+      "erreurDestinataires": "The tenant list could not be loaded."
     }
   },
   "statistiques": {
@@ -818,5 +846,33 @@
       "resolus": "{{n}} resolved out of {{total}} problem(s)",
       "aucunProbleme": "No problem reported"
     }
+  },
+  "variables": {
+    "titre": "Available variables",
+    "aide": "Click to insert at the cursor.",
+    "groupe": {
+      "locataire": "Tenant",
+      "garage": "Garage",
+      "loyer": "Rent",
+      "impaye": "Unpaid",
+      "expediteur": "Sender",
+      "organisation": "Organisation",
+      "autre": "Other"
+    },
+    "civilite": "Title (Mr / Ms)",
+    "nom": "Tenant’s last name",
+    "prenom": "Tenant’s first name",
+    "garage": "Garage number",
+    "ancien_loyer": "Current rent",
+    "nouveau_loyer": "New rent",
+    "date_effet": "Effective date of the new rent",
+    "periode": "Month of the rent concerned",
+    "montant_du": "Amount due for the month",
+    "montant_recu": "Amount already received",
+    "reste_du": "Amount still due",
+    "expediteur": "Sender name",
+    "entreprise": "Company or landlord name",
+    "coordonnees": "Postal address and phone (address · phone)",
+    "iban": "Account number (IBAN)"
   }
 }

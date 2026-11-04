@@ -13,7 +13,7 @@
       </select>
     </app-form-field>
 
-    <app-form-field [label]="'remarques.form.texte' | translate" [error]="fieldErrors()['texte']">
+    <app-form-field [label]="'remarques.form.texte' | translate" [error]="fieldErrors()['texte']" [group]="true">
       <app-rich-text
         formControlName="texte"
         [placeholder]="'remarques.form.placeholder' | translate"

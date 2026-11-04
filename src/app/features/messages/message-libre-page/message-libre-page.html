@@ -1,0 +1,110 @@
+<p class="page-note" role="note">
+  <i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>{{ 'messages.libre.intro' | translate }}</span>
+</p>
+
+<form class="card ml" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+  @if (recipients.error()) {
+    <p class="message-error" role="alert">{{ 'messages.libre.erreurDestinataires' | translate }}</p>
+  }
+
+  <div class="ml__field">
+    <span class="ml__label" id="ml-dest">{{ 'messages.libre.destinataires' | translate }}<span class="ml__req"> *</span></span>
+    <app-segmented
+      [options]="modeOptions()"
+      [value]="mode()"
+      [ariaLabel]="'messages.libre.destinataires' | translate"
+      [disabled]="!canSend()"
+      (valueChange)="setMode($event)"
+    />
+  </div>
+
+  @if (mode() === 'UN') {
+    <app-form-field [label]="'messages.libre.locataire' | translate" [error]="fieldErrors()['locataireId']">
+      <select class="input" formControlName="locataireId">
+        <option [ngValue]="null">{{ 'messages.libre.choisir' | translate }}</option>
+        @for (tenant of tenants(); track tenant.id) {
+          <option [ngValue]="tenant.id">{{ tenant.nom }}{{ tenant.ancien ? (' ' + ('messages.libre.ancien' | translate)) : '' }}</option>
+        }
+      </select>
+    </app-form-field>
+  }
+
+  @if (withoutEmail() > 0) {
+    <p class="message-warning" role="status">
+      {{ 'messages.libre.sansEmail.' + (withoutEmail() > 1 ? 'n' : 'un') | translate: { n: withoutEmail() } }}
+    </p>
+  }
+
+  <app-form-field [label]="'messages.libre.objet' | translate" [error]="fieldErrors()['objet']">
+    <input class="input" type="text" formControlName="objet" maxlength="200" />
+  </app-form-field>
+
+  <app-form-field [label]="'messages.libre.message' | translate" [error]="fieldErrors()['texte']" [group]="true">
+    <app-rich-text formControlName="texte" [ariaLabel]="'messages.libre.message' | translate" />
+  </app-form-field>
+
+  @if (canSend()) {
+    <app-variable-chips [variables]="variables" (insert)="insertVariable($event)" />
+  }
+
+  @if (error()) {
+    <p class="message-error" role="alert">{{ error() }}</p>
+  }
+
+  @if (canSend()) {
+    <div class="ml__actions">
+      <button type="submit" class="btn btn--secondary" (click)="intent = 'preview'">
+        <i class="fa-regular fa-eye" aria-hidden="true"></i> {{ 'messages.apercu.bouton' | translate }}
+      </button>
+      <button
+        type="submit"
+        class="btn btn--primary"
+        [class.is-disabled]="noRecipient()"
+        [attr.aria-disabled]="noRecipient()"
+        [appTooltip]="noRecipient() ? ('messages.libre.aucunDestinataire' | translate) : null"
+        (click)="intent = 'send'"
+      >
+        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        {{ 'messages.envoi.bouton' | translate: { n: recipientsWithEmail().length } }}
+      </button>
+    </div>
+  }
+</form>
+
+@if (confirming()) {
+  <app-modal
+    [title]="'messages.libre.confirmer.' + (recipientsWithEmail().length > 1 ? 'n' : 'un') | translate: { n: recipientsWithEmail().length }"
+    [width]="480"
+    [error]="sendError()"
+    (closed)="confirming.set(false)"
+  >
+    <p class="ml__explain">{{ 'messages.envoi.explication' | translate }}</p>
+    <ul class="ml__recipients">
+      @for (tenant of confirmList(); track tenant.id) {
+        <li><b>{{ tenant.nom }}</b><span>{{ tenant.email }}</span></li>
+      }
+    </ul>
+    @if (confirmMore() > 0) {
+      <p class="ml__more">{{ 'messages.libre.autres' | translate: { n: confirmMore() } }}</p>
+    }
+    <div modalFooter>
+      <button type="button" class="btn btn--secondary" [disabled]="sending()" (click)="confirming.set(false)">
+        {{ 'commun.annuler' | translate }}
+      </button>
+      <button type="button" class="btn btn--primary" [disabled]="sending()" [attr.aria-busy]="sending()" (click)="confirmSend()">
+        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        {{ (sending() ? 'messages.envoi.enCours' : 'messages.envoi.envoyer') | translate }}
+      </button>
+    </div>
+  </app-modal>
+}
+
+@if (preview(); as current) {
+  <app-email-preview
+    [title]="'messages.apercu.titre' | translate"
+    [subtitle]="'messages.libre.apercuPremier' | translate"
+    [preview]="current.data"
+    [error]="current.error"
+    (closed)="preview.set(null)"
+  />
+}
