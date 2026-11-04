@@ -1,0 +1,33 @@
+<app-modal
+  [title]="'messages.contact.titre.' + kind() | translate"
+  [subtitle]="name()"
+  [width]="480"
+  [error]="error()"
+  (closed)="closed.emit()"
+>
+  <form id="contact-form" class="modal-form" [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <p class="modal-intro">{{ 'messages.contact.intro.' + kind() | translate }}</p>
+    @if (contact(); as text) {
+      <div class="info-box">{{ text }}</div>
+    }
+    <app-form-field [label]="'messages.contact.moyen' | translate" [error]="fieldErrors()['moyen']">
+      <select class="input" formControlName="moyen">
+        @for (moyen of moyens; track moyen) {
+          <option [value]="moyen">{{ 'messages.moyen.' + moyen | translate }}</option>
+        }
+      </select>
+    </app-form-field>
+    <app-form-field [label]="'messages.contact.date' | translate" [error]="fieldErrors()['date']">
+      <app-date-input formControlName="date" />
+    </app-form-field>
+  </form>
+
+  <div modalFooter>
+    <button type="button" class="btn btn--secondary" [disabled]="pending()" (click)="closed.emit()">
+      {{ 'commun.annuler' | translate }}
+    </button>
+    <button type="submit" form="contact-form" class="btn btn--primary" [disabled]="pending()">
+      {{ (pending() ? 'commun.enregistrement' : 'commun.enregistrer') | translate }}
+    </button>
+  </div>
+</app-modal>

@@ -1,3 +1,4 @@
+import { provideRouter } from '@angular/router';
 import { HttpRequest, provideHttpClient } from '@angular/common/http';
 import { revokeRight, signInAs } from '../../../../testing/rights';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
@@ -80,7 +81,7 @@ describe('LocatairesPage', () => {
   beforeEach(() => {
     sessionStorage.clear();
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideTestTranslations()],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), provideTestTranslations()],
     });
     http = TestBed.inject(HttpTestingController);
   });

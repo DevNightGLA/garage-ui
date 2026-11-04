@@ -465,18 +465,6 @@
         "note": "{{n}} unavailable"
       }
     },
-    "graphique": {
-      "loyers": {
-        "titre": "Rents collected",
-        "legende": "Last 12 months, in euros"
-      },
-      "occupation": {
-        "titre": "Occupancy rate",
-        "legende": "Rented garages, last 12 months, in %"
-      },
-      "precedent": "Previous chart",
-      "suivant": "Next chart"
-    },
     "impayes": {
       "titre": "Unpaid to follow up ({{n}})",
       "vide": "No unpaid payments to follow up.",
@@ -485,7 +473,31 @@
         "PARTIEL": "Partial"
       },
       "recu": "Received {{recu}} of {{du}}",
-      "compteur": "{{from}}–{{to}} of {{total}}"
+      "nom": "unpaid",
+      "email": "E-mail",
+      "emailTitre": "Send a reminder e-mail",
+      "relance": "Reminded",
+      "relanceTitre": "Mark as reminded (phone, mail or in person)",
+      "relanceSansEmail": "No e-mail: mark as reminded (phone, mail, in person)"
+    },
+    "remarques": {
+      "titre": "Remarks to handle ({{n}})",
+      "nom": "remarks",
+      "vide": "No remark to handle.",
+      "garage": "Garage {{numero}}",
+      "aujourdhui": "today",
+      "depuis": "for {{n}} d",
+      "ouvrir": "Open"
+    },
+    "avis": {
+      "titre": "Rent notices to send ({{n}})",
+      "vide": "No rent notice to send.",
+      "des": "from {{date}}",
+      "envoyer": "Send the e-mail",
+      "envoyerTitre": "Prepare the e-mail",
+      "informe": "Mark informed",
+      "informeTitre": "Mark as informed",
+      "autres": "{{n}} more notice(s)"
     }
   },
   "messagesBack": {
@@ -673,6 +685,26 @@
     "mode": {
       "VIREMENT": "Transfer",
       "ESPECES": "Cash"
+    }
+  },
+  "messages": {
+    "contact": {
+      "titre": {
+        "informe": "Mark as informed",
+        "relance": "Mark as reminded"
+      },
+      "intro": {
+        "informe": "This tenant has no e-mail: inform them by phone, by post or in person, then record the contact. A remark will be added to their record.",
+        "relance": "Remind the tenant by phone, by post or in person, then record the contact. A remark will be added to their record."
+      },
+      "moyen": "Contact method",
+      "date": "Contact date"
+    },
+    "moyen": {
+      "EMAIL": "E-mail",
+      "TELEPHONE": "Phone",
+      "COURRIER": "Post",
+      "ORAL": "In person"
     }
   }
 }

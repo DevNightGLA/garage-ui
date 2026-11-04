@@ -38,3 +38,17 @@ export interface ImpayeARelancer {
   montantRecu: number;
   montantDu: number;
 }
+
+/** Une ligne de « Remarques à traiter » : problème non résolu d'un garage ou d'un locataire, le plus récent d'abord. */
+export interface RemarqueATraiter {
+  id: number;
+  dateCreation: string;
+  /** HTML nettoyé par le back. */
+  texte: string;
+  garageId: number | null;
+  /** Numéro du garage. */
+  garage: string | null;
+  locataireId: number | null;
+  /** « Nom Prénom ». */
+  locataire: string | null;
+}

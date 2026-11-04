@@ -32,6 +32,10 @@ export class LocataireApi {
     return this.http.put<LocataireDTO>(`${LOCATAIRES_URL}/${id}`, body, { params: forceParams(force) });
   }
 
+  get(id: number): Observable<LocataireDTO> {
+    return this.http.get<LocataireDTO>(`${LOCATAIRES_URL}/${id}`);
+  }
+
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${LOCATAIRES_URL}/${id}`);
   }

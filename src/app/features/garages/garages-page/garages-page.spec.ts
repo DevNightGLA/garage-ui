@@ -1,3 +1,4 @@
+import { ActivatedRoute, Router, provideRouter } from '@angular/router';
 import { HttpRequest, provideHttpClient } from '@angular/common/http';
 import { revokeRight, signInAs } from '../../../../testing/rights';
 import { HttpTestingController, TestRequest, provideHttpClientTesting } from '@angular/common/http/testing';
@@ -59,12 +60,29 @@ describe('GaragesPage', () => {
   beforeEach(() => {
     sessionStorage.clear();
     TestBed.configureTestingModule({
-      providers: [provideHttpClient(), provideHttpClientTesting(), provideTestTranslations()],
+      providers: [provideRouter([]), provideHttpClient(), provideHttpClientTesting(), provideTestTranslations()],
     });
     http = TestBed.inject(HttpTestingController);
   });
 
   afterEach(() => http.verify());
+
+  it('« ?remarques=id » (tableau de bord) ouvre directement les remarques du garage', async () => {
+    const router = TestBed.inject(Router);
+    await router.navigateByUrl('/?remarques=1');
+    TestBed.inject(ActivatedRoute);
+    signInAs('ADMIN');
+    fixture = TestBed.createComponent(GaragesPage);
+    root = fixture.nativeElement;
+    render();
+    http.expectOne((r) => r.url === '/api/garages/1').flush(garage());
+    http.match(isList).forEach((r) => r.flush(pageOf([garage()])));
+    http.match(isCounters).forEach((r) => r.flush(COMPTEURS));
+    render();
+    http.match((r) => r.url === '/api/garages/1/remarques').forEach((r) => r.flush([]));
+    await settle();
+    expect(root.querySelector('app-remarques-view')).not.toBeNull();
+  });
 
   describe('états', () => {
     it('affiche le chargement tant que la liste n\'est pas arrivée', async () => {

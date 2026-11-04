@@ -86,195 +86,311 @@
   }
 }
 
-// Graphique à gauche, impayés à relancer à droite
-.bas {
+// Cartes : impayés et remarques côte à côte, avis de loyer en pleine largeur (maquette v2)
+.cartes {
   display: grid;
-  grid-template-columns: minmax(0, 3fr) minmax(280px, 2fr);
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
   gap: var(--space-6);
   align-items: stretch;
 }
 
-.graphique,
-.impayes {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-4);
-  min-width: 0;
-  padding: var(--space-6);
+.cartes__large {
+  grid-column: 1 / -1;
 }
 
-.graphique__tete {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: var(--space-3);
-}
-
-.graphique__titre,
-.impayes__titre {
-  margin: 0;
-  color: var(--text-heading);
-}
-
-.graphique__titre {
-  font-size: 16px;
-  font-weight: 600;
-  line-height: 26px;
-}
-
-.graphique__legende {
-  font-size: 14px;
-  color: var(--text-body);
-
-  i {
-    font-size: 12px;
-    color: var(--color-success);
-  }
-}
-
-.graphique__nav {
+.avatar-rond,
+.avatar-carre {
   display: flex;
   flex: none;
-  align-items: center;
-  gap: 6px;
-}
-
-.graphique__numero {
-  margin-right: var(--space-1);
-  font-size: 12px;
-  color: var(--text-body);
-}
-
-.graphique__fleche {
-  display: flex;
   align-items: center;
   justify-content: center;
-  width: 32px;
-  height: 32px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-md);
-  background: var(--white);
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-  font-size: 12px;
-  color: var(--text-heading);
-  cursor: pointer;
-}
-
-.impayes__titre {
-  font-size: 16px;
-  font-weight: 700;
-}
-
-.impayes__liste {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.impaye {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-1);
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--surface-border);
-}
-
-.impaye__haut,
-.impaye__bas {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--space-2);
-}
-
-.impaye__haut {
-  align-items: baseline;
-}
-
-.impaye__bas {
-  align-items: center;
-}
-
-.impaye__locataire {
-  min-width: 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-heading);
-}
-
-.impaye__montant {
-  flex: none;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--color-danger);
-  white-space: nowrap;
-}
-
-.impaye__periode {
-  min-width: 0;
-  font-size: 12px;
-}
-
-.impaye__badge {
-  flex: none;
-}
-
-.impayes__pied {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  justify-content: space-between;
-  gap: var(--space-2);
-  margin-top: auto;
-  padding-top: var(--space-3);
-  border-top: 1px solid var(--surface-border);
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-circle);
+  background: var(--gradient-dark);
   font-size: 13px;
-}
+  font-weight: 700;
+  color: var(--white);
 
-.impayes__pages {
-  display: flex;
-  gap: 6px;
-}
-
-.impayes__page {
-  width: 34px;
-  height: 34px;
-  padding: 0;
-  border: 0;
-  border-radius: var(--radius-md);
-  background: var(--white);
-  box-shadow: 0 3px 5px rgba(0, 0, 0, 0.1);
-  color: var(--text-heading);
-  cursor: pointer;
-
-  &:disabled {
-    opacity: 0.4;
-    cursor: default;
+  &--petit {
+    width: 26px;
+    height: 26px;
+    font-size: 11px;
   }
 }
 
-// Tablette et smartphone : les impayés passent sous le graphique
-@media (max-width: 991.98px) {
-  .bas {
+.avatar-carre {
+  border-radius: 10px;
+  font-size: 12px;
+}
+
+// Impayé : locataire, garage et période, étiquette « Total | 80,00 € », actions
+.impaye__qui {
+  display: flex;
+  flex: 1 1 0;
+  align-items: center;
+  gap: 10px;
+  min-width: 120px;
+}
+
+.impaye__textes {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+
+  b {
+    overflow: hidden;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-heading);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  span {
+    overflow: hidden;
+    font-size: 13px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.montant-pill {
+  display: inline-flex;
+  flex: none;
+  align-items: stretch;
+  height: 26px;
+}
+
+.montant-pill__type {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  border-radius: var(--radius-md) 0 0 var(--radius-md);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--white);
+
+  &.is-total {
+    background: linear-gradient(310deg, #d40505, #f2566f);
+  }
+
+  &.is-partiel {
+    background: linear-gradient(310deg, #f53939, #fbcf33);
+  }
+}
+
+.montant-pill__valeur {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 66px;
+  padding: 0 6px;
+  box-sizing: border-box;
+  border: 1px solid currentColor;
+  border-left: 0;
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+  background: var(--white);
+  font-size: 13px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+
+  &.is-total {
+    color: #d40505;
+  }
+
+  &.is-partiel {
+    color: #f97316;
+  }
+}
+
+.actions-pile {
+  display: flex;
+  flex: none;
+  flex-direction: column;
+  gap: 6px;
+  width: 104px;
+}
+
+.btn--mini {
+  justify-content: flex-start;
+  gap: 6px;
+  width: 100%;
+  min-height: 32px;
+  padding: 6px var(--space-2);
+  font-size: 11px;
+}
+
+// Remarque à traiter
+.todo__texte {
+  flex: 1 1 120px;
+  min-width: 0;
+
+  b {
+    display: block;
+    overflow: hidden;
+    font-size: 15px;
+    color: var(--text-heading);
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  p {
+    display: -webkit-box;
+    margin: 2px 0 0;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    font-size: 14px;
+    line-height: 1.4;
+    color: var(--text-heading);
+  }
+}
+
+.todo__meta {
+  display: flex;
+  flex: none;
+  justify-content: center;
+  width: 104px;
+
+  span {
+    padding: var(--space-1) 10px;
+    border-radius: 999px;
+    background: var(--surface-border);
+    font-size: 12px;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--text-heading);
+    white-space: nowrap;
+  }
+}
+
+.todo__ouvrir {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: var(--radius-circle);
+  background: #f1f3f5;
+  font-size: 13px;
+  color: var(--text-body);
+  cursor: pointer;
+
+  &:hover {
+    background: #e9edf5;
+    color: var(--text-heading);
+  }
+}
+
+// Avis de loyer à communiquer
+.avis__milieu {
+  display: flex;
+  flex: 1 1 320px;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 40px;
+  min-width: 0;
+}
+
+.avis__nom {
+  flex: 0 1 440px;
+  min-width: 0;
+
+  b {
+    font-size: 15px;
+    color: var(--text-heading);
+  }
+}
+
+.avis__infos {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2px var(--space-4);
+  margin-top: 2px;
+  font-size: 13px;
+
+  span {
+    white-space: nowrap;
+  }
+
+  i {
+    width: 18px;
+    margin-right: 6px;
+    text-align: center;
+  }
+}
+
+.avis__loyer {
+  display: grid;
+  grid-template-columns: auto 10px auto 64px;
+  column-gap: 6px;
+  align-items: center;
+  font-variant-numeric: tabular-nums;
+
+  s {
+    text-align: right;
+  }
+
+  i {
+    justify-self: center;
+    font-size: 11px;
+  }
+
+  b {
+    text-align: right;
+    font-size: 15px;
+    color: var(--text-heading);
+  }
+}
+
+.avis__ecart {
+  padding: 2px 0;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: 700;
+  text-align: center;
+  background: #e8f6ec;
+  color: #14532d;
+
+  &.is-hausse {
+    background: #fff4e5;
+    color: #b45309;
+  }
+}
+
+.avis__action {
+  flex: none;
+  gap: var(--space-2);
+  width: 172px;
+  margin-left: auto;
+  font-size: 12px;
+}
+
+.avis__autres {
+  align-self: flex-start;
+}
+
+@media (max-width: 1024px) {
+  .cartes {
     grid-template-columns: minmax(0, 1fr);
   }
 }
 
-// Smartphone : cartes plus compactes, le numéro et les flèches passent sous le titre du graphique
-@media (max-width: 575.98px) {
+@media (max-width: 640px) {
   .kpis {
-    gap: var(--space-3);
+    grid-template-columns: minmax(0, 1fr);
   }
 
-  .graphique,
-  .impayes {
-    padding: var(--space-4);
-  }
-
-  .graphique__tete {
-    flex-direction: column;
+  .avis__action {
+    width: 100%;
   }
 }

@@ -1,0 +1,65 @@
+:host {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: var(--space-6);
+  overflow: hidden;
+}
+
+.tc__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-3);
+}
+
+.tc__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 700;
+  color: var(--text-heading);
+}
+
+.tc__rows {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+}
+
+.tc__state {
+  margin: 0;
+  padding: var(--space-2) 0;
+  font-size: 15px;
+  color: var(--text-body);
+
+  &--error {
+    color: var(--color-danger);
+  }
+}
+
+.tc__pager {
+  margin: auto calc(-1 * var(--space-6)) calc(-1 * var(--space-6));
+  padding: var(--space-4) var(--space-6);
+  border-top: 1px solid var(--surface-border);
+}
+
+// Ligne d'une carte : 84 px au moins, trait au-dessus, survol gris (maquette `.hli`)
+:host ::ng-deep .task-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--space-2) var(--space-3);
+  min-height: 84px;
+  margin: 0 calc(-1 * var(--space-2));
+  padding: var(--space-3) var(--space-2);
+  border-top: 1px solid var(--surface-border);
+  border-radius: var(--radius-md);
+  box-sizing: border-box;
+
+  &:hover {
+    background: var(--surface-page);
+  }
+}

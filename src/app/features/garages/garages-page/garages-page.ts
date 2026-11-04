@@ -1,6 +1,7 @@
 import { CurrencyPipe, formatCurrency } from '@angular/common';
 import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@angular/core';
 import { rxResource } from '@angular/core/rxjs-interop';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TranslatePipe, TranslateService } from '@ngx-translate/core';
 import { toApiError } from '../../../core/api/api-error';
 import { ErrorMessageService } from '../../../core/api/error-message-service';
@@ -175,12 +176,26 @@ export class GaragesPage {
   protected readonly rowKey = (garage: GarageDTO) => garage.id;
   protected readonly rowClass = (garage: GarageDTO) => (garage.id === this.history()?.id ? 'is-selected' : null);
 
+  /** `?remarques=id` (carte « Remarques à traiter » du tableau de bord) : ouvre directement ses remarques. */
+  private readonly route = inject(ActivatedRoute);
+  private readonly router = inject(Router);
+  private readonly deepLink = (() => {
+    const id = Number(this.route.snapshot.queryParamMap.get('remarques'));
+    if (id) {
+      this.api.get(id).subscribe({ next: (target) => this.remarks.set(target) });
+    }
+    return id || null;
+  })();
+
   protected openRemarks(garage: GarageDTO): void {
     this.remarks.set(garage);
   }
 
   protected closeRemarks(): void {
     this.remarks.set(null);
+    if (this.route.snapshot.queryParamMap.has('remarques')) {
+      this.router.navigate([], { relativeTo: this.route, queryParams: {}, replaceUrl: true });
+    }
   }
 
   /** Statut, locataire actuel, clés et réserve, loyer actuel (maquette). */
