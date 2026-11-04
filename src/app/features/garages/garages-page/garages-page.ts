@@ -24,8 +24,7 @@ import { GarageForm } from '../garage-form/garage-form';
 import { GarageDTO, GarageFilter, GarageStatut } from '../garage.models';
 import { LocationsHistory } from '../locations-history/locations-history';
 import { LoyersHistory } from '../loyers-history/loyers-history';
-
-export const GARAGES_PAGE_SIZE = 10;
+import { SettingsService } from '../../../core/settings-service';
 
 const STATUT_TONE: Record<GarageStatut, BadgeTone> = {
   LOUE: 'success',
@@ -85,7 +84,8 @@ export class GaragesPage {
   private readonly translate = inject(TranslateService);
   private readonly language = inject(LanguageService);
 
-  protected readonly pageSize = GARAGES_PAGE_SIZE;
+  /** Lignes par page : paramètre `lignes_liste` (RG-PAR-09). */
+  protected readonly pageSize = inject(SettingsService).lignesListe;
   protected readonly filter = signal<GarageFilter>('TOUS');
   protected readonly search = signal('');
   protected readonly page = signal(0);
@@ -110,7 +110,7 @@ export class GaragesPage {
     stream: ({ params }) =>
       this.api.list({
         page: params.page,
-        size: GARAGES_PAGE_SIZE,
+        size: this.pageSize(),
         sort: params.sort,
         q: params.q,
         filters: { statut: params.statut === 'TOUS' ? null : params.statut },

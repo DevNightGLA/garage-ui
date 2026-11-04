@@ -1,0 +1,74 @@
+:host {
+  display: flex;
+  flex: 0 0 230px;
+  flex-direction: column;
+  gap: var(--space-3);
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: var(--space-4);
+}
+
+.pl__head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-2);
+}
+
+.pl__title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: var(--text-body);
+  opacity: 0.7;
+}
+
+.pl__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin: -10px -8px -10px 0;
+  border: 0;
+  background: transparent;
+  color: var(--text-heading);
+  cursor: pointer;
+
+  i {
+    transform: rotate(0deg);
+    transition: transform 0.2s;
+  }
+
+  i.is-up {
+    transform: rotate(180deg);
+  }
+}
+
+.pl__list {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 640px;
+  overflow: auto;
+}
+
+// Tablette et smartphone : la colonne passe au-dessus du détail, repliable
+@media (max-width: 1024px) {
+  :host {
+    flex-basis: 100%;
+  }
+
+  .pl__toggle {
+    display: flex;
+  }
+
+  .pl__list {
+    max-height: 320px;
+
+    &.is-collapsed {
+      display: none;
+    }
+  }
+}

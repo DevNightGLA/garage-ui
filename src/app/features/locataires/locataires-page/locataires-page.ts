@@ -20,8 +20,7 @@ import { RemarqueCible } from '../../remarques/remarque.models';
 import { LocataireApi } from '../locataire-api';
 import { LocataireForm } from '../locataire-form/locataire-form';
 import { LocataireDTO, LocataireFilter } from '../locataire.models';
-
-export const LOCATAIRES_PAGE_SIZE = 10;
+import { SettingsService } from '../../../core/settings-service';
 
 /** Clé de traduction et teinte du badge : un locataire actuel affiche son solde (RG-LOCT-10). */
 type BadgeKey = 'A_JOUR' | 'EN_RETARD' | 'ACTUEL' | 'A_VENIR' | 'ANCIEN' | 'SANS_LOCATION';
@@ -79,7 +78,8 @@ export class LocatairesPage {
   private readonly translate = inject(TranslateService);
   private readonly language = inject(LanguageService);
 
-  protected readonly pageSize = LOCATAIRES_PAGE_SIZE;
+  /** Lignes par page : paramètre `lignes_liste` (RG-PAR-09). */
+  protected readonly pageSize = inject(SettingsService).lignesListe;
   protected readonly filter = signal<LocataireFilter>('ACTUEL');
   protected readonly search = signal('');
   protected readonly page = signal(0);
@@ -101,7 +101,7 @@ export class LocatairesPage {
     stream: ({ params }) =>
       this.api.list({
         page: params.page,
-        size: LOCATAIRES_PAGE_SIZE,
+        size: this.pageSize(),
         sort: params.sort,
         q: params.q,
         filters: { statut: params.statut === 'TOUS' ? null : params.statut },

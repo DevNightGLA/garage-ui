@@ -18,8 +18,7 @@ import { Tooltip } from '../../../shared/tooltip/tooltip';
 import { LocationApi } from '../location-api';
 import { LocationForm } from '../location-form/location-form';
 import { LocationDTO, LocationStatut } from '../location.models';
-
-export const LOCATIONS_PAGE_SIZE = 10;
+import { SettingsService } from '../../../core/settings-service';
 
 /** Colonnes triables : les clés sont les propriétés de tri acceptées par l'API (`sort=`). */
 const COLUMNS: readonly DataTableColumn[] = [
@@ -64,7 +63,8 @@ export class LocationsPage {
   private readonly api = inject(LocationApi);
   private readonly errors = inject(ErrorMessageService);
 
-  protected readonly pageSize = LOCATIONS_PAGE_SIZE;
+  /** Lignes par page : paramètre `lignes_liste` (RG-PAR-09). */
+  protected readonly pageSize = inject(SettingsService).lignesListe;
   protected readonly filter = signal<LocationStatut>('ACTIVE');
   protected readonly search = signal('');
   protected readonly page = signal(0);
@@ -93,7 +93,7 @@ export class LocationsPage {
     stream: ({ params }) =>
       this.api.list({
         page: params.page,
-        size: LOCATIONS_PAGE_SIZE,
+        size: this.pageSize(),
         sort: params.sort,
         q: params.q,
         filters: { statut: params.statut, finDu: params.finDu, finAu: params.finAu },

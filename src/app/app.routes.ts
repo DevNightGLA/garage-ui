@@ -11,6 +11,9 @@ import { Shell } from './layout/shell';
  * construction » (`ScreenPending`) jusqu'à son étape de docs/TASKS.md ; `app.routes.spec.ts` vérifie
  * qu'aucune page n'est oubliée.
  */
+const garageHistory = () =>
+  import('./features/garages/garage-history-page/garage-history-page').then((m) => m.GarageHistoryPage);
+
 export const SCREENS: Partial<Record<string, () => Promise<Type<unknown>>>> = {
   'tableau-de-bord': () =>
     import('./features/tableau-de-bord/tableau-de-bord-page/tableau-de-bord-page').then((m) => m.TableauDeBordPage),
@@ -18,6 +21,14 @@ export const SCREENS: Partial<Record<string, () => Promise<Type<unknown>>>> = {
   locataires: () => import('./features/locataires/locataires-page/locataires-page').then((m) => m.LocatairesPage),
   locations: () => import('./features/locations/locations-page/locations-page').then((m) => m.LocationsPage),
   paiements: () => import('./features/paiements/paiements-page/paiements-page').then((m) => m.PaiementsPage),
+  'historique-loyers': garageHistory,
+  'historique-locations': garageHistory,
+};
+
+/** Données propres à certaines pages, ajoutées au titre et au groupe du fil d'Ariane. */
+const SCREEN_DATA: Partial<Record<string, Record<string, unknown>>> = {
+  'historique-loyers': { vue: 'loyers' },
+  'historique-locations': { vue: 'locations' },
 };
 
 const pending = () => import('./layout/info-pages').then((m) => m.ScreenPending);
@@ -62,7 +73,7 @@ export const routes: Routes = [
       ...NAV_ITEMS.map((item) => ({
         path: item.path,
         canActivate: [screenGuard(item.ecran)],
-        data: headingOf(item),
+        data: { ...headingOf(item), ...SCREEN_DATA[item.path] },
         loadComponent: SCREENS[item.path] ?? pending,
       })),
       {

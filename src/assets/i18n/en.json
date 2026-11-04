@@ -18,7 +18,9 @@
       "listePuces": "Bulleted list",
       "lien": "Link"
     },
-    "enregistrement": "Saving…"
+    "enregistrement": "Saving…",
+    "deplier": "Expand",
+    "replier": "Collapse"
   },
   "nav": {
     "pages": "Pages /",
@@ -184,6 +186,12 @@
       "locataireActuel": "Current tenant",
       "cles": "Keys / reserve",
       "loyerActuel": "Current rent"
+    },
+    "historique": {
+      "liste": "Garages",
+      "parMois": "{{montant}}/month",
+      "aucunLoyer": "No rent",
+      "aucunGarage": "No garage."
     }
   },
   "loyers": {
@@ -547,7 +555,10 @@
     "telephoneTropLong": "The phone number cannot exceed 30 characters.",
     "resoudreImpossible": "Only an issue can be marked as resolved.",
     "rouvrirImpossible": "Only an issue can be reopened.",
-    "resolutionFuture": "The resolution date cannot be in the future."
+    "resolutionFuture": "The resolution date cannot be in the future.",
+    "loyerDebutAvantLocation": "The start date must be after the end of the last rental ({{date}}).",
+    "locationEnCoursLoyer": "Cannot modify: a rental has been ongoing since the start date of this rent",
+    "locationDemarreeLoyer": "Cannot modify: a rental took place after the start date of this rent"
   },
   "erreur": {
     "generique": "An error occurred.",
@@ -586,7 +597,7 @@
     "GAR_RESERVE_INVALIDE": "The reserve must be between 0 and the number of keys.",
     "GAR_SUPPRESSION_REFUSEE": "This garage cannot be deleted.",
     "GAR_INTROUVABLE": "Garage not found.",
-    "LOY_LOCATION_DEMARREE": "A lease has started since the start date of this rent",
+    "LOY_LOCATION_DEMARREE": "Cannot modify: a rental took place after the start date of this rent",
     "LOY_NON_DERNIER": "Only the latest rent can be edited or deleted.",
     "LOY_SUPPRESSION_REFUSEE": "Only the latest rent, if upcoming, can be deleted.",
     "LOY_UNIQUE": "The first rent of a garage cannot be deleted.",
@@ -596,7 +607,9 @@
     "UTIL_EMAIL_EXISTE": "This e-mail already exists.",
     "UTIL_DERNIER_ADMIN": "At least one active administrator must always remain.",
     "MAINTENANCE": "The site is under maintenance.",
-    "MOT_DE_PASSE_TEMPORAIRE": "You must choose a new password before continuing."
+    "MOT_DE_PASSE_TEMPORAIRE": "You must choose a new password before continuing.",
+    "GAR_MAX_ATTEINT": "The maximum number of 20 garages has been reached.",
+    "LOY_LOCATION_EN_COURS": "Cannot modify: a rental has been ongoing since the start date of this rent"
   },
   "maintenance": {
     "site": {

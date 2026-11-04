@@ -20,7 +20,7 @@ La v1 (étapes 0 à 6 du premier plan) est livrée : socle, composants partagés
 - [x] Écrans existants branchés sur `RightsService` au lieu du rôle figé.
 
 ## Étape 3 : écrans v2
-1. [ ] Garages : réalignement v2, pages Historique des loyers et Historique des locations.
+1. [x] Garages : réalignement v2, pages Historique des loyers et Historique des locations.
 2. [ ] Locataires : réalignement v2, Chronologie.
 3. [ ] Locations (durée minimale, nouveaux codes) et Paiements.
 4. [ ] Tableau de bord v2 (cartes Avis de loyer et Remarques à traiter, `graphMois`) et Statistiques (4 pages).

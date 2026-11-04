@@ -10,7 +10,7 @@ describe('routes', () => {
       expect(route, item.path).toBeDefined();
       expect(typeof route?.loadComponent, item.path).toBe('function');
       expect(route?.canActivate, item.path).toHaveLength(1);
-      expect(route?.data, item.path).toEqual(headingOf(item));
+      expect(route?.data, item.path).toMatchObject(headingOf(item));
     }
   });
 
@@ -23,7 +23,8 @@ describe('routes', () => {
   it('fil d\'Ariane : « Garages » pour la liste, « Garages / Historique des loyers » pour une sous-page', () => {
     const titre = (path: string) => shellChildren.find((child) => child.path === path)?.data;
     expect(titre('garages')).toEqual({ titleKey: 'nav.garages', groupKey: null });
-    expect(titre('historique-loyers')).toEqual({ titleKey: 'nav.historiqueLoyers', groupKey: 'nav.garages' });
+    expect(titre('historique-loyers')).toEqual({ titleKey: 'nav.historiqueLoyers', groupKey: 'nav.garages', vue: 'loyers' });
+    expect(titre('historique-locations')).toMatchObject({ vue: 'locations' });
     expect(titre('tableau-de-bord')).toEqual({ titleKey: 'nav.tableauDeBord', groupKey: null });
   });
 

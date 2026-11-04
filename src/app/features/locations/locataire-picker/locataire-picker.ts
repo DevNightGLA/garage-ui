@@ -8,10 +8,9 @@ import { Pagination } from '../../../shared/pagination/pagination';
 import { SEARCH_DEBOUNCE_MS } from '../../../shared/search-input/search-input';
 import { LocataireApi } from '../../locataires/locataire-api';
 import { LocataireDTO } from '../../locataires/locataire.models';
+import { SettingsService } from '../../../core/settings-service';
 
 /** RG-LST-01 : 5 locataires par page dans la liste de choix. */
-export const PICKER_PAGE_SIZE = 5;
-
 /**
  * Choix du locataire d'une location (RG-LOC-11) : recherche par nom ou prénom, liste triée par
  * nom, 5 par page, statut de chaque locataire. Tout locataire peut être choisi. La valeur du
@@ -30,7 +29,8 @@ export class LocatairePicker implements ControlValueAccessor {
   private readonly api = inject(LocataireApi);
   private readonly errors = inject(ErrorMessageService);
 
-  protected readonly pageSize = PICKER_PAGE_SIZE;
+  /** Lignes par page : paramètre `lignes_hist` (RG-PAR-09). */
+  protected readonly pageSize = inject(SettingsService).lignesHist;
   protected readonly text = signal('');
   protected readonly query = signal('');
   protected readonly page = signal(0);
@@ -39,7 +39,7 @@ export class LocatairePicker implements ControlValueAccessor {
 
   protected readonly list = rxResource({
     params: () => ({ page: this.page(), q: this.query() }),
-    stream: ({ params }) => this.api.list({ page: params.page, size: PICKER_PAGE_SIZE, q: params.q }),
+    stream: ({ params }) => this.api.list({ page: params.page, size: this.pageSize(), q: params.q }),
   });
   protected readonly rows = computed(() => (this.list.hasValue() ? this.list.value().content : []));
   protected readonly total = computed(() => (this.list.hasValue() ? this.list.value().totalElements : 0));

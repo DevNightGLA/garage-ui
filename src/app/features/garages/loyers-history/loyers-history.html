@@ -1,16 +1,4 @@
-<app-modal
-  [title]="'loyers.titre' | translate: { numero: garage().numero }"
-  [width]="720"
-  (closed)="closed.emit()"
->
-  @if (droits.canAdd()) {
-    <div class="lh__toolbar">
-      <button type="button" class="btn btn--primary" (click)="openNew()">
-        <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'loyers.nouveau' | translate }}
-      </button>
-    </div>
-  }
-
+<ng-template #body>
   <div class="lh__scroll">
     <table class="lh">
       <thead>
@@ -85,7 +73,7 @@
   <app-pagination
     class="lh__pager"
     [page]="page()"
-    [size]="pageSize"
+    [size]="pageSize()"
     [total]="total()"
     [noun]="'loyers.nom' | translate"
     (pageChange)="page.set($event)"
@@ -104,11 +92,42 @@
       <span>{{ 'loyers.aide.cloture' | translate }}</span>
     </span>
   </div>
+</ng-template>
+
+@if (embedded()) {
+  <section class="card panel">
+    <div class="panel__head">
+      <span class="panel__icon" aria-hidden="true"><i class="fa-solid fa-coins"></i></span>
+      <h2 class="panel__title">{{ 'nav.historiqueLoyers' | translate }}</h2>
+      @if (droits.canAdd()) {
+        <button type="button" class="btn btn--primary" (click)="openNew()">
+          <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'loyers.nouveau' | translate }}
+        </button>
+      }
+    </div>
+    <ng-container [ngTemplateOutlet]="body" />
+  </section>
+} @else {
+<app-modal
+  [title]="'loyers.titre' | translate: { numero: garage().numero }"
+  [width]="720"
+  (closed)="closed.emit()"
+>
+  @if (droits.canAdd()) {
+    <div class="lh__toolbar">
+      <button type="button" class="btn btn--primary" (click)="openNew()">
+        <i class="fa-solid fa-plus" aria-hidden="true"></i> {{ 'loyers.nouveau' | translate }}
+      </button>
+    </div>
+  }
+  <ng-container [ngTemplateOutlet]="body" />
 
   <div modalFooter>
     <button type="button" class="btn btn--primary" (click)="closed.emit()">{{ 'commun.fermer' | translate }}</button>
   </div>
 </app-modal>
+}
+
 
 @if (form(); as current) {
   <app-loyer-form

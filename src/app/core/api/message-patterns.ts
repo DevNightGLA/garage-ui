@@ -11,6 +11,7 @@ export const PARAMETERIZED_MESSAGES: readonly { pattern: RegExp; key: string }[]
   { pattern: /^Le garage a un historique de (?<n>\d+) location\(s\)\.$/, key: 'garageHistorique' },
   { pattern: /^La date de début doit être postérieure au début du loyer précédent \((?<date>[^)]+)\) : pas de chevauchement\.$/, key: 'loyerDebutAnterieur' },
   { pattern: /^Modification et suppression impossibles : un paiement anticipé est déjà enregistré pour (?<mois>.+)\. Annulez d'abord ce paiement dans l'écran Paiements\.$/, key: 'loyerPaiementAnticipe' },
+  { pattern: /^La date de début doit être postérieure à la fin de la dernière location \((?<date>[\d\/]+)\)\.$/, key: 'loyerDebutAvantLocation' },
   { pattern: /^Le locataire a été assigné à un garage \((?<n>\d+) location\(s\) : (?<garages>.+)\)\.$/, key: 'locataireAssigne' },
   { pattern: /^Des paiements ont été effectués pour ce locataire \((?<n>\d+) versement\(s\)\)\.$/, key: 'locatairePaiements' },
   { pattern: /^Maximum (?<n>\d+) clés remises \(hors réserve\)\.$/, key: 'clesMax' },
@@ -27,6 +28,8 @@ export const PARAMETERIZED_MESSAGES: readonly { pattern: RegExp; key: string }[]
 
 /** Messages fixes (validation des champs, refus) : texte du back → clé de `messagesBack` dans `en.json`. */
 export const FIXED_MESSAGES: Readonly<Record<string, string>> = {
+  'Modification impossible : une location est en cours depuis la date de début de ce loyer': 'locationEnCoursLoyer',
+  'Modification impossible : une location a eu lieu depuis la date de début de ce loyer': 'locationDemarreeLoyer',
   "Format d'e-mail invalide.": 'emailInvalide',
   "L'adresse ne peut pas dépasser 200 caractères.": 'adresseTropLongue',
   "L'e-mail est obligatoire.": 'emailObligatoire',

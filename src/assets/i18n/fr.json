@@ -18,7 +18,9 @@
       "listePuces": "Liste à puces",
       "lien": "Lien"
     },
-    "enregistrement": "Enregistrement…"
+    "enregistrement": "Enregistrement…",
+    "deplier": "Déplier",
+    "replier": "Replier"
   },
   "nav": {
     "pages": "Pages /",
@@ -184,6 +186,12 @@
       "locataireActuel": "Locataire actuel",
       "cles": "Clés / réserve",
       "loyerActuel": "Loyer actuel"
+    },
+    "historique": {
+      "liste": "Garages",
+      "parMois": "{{montant}}/mois",
+      "aucunLoyer": "Aucun loyer",
+      "aucunGarage": "Aucun garage."
     }
   },
   "loyers": {

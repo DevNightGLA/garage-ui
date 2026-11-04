@@ -42,11 +42,11 @@
     }
   </div>
 
-  @if (total() > pageSize) {
+  @if (total() > pageSize()) {
     <app-pagination
       class="picker__pager"
       [page]="page()"
-      [size]="pageSize"
+      [size]="pageSize()"
       [total]="total()"
       [noun]="'locataires.nom' | translate"
       (pageChange)="page.set($event)"

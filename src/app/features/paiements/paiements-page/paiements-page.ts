@@ -20,8 +20,7 @@ import { PaiementForm } from '../paiement-form/paiement-form';
 import { PaiementApi } from '../paiement-api';
 import { PaiementDTO, PaiementFilter, TypePaiement } from '../paiement.models';
 import { VersementsModal } from '../versements-detail/versements-detail';
-
-export const PAIEMENTS_PAGE_SIZE = 10;
+import { SettingsService } from '../../../core/settings-service';
 
 /** Colonnes triables : les clés sont les propriétés de tri acceptées par l'API (`sort=`). */
 const COLUMNS: readonly DataTableColumn[] = [
@@ -59,7 +58,8 @@ export class PaiementsPage {
   private readonly api = inject(PaiementApi);
   private readonly errors = inject(ErrorMessageService);
 
-  protected readonly pageSize = PAIEMENTS_PAGE_SIZE;
+  /** Lignes par page : paramètre `lignes_liste` (RG-PAR-09). */
+  protected readonly pageSize = inject(SettingsService).lignesListe;
   /** Mois affiché, `yyyy-MM` : le mois courant par défaut (RG-PAI-01). */
   protected readonly month = signal(monthOf(inject(TODAY)()));
   protected readonly filter = signal<PaiementFilter>('TOUS');
@@ -82,7 +82,7 @@ export class PaiementsPage {
     stream: ({ params }) =>
       this.api.list({
         page: params.page,
-        size: PAIEMENTS_PAGE_SIZE,
+        size: this.pageSize(),
         sort: params.sort,
         q: params.q,
         filters: { mois: params.mois, statut: params.statut === 'TOUS' ? null : params.statut },
