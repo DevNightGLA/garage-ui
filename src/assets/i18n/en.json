@@ -1143,5 +1143,143 @@
       "suivant": "Next",
       "creer": "Create user"
     }
+  },
+  "droits": {
+    "onglet": {
+      "ecrans": "Screen access",
+      "actions": "Allowed actions",
+      "appareils": "Access by device"
+    },
+    "profil": "Profile",
+    "sections": "Sections",
+    "nbEcrans": "{{n}} of {{total}} screens",
+    "sesDonnees": "Own data only",
+    "noteProfil": {
+      "GESTIONNAIRE": "The Manager has the same rights as the Admin, except the Configuration menu.",
+      "LOCATAIRE": "The Tenant only sees their own garages, leases, rents and payments.",
+      "CONSULTANT": "The Consultant sees the same screens as the Manager, without adding, editing or deleting."
+    },
+    "action": {
+      "v": "Access",
+      "a": "Add",
+      "m": "Edit",
+      "d": "Delete"
+    },
+    "consulterEcran": "View the screen",
+    "consulterDonnees": "View own data",
+    "nonPropose": "Action not offered",
+    "autoriserAcces": "Allow access",
+    "retirerAcces": "Remove access",
+    "autoriser": "Allow:",
+    "retirer": "Remove:",
+    "verrou": {
+      "admin": "Admin: all rights, cannot be changed.",
+      "reserve": "Admin only: cannot be changed.",
+      "accesRequis": "Screen access required.",
+      "ordinateur": "Computer: always available.",
+      "droitsToujours": "Access rights stays available on every device."
+    },
+    "appareil": {
+      "ORDINATEUR": "Computer",
+      "TABLETTE": "Tablet",
+      "SMARTPHONE": "Smartphone"
+    },
+    "appareilTaille": {
+      "ORDINATEUR": "Over 1024 px",
+      "TABLETTE": "641 to 1024 px",
+      "SMARTPHONE": "Up to 640 px"
+    },
+    "brouillon": "Pending changes",
+    "modifications": {
+      "un": "1 unsaved change",
+      "n": "{{n}} unsaved changes"
+    },
+    "aucuneModification": "No changes",
+    "enregistres": "Access rights saved successfully",
+    "section": {
+      "Pilotage": "Overview",
+      "Garages": "Garages",
+      "Locataires": "Tenants",
+      "Locations et paiements": "Leases and payments",
+      "Remarques": "Remarks",
+      "Envoi de messages": "Messages",
+      "Configuration": "Configuration"
+    },
+    "ecran": {
+      "DASH": "Dashboard",
+      "STA": "Statistics",
+      "GAR": "Garage list",
+      "LOY": "Rent history",
+      "HLOC": "Lease history",
+      "TEN": "Tenant list",
+      "CHR": "Timeline",
+      "LOC": "Leases",
+      "PAI": "Payments",
+      "REM": "Garage and tenant records",
+      "AVI": "Rent notices",
+      "REL": "Overdue reminders",
+      "LIB": "Free message",
+      "PAR": "Settings",
+      "TPL": "Message templates",
+      "USR": "Users",
+      "DRO": "Access rights",
+      "AUD": "Audit log",
+      "MNT": "Maintenance"
+    },
+    "libelleAction": {
+      "GAR": {
+        "a": "Create a garage",
+        "m": "Edit a garage",
+        "d": "Delete a garage"
+      },
+      "LOY": {
+        "a": "Create a rent",
+        "m": "Edit the latest rent",
+        "d": "Delete an upcoming rent"
+      },
+      "TEN": {
+        "a": "Create a tenant",
+        "m": "Edit a tenant",
+        "d": "Delete a tenant"
+      },
+      "LOC": {
+        "a": "Create a lease",
+        "m": "Edit or close",
+        "d": "Delete a lease"
+      },
+      "PAI": {
+        "a": "Record a payment",
+        "m": "—",
+        "d": "Cancel a payment"
+      },
+      "REM": {
+        "a": "Create a remark",
+        "m": "Edit, resolve or reopen",
+        "d": "Delete a remark"
+      },
+      "AVI": {
+        "a": "Send or mark as informed"
+      },
+      "REL": {
+        "a": "Send or mark as reminded"
+      },
+      "LIB": {
+        "a": "Send a message"
+      },
+      "PAR": {
+        "m": "Edit settings"
+      },
+      "TPL": {
+        "m": "Edit templates and signature"
+      },
+      "USR": {
+        "a": "Create a user",
+        "m": "Edit, reset, deactivate",
+        "d": "Delete an account"
+      },
+      "DRO": {
+        "m": "Edit rights"
+      }
+    }
   }
 }

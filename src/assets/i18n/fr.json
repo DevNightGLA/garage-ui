@@ -1016,5 +1016,143 @@
       "suivant": "Suivant",
       "creer": "Créer l’utilisateur"
     }
+  },
+  "droits": {
+    "onglet": {
+      "ecrans": "Accès aux écrans",
+      "actions": "Actions autorisées",
+      "appareils": "Accès selon l’appareil"
+    },
+    "profil": "Profil",
+    "sections": "Sections",
+    "nbEcrans": "{{n}} sur {{total}} écrans",
+    "sesDonnees": "Ses propres données uniquement",
+    "noteProfil": {
+      "GESTIONNAIRE": "Le Gestionnaire a les mêmes droits que l’Admin, sauf le menu Configuration.",
+      "LOCATAIRE": "Le Locataire ne voit que ses propres garages, locations, loyers et paiements.",
+      "CONSULTANT": "Le Consultant voit les mêmes écrans que le Gestionnaire, sans droit d’ajout, de modification ni de suppression."
+    },
+    "action": {
+      "v": "Accès",
+      "a": "Ajouter",
+      "m": "Modifier",
+      "d": "Supprimer"
+    },
+    "consulterEcran": "Consulter l’écran",
+    "consulterDonnees": "Consulter ses données",
+    "nonPropose": "Action non proposée",
+    "autoriserAcces": "Autoriser l’accès",
+    "retirerAcces": "Retirer l’accès",
+    "autoriser": "Autoriser :",
+    "retirer": "Retirer :",
+    "verrou": {
+      "admin": "Admin : tous les droits, non modifiable.",
+      "reserve": "Réservé à l’Admin : non modifiable.",
+      "accesRequis": "Accès à l’écran requis.",
+      "ordinateur": "Ordinateur : toujours accessible.",
+      "droitsToujours": "Droits d’accès reste disponible sur tous les appareils."
+    },
+    "appareil": {
+      "ORDINATEUR": "Ordinateur",
+      "TABLETTE": "Tablette",
+      "SMARTPHONE": "Smartphone"
+    },
+    "appareilTaille": {
+      "ORDINATEUR": "Plus de 1024 px",
+      "TABLETTE": "641 à 1024 px",
+      "SMARTPHONE": "Jusqu’à 640 px"
+    },
+    "brouillon": "Modifications en cours",
+    "modifications": {
+      "un": "1 modification non enregistrée",
+      "n": "{{n}} modifications non enregistrées"
+    },
+    "aucuneModification": "Aucune modification",
+    "enregistres": "Droits d’accès enregistrés avec succès",
+    "section": {
+      "Pilotage": "Pilotage",
+      "Garages": "Garages",
+      "Locataires": "Locataires",
+      "Locations et paiements": "Locations et paiements",
+      "Remarques": "Remarques",
+      "Envoi de messages": "Envoi de messages",
+      "Configuration": "Configuration"
+    },
+    "ecran": {
+      "DASH": "Tableau de bord",
+      "STA": "Statistiques",
+      "GAR": "Liste des garages",
+      "LOY": "Historique des loyers",
+      "HLOC": "Historique des locations",
+      "TEN": "Liste des locataires",
+      "CHR": "Chronologie",
+      "LOC": "Locations",
+      "PAI": "Paiements",
+      "REM": "Fiches garage et locataire",
+      "AVI": "Avis de loyer",
+      "REL": "Relances d’impayés",
+      "LIB": "Message libre",
+      "PAR": "Paramètres",
+      "TPL": "Modèles de messages",
+      "USR": "Utilisateurs",
+      "DRO": "Droits d’accès",
+      "AUD": "Journal d’audit",
+      "MNT": "Maintenance"
+    },
+    "libelleAction": {
+      "GAR": {
+        "a": "Créer un garage",
+        "m": "Modifier un garage",
+        "d": "Supprimer un garage"
+      },
+      "LOY": {
+        "a": "Créer un loyer",
+        "m": "Modifier le dernier loyer",
+        "d": "Supprimer un loyer à venir"
+      },
+      "TEN": {
+        "a": "Créer un locataire",
+        "m": "Modifier un locataire",
+        "d": "Supprimer un locataire"
+      },
+      "LOC": {
+        "a": "Créer une location",
+        "m": "Modifier ou clôturer",
+        "d": "Supprimer une location"
+      },
+      "PAI": {
+        "a": "Enregistrer un paiement",
+        "m": "—",
+        "d": "Annuler un versement"
+      },
+      "REM": {
+        "a": "Créer une remarque",
+        "m": "Modifier, résoudre ou rouvrir",
+        "d": "Supprimer une remarque"
+      },
+      "AVI": {
+        "a": "Envoyer ou marquer comme informé"
+      },
+      "REL": {
+        "a": "Envoyer ou marquer comme relancé"
+      },
+      "LIB": {
+        "a": "Envoyer un message"
+      },
+      "PAR": {
+        "m": "Modifier les paramètres"
+      },
+      "TPL": {
+        "m": "Modifier les modèles et la signature"
+      },
+      "USR": {
+        "a": "Créer un utilisateur",
+        "m": "Modifier, réinitialiser, désactiver",
+        "d": "Supprimer un compte"
+      },
+      "DRO": {
+        "m": "Modifier les droits"
+      }
+    }
   }
 }

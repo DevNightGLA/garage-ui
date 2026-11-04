@@ -1,0 +1,191 @@
+<app-segmented [options]="tabOptions()" [value]="tab()" [caps]="true" [ariaLabel]="'nav.droitsAcces' | translate" (valueChange)="setTab($event)" />
+
+@if (loadError(); as message) {
+  <div class="card dp__pad" role="alert">
+    <p class="message-error">{{ message }}</p>
+    <button type="button" class="btn btn--secondary" (click)="grid.reload(); deviceGrid.reload()">{{ 'commun.reessayer' | translate }}</button>
+  </div>
+} @else if (!grid.hasValue()) {
+  <p>{{ 'commun.chargement' | translate }}</p>
+} @else {
+  <!-- En-têtes : profils (écrans, actions) ou appareils. -->
+  @switch (tab()) {
+    @case ('ecrans') {
+      <div class="dp__heads">
+        @for (p of roles; track p) {
+          <div class="card dp__head">
+            <span class="dp__head-title">
+              <span class="dp__badge" [style.background]="profils[p].gradient" aria-hidden="true">
+                <i class="fa-solid" [class]="profils[p].icon"></i>
+              </span>
+              {{ 'role.' + p | translate }}
+            </span>
+            <span class="dp__bar" aria-hidden="true">
+              <span class="dp__bar-fill" [style.width.%]="(100 * screenCount(p)) / screens().length"></span>
+            </span>
+            <span class="dp__head-count">{{ 'droits.nbEcrans' | translate: { n: screenCount(p), total: screens().length } }}</span>
+            @if (p === 'LOCATAIRE') {
+              <span class="dp__scope">{{ 'droits.sesDonnees' | translate }}</span>
+            }
+          </div>
+        }
+      </div>
+    }
+    @case ('actions') {
+      <div class="dp__profil">
+        <app-segmented [options]="profilOptions()" [value]="profil()" [ariaLabel]="'droits.profil' | translate" (valueChange)="profil.set($event)" />
+        @if (profil() !== 'ADMIN') {
+          <p class="page-note" role="note">
+            <i class="fa-solid fa-circle-info" aria-hidden="true"></i><span>{{ 'droits.noteProfil.' + profil() | translate }}</span>
+          </p>
+        }
+      </div>
+    }
+    @case ('appareils') {
+      <div class="dp__heads dp__heads--3">
+        @for (d of devices; track d) {
+          <div class="card dp__head">
+            <span class="dp__head-title">
+              <span class="dp__badge dp__badge--dark" aria-hidden="true"><i class="fa-solid" [class]="deviceIcons[d]"></i></span>
+              <span class="dp__head-text">
+                {{ 'droits.appareil.' + d | translate }}
+                <span class="dp__head-cap">{{ 'droits.appareilTaille.' + d | translate }}</span>
+              </span>
+            </span>
+            <span class="dp__bar" aria-hidden="true">
+              <span class="dp__bar-fill" [style.width.%]="(100 * deviceCount(d)) / screens().length"></span>
+            </span>
+            <span class="dp__head-count">{{ 'droits.nbEcrans' | translate: { n: deviceCount(d), total: screens().length } }}</span>
+          </div>
+        }
+      </div>
+    }
+  }
+
+  <div class="dp__body">
+    <nav class="card dp__nav" [attr.aria-label]="'droits.sections' | translate">
+      @for (s of sections(); track s) {
+        <button type="button" class="dp__nav-btn" [class.is-on]="s === section()" [attr.aria-current]="s === section() ? 'true' : null" (click)="setSection(s)">
+          <span class="dp__nav-label">{{ sectionLabel(s) }}</span>
+          @if (sectionChanges(s) > 0) {
+            <span
+              class="dp__nav-dot"
+              [attr.title]="'droits.modifications.' + (sectionChanges(s) > 1 ? 'n' : 'un') | translate: { n: sectionChanges(s) }"
+            ></span>
+          }
+        </button>
+      }
+    </nav>
+
+    @if (section(); as current) {
+      <section class="card dp__panel">
+        <div class="dp__table" role="table" [attr.aria-label]="sectionLabel(current)">
+          <div class="dp__tr dp__tr--head" role="row" [attr.data-cols]="tab() === 'appareils' ? 3 : 4">
+            <span class="dp__th dp__th--first" role="columnheader">{{ sectionLabel(current) }}</span>
+            @switch (tab()) {
+              @case ('ecrans') {
+                @for (p of roles; track p) {
+                  <span class="dp__th" role="columnheader">{{ 'role.' + p | translate }}</span>
+                }
+              }
+              @case ('actions') {
+                @for (a of actions; track a) {
+                  <span class="dp__th" role="columnheader">{{ 'droits.action.' + a | translate }}</span>
+                }
+              }
+              @case ('appareils') {
+                @for (d of devices; track d) {
+                  <span class="dp__th" role="columnheader">
+                    <i class="fa-solid" [class]="deviceIcons[d]" aria-hidden="true"></i> {{ 'droits.appareil.' + d | translate }}
+                  </span>
+                }
+              }
+            }
+          </div>
+
+          @for (screen of sectionScreens(); track screen.ecran) {
+            <div class="dp__tr" role="row" [attr.data-cols]="tab() === 'appareils' ? 3 : 4">
+              <span class="dp__td dp__td--first" role="rowheader">{{ screenLabel(screen) }}</span>
+              @switch (tab()) {
+                @case ('ecrans') {
+                  @for (p of roles; track p) {
+                    <span class="dp__td" role="cell" [attr.data-label]="'role.' + p | translate">
+                      <app-toggle-cell
+                        [on]="has(p, screen.ecran, 'v')"
+                        [locked]="locked(p, screen.ecran)"
+                        [changed]="changed(p, screen.ecran, 'v')"
+                        [icon]="p === 'LOCATAIRE' ? 'fa-user-check' : null"
+                        [label]="cellLabel(p, screen, 'v')"
+                        [tooltip]="lockReason(p, screen, 'v')"
+                        (toggled)="toggle(p, screen, 'v')"
+                      />
+                    </span>
+                  }
+                }
+                @case ('actions') {
+                  @for (a of actions; track a) {
+                    <span class="dp__td dp__td--action" role="cell" [attr.data-label]="'droits.action.' + a | translate">
+                      @if (proposed(screen, a)) {
+                        <app-toggle-cell
+                          [on]="has(profil(), screen.ecran, a)"
+                          [locked]="locked(profil(), screen.ecran)"
+                          [disabled]="a !== 'v' && profil() !== 'ADMIN' && !has(profil(), screen.ecran, 'v')"
+                          [changed]="changed(profil(), screen.ecran, a)"
+                          [icon]="a === 'v' && profil() === 'LOCATAIRE' ? 'fa-user-check' : null"
+                          [label]="cellLabel(profil(), screen, a)"
+                          [tooltip]="lockReason(profil(), screen, a)"
+                          (toggled)="toggle(profil(), screen, a)"
+                        />
+                        <span class="dp__cap" [class.is-off]="a !== 'v' && !has(profil(), screen.ecran, 'v')">{{ actionLabel(screen, a) }}</span>
+                      } @else {
+                        <span class="dp__na" [attr.aria-label]="'droits.nonPropose' | translate">—</span>
+                      }
+                    </span>
+                  }
+                }
+                @case ('appareils') {
+                  @for (d of devices; track d) {
+                    <span class="dp__td" role="cell" [attr.data-label]="'droits.appareil.' + d | translate">
+                      <app-toggle-cell
+                        [on]="device(d, screen.ecran)"
+                        [locked]="deviceLocked(d, screen.ecran)"
+                        [changed]="deviceChanged(d, screen.ecran)"
+                        [label]="deviceLabel(d, screen)"
+                        (toggled)="toggleDevice(d, screen.ecran)"
+                      />
+                    </span>
+                  }
+                }
+              }
+            </div>
+          }
+        </div>
+      </section>
+    }
+  </div>
+
+  @if (canEdit()) {
+    <div class="card dp__save" role="region" [attr.aria-label]="'droits.brouillon' | translate">
+      <span class="dp__draft" [class.has-changes]="changeCount() > 0" aria-live="polite">
+        @if (changeCount() > 0) {
+          <span class="dp__draft-dot" aria-hidden="true"></span>
+          {{ 'droits.modifications.' + (changeCount() > 1 ? 'n' : 'un') | translate: { n: changeCount() } }}
+        } @else {
+          {{ 'droits.aucuneModification' | translate }}
+        }
+      </span>
+      @if (saveError(); as message) {
+        <span class="message-error" role="alert">{{ message }}</span>
+      }
+      <span class="dp__save-actions">
+        <button type="button" class="btn btn--secondary" [disabled]="changeCount() === 0 || saving()" (click)="cancel()">
+          {{ 'commun.annuler' | translate }}
+        </button>
+        <button type="button" class="btn btn--primary" [disabled]="changeCount() === 0 || saving()" [attr.aria-busy]="saving()" (click)="save()">
+          <i class="fa-solid fa-floppy-disk" aria-hidden="true"></i>
+          {{ (saving() ? 'commun.enregistrement' : 'commun.enregistrer') | translate }}
+        </button>
+      </span>
+    </div>
+  }
+}
